@@ -272,6 +272,1028 @@ body.dark .home-card{background:#1a1a22;}
 body.dark .home-title{color:#f0f0f5;}
 body.dark #page-home{background:radial-gradient(ellipse at center,rgba(232,25,44,0.1) 0%,transparent 70%);}
 body.dark ::-webkit-scrollbar-track{background:#141418;}
+
+/* ── ADMIN PANEL ── */
+#admin-screen{position:fixed;inset:0;z-index:8000;background:#f0f0f2;display:none;flex-direction:column;overflow:hidden;}
+#admin-screen.open{display:flex;}
+.admin-topbar{height:52px;background:linear-gradient(90deg,#E8192C,#c8101f);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;}
+.admin-topbar-title{font-size:14px;font-weight:700;color:#fff;}
+.admin-topbar-right{display:flex;gap:8px;}
+.admin-close-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:11px;font-weight:600;font-family:'Sora',sans-serif;padding:5px 14px;border-radius:20px;cursor:pointer;}
+.admin-close-btn:hover{background:rgba(255,255,255,0.25);}
+.admin-save-btn{background:#fff;border:none;color:#E8192C;font-size:11px;font-weight:700;font-family:'Sora',sans-serif;padding:5px 16px;border-radius:20px;cursor:pointer;transition:all 0.2s;}
+.admin-save-btn:hover{background:#ffe0e0;}
+.admin-body{flex:1;overflow-y:auto;padding:24px;}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;max-width:1200px;margin:0 auto;}
+.admin-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.admin-card-head{padding:14px 18px;display:flex;align-items:center;gap:10px;}
+.admin-card-head h3{font-size:13px;font-weight:600;}
+.admin-card-head p{font-size:11px;color:#888;margin-top:1px;}
+.admin-card-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.admin-card-body{padding:0 18px 18px;}
+.admin-field{margin-bottom:12px;}
+.admin-field label{display:block;font-size:11px;font-weight:600;color:#555;margin-bottom:4px;}
+.admin-field input{width:100%;padding:8px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:12px;font-family:'JetBrains Mono',monospace;color:#111;outline:none;transition:border-color 0.2s;}
+.admin-field input:focus{border-color:#E8192C;}
+.admin-field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.admin-section-label{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#bbb;margin:14px 0 8px;display:flex;align-items:center;gap:8px;}
+.admin-section-label::after{content:'';flex:1;height:1px;background:#f0f0f2;}
+.admin-month-select{width:100%;padding:8px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:12px;font-family:'Sora',sans-serif;color:#111;outline:none;margin-bottom:16px;transition:border-color 0.2s;}
+.admin-month-select:focus{border-color:#E8192C;}
+.admin-header-box{background:#fff8f8;border:1px solid rgba(232,25,44,0.15);border-radius:10px;padding:14px 18px;margin-bottom:16px;max-width:1200px;margin:0 auto 16px;}
+.admin-header-box h2{font-size:16px;font-weight:700;color:#111;margin-bottom:4px;}
+.admin-header-box p{font-size:12px;color:#888;}
+.admin-tabs{display:flex;gap:4px;margin-bottom:16px;background:#f0f0f2;border-radius:10px;padding:4px;}
+.admin-tab{flex:1;padding:8px;border:none;border-radius:8px;font-size:11px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;background:transparent;color:#888;transition:all 0.2s;}
+.admin-tab.active{background:#fff;color:#E8192C;box-shadow:0 1px 4px rgba(0,0,0,0.1);}
+.admin-tab-content{display:none;}
+.admin-tab-content.active{display:block;}
+.admin-btn-preview{width:100%;padding:10px;background:linear-gradient(135deg,#E8192C,#c8101f);color:#fff;font-size:12px;font-weight:600;font-family:'Sora',sans-serif;border:none;border-radius:8px;cursor:pointer;margin-top:4px;transition:all 0.2s;}
+.admin-btn-preview:hover{opacity:0.9;}
+.admin-success{background:#f0fff8;border:1px solid rgba(10,138,80,0.2);border-radius:8px;padding:10px 14px;font-size:12px;color:#0a8a50;display:none;margin-top:8px;}
+.admin-success.show{display:block;}
+
+
+/* AI CHAT */
+#ai-chat-btn{position:fixed;bottom:20px;right:64px;z-index:200;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#1a6fd4,#0a4fa0);border:none;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(26,111,212,0.4);transition:all 0.2s;}
+#ai-chat-btn:hover{transform:translateY(-2px) scale(1.05);}
+.chat-dot{position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:#22c97a;border:2px solid #fff;animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{transform:scale(1);}50%{transform:scale(1.3);}}
+#ai-chat-panel{position:fixed;bottom:74px;right:64px;z-index:500;width:360px;max-height:520px;background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,0.15);display:none;flex-direction:column;overflow:hidden;}
+#ai-chat-panel.open{display:flex;animation:popIn 0.25s ease both;}
+.chat-head{background:linear-gradient(135deg,#1a6fd4,#0a4fa0);padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.chat-head-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.chat-head-info{flex:1;}
+.chat-head-name{font-size:13px;font-weight:700;color:#fff;}
+.chat-head-status{font-size:10px;color:rgba(255,255,255,0.75);display:flex;align-items:center;gap:4px;}
+.chat-head-status::before{content:'';width:6px;height:6px;border-radius:50%;background:#22c97a;display:inline-block;}
+.chat-head-close{background:rgba(255,255,255,0.15);border:none;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:340px;}
+.chat-msg{display:flex;gap:8px;align-items:flex-start;animation:fadeUp 0.2s ease both;}
+.chat-msg.user{flex-direction:row-reverse;}
+.chat-msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.chat-msg.ai .chat-msg-avatar{background:linear-gradient(135deg,#1a6fd4,#0a4fa0);}
+.chat-msg.user .chat-msg-avatar{background:linear-gradient(135deg,#E8192C,#c8101f);}
+.chat-msg-bubble{max-width:78%;padding:10px 12px;border-radius:12px;font-size:12px;line-height:1.6;}
+.chat-msg.ai .chat-msg-bubble{background:#f0f6ff;color:#111;border-bottom-left-radius:4px;}
+.chat-msg.user .chat-msg-bubble{background:linear-gradient(135deg,#E8192C,#c8101f);color:#fff;border-bottom-right-radius:4px;}
+.chat-msg-time{font-size:9px;color:#bbb;margin-top:3px;}
+.chat-typing{display:flex;align-items:center;gap:4px;padding:10px 12px;background:#f0f6ff;border-radius:12px;border-bottom-left-radius:4px;width:fit-content;}
+.chat-typing span{width:6px;height:6px;border-radius:50%;background:#1a6fd4;display:inline-block;animation:typing-dot 1.2s infinite;}
+.chat-typing span:nth-child(2){animation-delay:0.2s;}
+.chat-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes typing-dot{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+.chat-suggestions{padding:8px 14px;display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0;border-top:1px solid #f0f0f2;}
+.chat-suggestion-btn{background:#f0f6ff;border:1px solid rgba(26,111,212,0.2);color:#1a6fd4;font-size:10px;font-weight:500;font-family:'Sora',sans-serif;padding:4px 10px;border-radius:20px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.chat-suggestion-btn:hover{background:#1a6fd4;color:#fff;}
+.chat-input-area{padding:10px 14px;border-top:1px solid #f0f0f2;display:flex;gap:8px;align-items:center;flex-shrink:0;}
+#chat-input{flex:1;padding:8px 12px;border:1px solid #e0e0e0;border-radius:20px;font-size:12px;font-family:'Sora',sans-serif;outline:none;transition:border-color 0.2s;}
+#chat-input:focus{border-color:#1a6fd4;}
+#chat-send-btn{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1a6fd4,#0a4fa0);border:none;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
+#chat-send-btn:hover{transform:scale(1.05);}
+#chat-send-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.chat-context-badge{background:rgba(26,111,212,0.08);border:1px solid rgba(26,111,212,0.15);border-radius:6px;padding:5px 10px;font-size:10px;color:#1a6fd4;margin:0 14px 6px;text-align:center;flex-shrink:0;}
+
+/* ── META VS REALIZADO ── */
+.meta-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.meta-label{font-size:11px;color:#555;width:130px;flex-shrink:0;}
+.meta-bar-wrap{flex:1;height:8px;background:#f0f0f2;border-radius:4px;overflow:hidden;position:relative;}
+.meta-bar-fill{height:100%;border-radius:4px;transition:width 1s ease;}
+.meta-bar-fill.over{background:var(--green);}
+.meta-bar-fill.under{background:var(--red);}
+.meta-pct{font-size:11px;font-weight:600;width:42px;text-align:right;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.meta-pct.over{color:var(--green);}
+.meta-pct.under{color:var(--red2);}
+.meta-input-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+.meta-input-row label{font-size:11px;color:#888;width:130px;flex-shrink:0;}
+.meta-input-row input{flex:1;padding:6px 10px;border:1px solid #e0e0e0;border-radius:6px;font-size:12px;font-family:'JetBrains Mono',monospace;outline:none;}
+.meta-input-row input:focus{border-color:var(--red);}
+
+/* ── RANKING VIDEOS ── */
+.ranking-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #f0f0f2;transition:background 0.15s;}
+.ranking-item:hover{background:#f8f8f9;}
+.ranking-item:last-child{border-bottom:none;}
+.ranking-pos{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ranking-pos.gold{background:#FFD700;color:#856404;}
+.ranking-pos.silver{background:#C0C0C0;color:#555;}
+.ranking-pos.bronze{background:#CD7F32;color:#fff;}
+.ranking-pos.other{background:#f0f0f2;color:#888;}
+.ranking-info{flex:1;min-width:0;}
+.ranking-title{font-size:12px;font-weight:500;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ranking-meta{font-size:10px;color:#888;margin-top:2px;}
+.ranking-views{font-size:13px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+
+/* ── HISTORY LOG ── */
+.history-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f2;}
+.history-item:last-child{border-bottom:none;}
+.history-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:4px;}
+.history-text{font-size:12px;color:#555;flex:1;line-height:1.5;}
+.history-time{font-size:10px;color:#bbb;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+
+/* ── BRAZIL MAP ── */
+.map-wrap{position:relative;text-align:center;}
+.map-wrap svg{max-width:100%;height:auto;}
+.map-city-dot{cursor:pointer;transition:r 0.2s;}
+.map-city-dot:hover{r:8;}
+.map-tooltip{position:absolute;background:#111;color:#fff;font-size:11px;padding:6px 10px;border-radius:6px;pointer-events:none;white-space:nowrap;z-index:10;display:none;}
+
+/* ── PAUTA IA ── */
+.pauta-item{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.pauta-num{width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pauta-content{flex:1;}
+.pauta-title{font-size:12px;font-weight:600;color:#111;margin-bottom:3px;}
+.pauta-why{font-size:11px;color:#888;line-height:1.5;}
+.pauta-tag{display:inline-block;background:#fff0f0;color:var(--red);font-size:10px;padding:2px 6px;border-radius:10px;margin-top:4px;font-weight:500;}
+
+/* ── URL PARAMS ── */
+/* (handled by JS) */
+
+/* ── WELCOME SCREEN ── */
+#welcome-screen{position:fixed;inset:0;z-index:7500;background:linear-gradient(135deg,#fff 0%,#fff5f5 100%);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
+#welcome-screen.open{display:flex;animation:fadeUp 0.4s ease both;}
+.welcome-logo{width:80px;height:80px;border-radius:16px;object-fit:cover;margin-bottom:20px;box-shadow:0 4px 20px rgba(232,25,44,0.2);}
+.welcome-greeting{font-size:28px;font-weight:700;color:#111;margin-bottom:8px;letter-spacing:-0.5px;}
+.welcome-date{font-size:14px;color:#888;margin-bottom:24px;}
+.welcome-highlight{background:linear-gradient(135deg,#fff5f5,#fff);border:1px solid rgba(232,25,44,0.15);border-radius:14px;padding:16px 24px;margin-bottom:24px;max-width:460px;}
+.welcome-highlight-label{font-size:10px;font-weight:600;color:#E8192C;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.welcome-highlight-text{font-size:14px;color:#111;line-height:1.6;}
+.welcome-stats{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;justify-content:center;}
+.welcome-stat{background:#fff;border:1px solid rgba(232,25,44,0.1);border-radius:10px;padding:12px 18px;min-width:100px;}
+.welcome-stat-num{font-size:20px;font-weight:700;color:#E8192C;}
+.welcome-stat-label{font-size:10px;color:#888;margin-top:3px;}
+.welcome-btn{background:linear-gradient(135deg,#E8192C,#c8101f);color:#fff;font-size:13px;font-weight:600;font-family:'Sora',sans-serif;border:none;padding:12px 32px;border-radius:20px;cursor:pointer;box-shadow:0 4px 16px rgba(232,25,44,0.3);transition:all 0.2s;}
+.welcome-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,25,44,0.4);}
+.welcome-skip{font-size:11px;color:#ccc;margin-top:14px;cursor:pointer;transition:color 0.2s;}
+.welcome-skip:hover{color:#888;}
+
+/* ── SEARCH ── */
+#search-wrap{padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
+#search-input{width:100%;padding:7px 10px 7px 28px;border:1px solid #e8e8e8;border-radius:8px;font-size:11px;font-family:'Sora',sans-serif;outline:none;background:#f8f8f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 8px center;transition:all 0.2s;}
+#search-input:focus{border-color:var(--red);background-color:#fff;}
+.search-results{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:0 0 10px 10px;box-shadow:0 8px 20px rgba(0,0,0,0.1);z-index:100;display:none;max-height:200px;overflow-y:auto;}
+.search-result-item{padding:8px 12px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background 0.15s;}
+.search-result-item:hover{background:#f5f5f5;}
+.search-result-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* ── FAVORITES ── */
+.sub-link .fav-btn{margin-left:auto;background:none;border:none;cursor:pointer;font-size:12px;opacity:0;transition:opacity 0.15s;padding:0 2px;}
+.sub-link:hover .fav-btn{opacity:1;}
+.fav-btn.active{opacity:1 !important;color:#E8192C;}
+.sidebar-favs{padding:4px 8px;}
+.fav-link{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;font-size:11px;color:#999;cursor:pointer;transition:all 0.15s;}
+.fav-link:hover{background:#f5f5f5;color:#111;}
+
+/* ── TREND CARD ── */
+.trend-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);margin-bottom:8px;}
+.trend-icon{font-size:22px;flex-shrink:0;}
+.trend-info{flex:1;}
+.trend-title{font-size:12px;font-weight:600;color:#111;}
+.trend-sub{font-size:11px;color:#888;margin-top:2px;}
+.trend-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;}
+.trend-badge.up{background:rgba(10,138,80,0.1);color:#0a8a50;}
+.trend-badge.down{background:rgba(232,25,44,0.1);color:#E8192C;}
+.trend-badge.stable{background:#f0f0f2;color:#888;}
+
+/* ── TIMELINE CHART ── */
+.timeline-wrap{position:relative;height:220px;}
+
+/* ── ALERT BANNER ── */
+.alert-banner{display:none;background:linear-gradient(135deg,#fff5f5,#fff);border:1px solid rgba(232,25,44,0.2);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:14px;animation:slideIn 0.3s ease both;}
+.alert-banner.show{display:flex;align-items:center;gap:10px;}
+.alert-banner-icon{font-size:18px;flex-shrink:0;}
+.alert-banner p{font-size:12px;color:#555;line-height:1.5;flex:1;}
+.alert-banner strong{color:#E8192C;}
+.alert-banner-close{background:none;border:none;font-size:14px;color:#aaa;cursor:pointer;padding:0 4px;}
+
+/* ── MOBILE OPTIMIZED ── */
+@media(max-width:640px){
+  :root{--sw:0px;}
+  .sidebar{position:fixed;left:-240px;width:240px;transition:left 0.3s;z-index:100;box-shadow:4px 0 20px rgba(0,0,0,0.1);}
+  .sidebar.mobile-open{left:0;}
+  .main{width:100vw;}
+  .topbar{padding:0 12px;}
+  #share-btn{display:none;}
+  .mobile-menu-btn{display:flex!important;}
+  .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;}
+  .mobile-overlay.show{display:block;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .metrics-cols{grid-template-columns:1fr;}
+  .exec-trigger{left:16px;bottom:16px;}
+  #ai-chat-btn{right:16px;bottom:70px;}
+  .glossary-btn{right:16px;bottom:20px;}
+  .home-cards{gap:8px;}
+  .home-card{min-width:80px;padding:10px 14px;}
+}
+.mobile-menu-btn{display:none;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;width:32px;height:32px;border-radius:8px;align-items:center;justify-content:center;font-size:16px;cursor:pointer;margin-right:8px;flex-shrink:0;}
+
+/* ── SCORE CARD ── */
+.score-wrap{display:flex;align-items:center;gap:16px;padding:12px 16px;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.score-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0;position:relative;}
+.score-circle.excellent{background:linear-gradient(135deg,#22c97a,#0a8a50);color:#fff;}
+.score-circle.good{background:linear-gradient(135deg,#4a9eff,#1a6fd4);color:#fff;}
+.score-circle.average{background:linear-gradient(135deg,#f5a623,#c47a00);color:#fff;}
+.score-circle.poor{background:linear-gradient(135deg,#ff6b6b,#E8192C);color:#fff;}
+.score-info{flex:1;}
+.score-title{font-size:13px;font-weight:600;color:#111;}
+.score-desc{font-size:11px;color:#888;margin-top:2px;line-height:1.5;}
+.score-breakdown{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
+.score-tag{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500;}
+.score-tag.pos{background:rgba(34,201,122,0.1);color:#0a8a50;}
+.score-tag.neg{background:rgba(232,25,44,0.1);color:#E8192C;}
+.score-tag.neu{background:#f0f0f2;color:#888;}
+
+/* ── PROJECTION ── */
+.projection-wrap{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.projection-label{font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
+.projection-chart{position:relative;height:160px;}
+.projection-note{font-size:10px;color:#bbb;margin-top:6px;font-style:italic;}
+
+/* ── GROWTH CALC ── */
+.calc-wrap{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.calc-title{font-size:12px;font-weight:600;color:#111;margin-bottom:12px;}
+.calc-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.calc-label{font-size:11px;color:#888;width:160px;flex-shrink:0;}
+.calc-input{flex:1;padding:7px 10px;border:1px solid #e0e0e0;border-radius:7px;font-size:12px;font-family:'JetBrains Mono',monospace;outline:none;}
+.calc-input:focus{border-color:var(--red);}
+.calc-result{background:linear-gradient(135deg,#fff5f5,#fff);border:1px solid rgba(232,25,44,0.15);border-radius:8px;padding:12px 14px;margin-top:10px;}
+.calc-result-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
+.calc-result-item:last-child{border-bottom:none;}
+.calc-result-label{font-size:11px;color:#888;}
+.calc-result-value{font-size:13px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;}
+
+/* ── HEALTH INDEX ── */
+.health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:12px;}
+.health-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.health-score{font-size:28px;font-weight:700;letter-spacing:-1px;}
+.health-label{font-size:11px;color:#888;margin-top:4px;}
+.health-bar{height:4px;background:#f0f0f2;border-radius:2px;margin-top:8px;overflow:hidden;}
+.health-bar-fill{height:100%;border-radius:2px;}
+
+/* ── NOTES ── */
+.notes-wrap{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.notes-label{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#bbb;margin-bottom:8px;}
+.notes-textarea{width:100%;min-height:80px;padding:10px 12px;border:1px solid #e8e8e8;border-radius:8px;font-size:12px;font-family:'Sora',sans-serif;resize:vertical;outline:none;transition:border-color 0.2s;color:#111;}
+.notes-textarea:focus{border-color:var(--red);}
+.notes-save-btn{background:var(--red);border:none;color:#fff;font-size:11px;font-weight:600;font-family:'Sora',sans-serif;padding:6px 14px;border-radius:7px;cursor:pointer;margin-top:6px;float:right;}
+.notes-saved{font-size:10px;color:#0a8a50;margin-top:8px;display:none;}
+
+/* ── COMPARE TWO ── */
+#compare-two-page .cmp-selector{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+#compare-two-page .cmp-select{flex:1;min-width:160px;padding:8px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:12px;font-family:'Sora',sans-serif;outline:none;}
+#compare-two-page .cmp-select:focus{border-color:var(--red);}
+.cmp-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.cmp-table th{padding:10px 14px;font-size:11px;font-weight:600;text-align:left;}
+.cmp-table th:first-child{background:#f8f8f9;color:#888;}
+.cmp-table th.a{background:linear-gradient(135deg,#E8192C,#c8101f);color:#fff;}
+.cmp-table th.b{background:linear-gradient(135deg,#1a6fd4,#0a4fa0);color:#fff;}
+.cmp-table td{padding:9px 14px;font-size:12px;border-bottom:1px solid #f0f0f2;font-family:'JetBrains Mono',monospace;}
+.cmp-table td:first-child{font-family:'Sora',sans-serif;font-weight:500;color:#888;background:#f8f8f9;}
+.cmp-table tr:last-child td{border-bottom:none;}
+.cmp-table .winner{font-weight:700;color:#0a8a50;}
+
+/* ── CONFETTI ── */
+.confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confetti-fall linear forwards;pointer-events:none;z-index:9998;}
+@keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+
+/* ── PRINT ── */
+@media print{
+  #lock-screen,#welcome-screen,#admin-screen,#ai-chat-btn,#ai-chat-panel,.exec-trigger,.glossary-btn,.glossary-panel,.toast,#mobile-overlay,#particles,.sidebar,canvas,.chat-suggestions,.chat-input-area{display:none!important;}
+  .app{display:block!important;}
+  .main{width:100%!important;}
+  .topbar{background:#E8192C!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .page-section.active{display:block!important;}
+  .kpi{break-inside:avoid;}
+  body{overflow:visible!important;}
+}
+
+/* ══ VISUAL UPGRADE ══ */
+
+/* Better sidebar */
+.sidebar {
+  background: #fff;
+  border-right: none;
+  box-shadow: 2px 0 20px rgba(0,0,0,0.06);
+}
+.sidebar-logo {
+  background: linear-gradient(135deg, #E8192C 0%, #c8101f 100%);
+  padding: 18px 16px;
+  box-shadow: 0 2px 10px rgba(232,25,44,0.3);
+}
+.month-item.has-data .month-item-btn:hover,
+.month-item.open .month-item-btn {
+  background: rgba(232,25,44,0.06);
+}
+.month-item.active .month-item-btn {
+  background: linear-gradient(90deg, rgba(232,25,44,0.1), transparent);
+  border-left: 3px solid var(--red);
+  padding-left: 8px;
+}
+.sidebar-compare {
+  background: linear-gradient(135deg, #fff8f8, #fff);
+  border: 1px solid rgba(232,25,44,0.12);
+  transition: all 0.2s;
+}
+.sidebar-compare:hover {
+  background: linear-gradient(135deg, #fff0f0, #fff8f8);
+  border-color: rgba(232,25,44,0.25);
+  transform: translateX(2px);
+}
+.sidebar-compare.active {
+  background: linear-gradient(135deg, #fff0f0, #ffe8e8);
+  border-color: var(--red);
+}
+
+/* Better topbar */
+.topbar {
+  background: linear-gradient(90deg, #E8192C 0%, #c8101f 60%, #a00018 100%);
+  box-shadow: 0 3px 16px rgba(232,25,44,0.35);
+  border-bottom: none;
+}
+
+/* Better KPI cards */
+.kpi {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.kpi:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(232,25,44,0.12);
+  border-color: rgba(232,25,44,0.2);
+}
+.kpi-value {
+  font-size: 24px;
+  background: linear-gradient(135deg, #111, #333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Better metric boxes */
+.metric-box {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.metric-box-head {
+  padding: 10px 14px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.metric-row:nth-child(even) {
+  background: #fafafa;
+}
+
+/* Better summary pill */
+.summary-pill {
+  border-radius: 0 12px 12px 0;
+  border-left-width: 4px;
+  background: linear-gradient(135deg, #fff8f8, #fff);
+}
+
+/* Better AI box */
+.ai-box {
+  border-radius: 0 12px 12px 0;
+  border-left-width: 4px;
+}
+
+/* Better best-box */
+.best-box {
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+.best-box:hover {
+  transform: translateX(3px);
+  border-color: rgba(232,25,44,0.25);
+  box-shadow: 0 4px 16px rgba(232,25,44,0.08);
+}
+
+/* Better chart box */
+.chart-box {
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff, #fafafa);
+}
+
+/* Better home cards */
+.home-card {
+  border-radius: 14px;
+  transition: all 0.2s;
+  background: linear-gradient(135deg, #fff, #fafafa);
+}
+.home-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(232,25,44,0.12);
+  border-color: rgba(232,25,44,0.25);
+}
+.home-card-num {
+  background: linear-gradient(135deg, #E8192C, #c8101f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Better alert */
+.alert-drop {
+  border-radius: 0 12px 12px 0;
+  border-left-width: 4px;
+}
+
+/* Better score wrap */
+.score-wrap {
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff, #fafafa);
+}
+
+/* Better compare card */
+.compare-card {
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff, #fafafa);
+  transition: all 0.2s;
+}
+.compare-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* Better ranking */
+.ranking-item {
+  transition: all 0.15s;
+}
+.ranking-item:hover {
+  background: linear-gradient(90deg, rgba(232,25,44,0.04), transparent);
+  transform: translateX(3px);
+}
+
+/* Better exec card */
+.exec-card {
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #fff, #fafafa);
+}
+
+/* Smooth slabel */
+.slabel::after {
+  background: linear-gradient(90deg, rgba(232,25,44,0.2), transparent);
+}
+
+/* Better search */
+#search-input {
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f2;
+  background: #f8f8f9;
+  transition: all 0.2s;
+}
+#search-input:focus {
+  background: #fff;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(232,25,44,0.08);
+}
+
+/* Better admin card */
+.admin-card {
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* Better lock card */
+.lock-card {
+  border-radius: 24px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+}
+
+/* Better welcome */
+.welcome-highlight {
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff8f8, #fff);
+}
+
+/* Better glossary */
+.glossary-panel {
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+}
+
+/* Better chat panel */
+#ai-chat-panel {
+  border-radius: 20px;
+  box-shadow: 0 16px 56px rgba(0,0,0,0.18);
+}
+.chat-msg.ai .chat-msg-bubble {
+  background: linear-gradient(135deg, #f0f6ff, #e8f2ff);
+  border-radius: 14px 14px 14px 4px;
+}
+.chat-msg.user .chat-msg-bubble {
+  border-radius: 14px 14px 4px 14px;
+}
+
+/* Subtle page background */
+.content {
+  background: #f4f4f6;
+}
+
+/* Section headers with gradient accent */
+.slabel {
+  font-size: 10px;
+  color: #999;
+}
+
+/* Smooth transitions on all interactive */
+.sub-link, .month-item-btn, .kpi, .best-box, .ranking-item, .home-card, .compare-card {
+  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Toast upgrade */
+.toast {
+  border-radius: 12px;
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+}
+
+/* Better progress bars */
+.meta-bar-fill {
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+
+/* ══════════════════════════════════
+   VISUAL UPGRADE — SHAPES & DEPTH
+══════════════════════════════════ */
+
+/* ── GLOBAL BACKGROUND ── */
+body {
+  background: #f0f0f4;
+}
+.content {
+  background: linear-gradient(160deg, #f5f5f8 0%, #eeecf2 100%);
+  position: relative;
+}
+
+/* ── SIDEBAR SHAPES ── */
+.sidebar {
+  background: #fff;
+  box-shadow: 3px 0 24px rgba(0,0,0,0.07);
+  position: relative;
+  overflow: hidden;
+}
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.08), transparent 70%);
+  pointer-events: none;
+}
+.sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: 80px;
+  left: -40px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.05), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── TOPBAR SHAPES ── */
+.topbar {
+  background: linear-gradient(90deg, #E8192C 0%, #c8101f 50%, #a00018 100%);
+  position: relative;
+  overflow: hidden;
+}
+.topbar::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: 80px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.topbar::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  right: 200px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+
+/* ── LOCK SCREEN SHAPES ── */
+#lock-screen {
+  background: linear-gradient(135deg, #E8192C 0%, #c8101f 40%, #8a0010 100%);
+  position: relative;
+  overflow: hidden;
+}
+#lock-screen::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+#lock-screen::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -80px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.08);
+  pointer-events: none;
+}
+.lock-card {
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255,255,255,0.8);
+}
+
+/* ── WELCOME SCREEN SHAPES ── */
+#welcome-screen {
+  background: linear-gradient(160deg, #fff 0%, #fff5f5 60%, #fff0f0 100%);
+  position: relative;
+  overflow: hidden;
+}
+#welcome-screen::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  right: -80px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.08), transparent 70%);
+  pointer-events: none;
+}
+#welcome-screen::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  left: -60px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.05), transparent 70%);
+  pointer-events: none;
+}
+.welcome-logo {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── HOME PAGE SHAPES ── */
+#page-home {
+  background: linear-gradient(160deg, #f5f5f8 0%, #eeecf2 100%);
+  position: relative;
+  overflow: hidden;
+}
+#page-home::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -60px;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.07), transparent 70%);
+  pointer-events: none;
+}
+#page-home::after {
+  content: '';
+  position: absolute;
+  bottom: 40px;
+  left: -80px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.04), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── SIDEBAR LOGO SHAPES ── */
+.sidebar-logo {
+  background: linear-gradient(135deg, #E8192C 0%, #c8101f 60%, #a00018 100%);
+  position: relative;
+  overflow: hidden;
+}
+.sidebar-logo::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  pointer-events: none;
+}
+.sidebar-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+
+/* ── KPI CARDS DEPTH ── */
+.kpi {
+  background: linear-gradient(145deg, #ffffff, #f8f8fb);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+.kpi::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(232,25,44,0.04);
+  pointer-events: none;
+  transition: all 0.3s;
+}
+.kpi:hover::after {
+  background: rgba(232,25,44,0.08);
+  transform: scale(1.3);
+}
+
+/* ── METRIC BOXES DEPTH ── */
+.metric-box {
+  background: linear-gradient(145deg, #ffffff, #f8f8fb);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* ── CHART BOXES ── */
+.chart-box {
+  background: linear-gradient(145deg, #ffffff, #f9f9fc);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.chart-box::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.04), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── BEST BOX ── */
+.best-box {
+  background: linear-gradient(145deg, #ffffff, #f9f9fc);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* ── SUMMARY PILL DEPTH ── */
+.summary-pill {
+  background: linear-gradient(135deg, #fff8f8, #fff5f5, #fff);
+  box-shadow: 0 2px 10px rgba(232,25,44,0.06);
+}
+
+/* ── AI BOX DEPTH ── */
+.ai-box {
+  background: linear-gradient(135deg, #f0f6ff, #e8f2ff, #f5f9ff);
+  box-shadow: 0 2px 10px rgba(26,111,212,0.07);
+}
+
+/* ── SCORE WRAP ── */
+.score-wrap {
+  background: linear-gradient(145deg, #ffffff, #f8f8fb);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* ── COMPARE CARD ── */
+.compare-card {
+  background: linear-gradient(145deg, #ffffff, #f8f8fb);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* ── SIDEBAR COMPARE ── */
+.sidebar-compare {
+  background: linear-gradient(135deg, #fff8f8, #fff);
+  box-shadow: 0 1px 6px rgba(232,25,44,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.sidebar-compare::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(232,25,44,0.05);
+  transition: all 0.3s;
+}
+.sidebar-compare:hover::before {
+  transform: scale(2);
+  background: rgba(232,25,44,0.08);
+}
+
+/* ── EXEC CARD SHAPES ── */
+.exec-card {
+  background: linear-gradient(145deg, #ffffff, #f8f8fb);
+  position: relative;
+  overflow: hidden;
+}
+.exec-card::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.05), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── CHAT PANEL SHAPES ── */
+#ai-chat-panel {
+  background: linear-gradient(160deg, #ffffff, #f8f9ff);
+}
+.chat-head {
+  background: linear-gradient(135deg, #1a6fd4 0%, #0a4fa0 60%, #083880 100%);
+  position: relative;
+  overflow: hidden;
+}
+.chat-head::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  pointer-events: none;
+}
+
+/* ── ADMIN TOPBAR SHAPES ── */
+.admin-topbar {
+  position: relative;
+  overflow: hidden;
+}
+.admin-topbar::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: 40px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+
+/* ── RANKING ITEMS ── */
+.ranking-item:hover {
+  background: linear-gradient(90deg, rgba(232,25,44,0.04), transparent);
+}
+
+/* ── HEALTH CARDS ── */
+.health-card {
+  background: linear-gradient(145deg, #ffffff, #f8f8fb);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  transition: all 0.2s;
+}
+.health-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* ── NOTES WRAP ── */
+.notes-wrap {
+  background: linear-gradient(145deg, #ffffff, #f9f9fc);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* ── PAUTA ITEM ── */
+.pauta-item {
+  background: linear-gradient(145deg, #ffffff, #f9f9fc);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+.pauta-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(232,25,44,0.08);
+}
+
+/* ── CALC WRAP ── */
+.calc-wrap {
+  background: linear-gradient(145deg, #ffffff, #f9f9fc);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+}
+.calc-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,25,44,0.04), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── ALERT BANNER ── */
+.alert-banner {
+  background: linear-gradient(135deg, #fff5f5, #fff);
+  box-shadow: 0 2px 10px rgba(232,25,44,0.08);
+}
+
+/* ── TREND CARD ── */
+.trend-card {
+  background: linear-gradient(145deg, #ffffff, #f9f9fc);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+.trend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.09);
+}
+
+/* ── SLABEL UPGRADE ── */
+.slabel::after {
+  background: linear-gradient(90deg, rgba(232,25,44,0.25), rgba(232,25,44,0.05), transparent);
+  height: 1.5px;
+}
+
+/* ── HOME INNER SHAPE ── */
+.home-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── WELCOME STAT SHAPES ── */
+.welcome-stat {
+  background: linear-gradient(145deg, #ffffff, #f8f8fb);
+  box-shadow: 0 2px 12px rgba(232,25,44,0.06);
+  transition: all 0.2s;
+}
+.welcome-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(232,25,44,0.1);
+}
+
+/* ── GLOSSARY PANEL ── */
+.glossary-panel {
+  background: linear-gradient(145deg, #ffffff, #f9f9fc);
+}
+
+/* ── HISTORY ITEM ── */
+.history-item {
+  transition: background 0.15s;
+}
+.history-item:hover {
+  background: rgba(232,25,44,0.02);
+}
+
+/* ── NO DATA STATE ── */
+.no-data-state {
+  background: linear-gradient(160deg, #f8f8fb, #f2f2f6);
+  border-radius: 16px;
+  margin: 8px 0;
+}
+.no-data-pill {
+  background: linear-gradient(135deg, #fff0f0, #fff8f8);
+  box-shadow: 0 2px 8px rgba(232,25,44,0.06);
+}
+
+/* ── OVERALL DEPTH ── */
+.metric-box-head {
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.1), transparent) !important;
+}
+
 </style>
 </head>
 <body>
@@ -304,6 +1326,12 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
         <div class="sidebar-logo-sub">Analytics Dashboard</div>
       </div>
     </div>
+    <div id="search-wrap" style="position:relative;">
+      <input type="text" id="search-input" placeholder="Buscar canal..." oninput="searchChannels(this.value)">
+      <div class="search-results" id="search-results"></div>
+    </div>
+    <div class="sidebar-section">Favoritos</div>
+    <div class="sidebar-favs" id="sidebar-favs"><div style="font-size:10px;color:#ccc;padding:4px 8px;">Nenhum favorito ainda</div></div>
     <div class="sidebar-section">Meses</div>
     <div class="month-item has-data" id="nav-fev">
       <div class="month-item-btn" onclick="toggleMonth('fev')">
@@ -311,9 +1339,9 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
         <span class="month-chevron">›</span>
       </div>
       <div class="month-sub">
-        <div class="sub-link" onclick="showPage('fev-yt1')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Sistemas</div>
-        <div class="sub-link" onclick="showPage('fev-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
-        <div class="sub-link" onclick="showPage('fev-fb')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook</div>
+        <div class="sub-link" onclick="showPage('fev-yt1')"><div class="sub-link-dot" style="background:var(--yt)"><button class="fav-btn" id="fav-fev-yt1" onclick="event.stopPropagation();toggleFav('fev-yt1')" title="Favoritar">☆</button></div>Myse Sistemas<button class="fav-btn" id="fav-fev-yt1" onclick="event.stopPropagation();toggleFav('fev-yt1')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('fev-ig')"><div class="sub-link-dot" style="background:var(--ig)"><button class="fav-btn" id="fav-fev-ig" onclick="event.stopPropagation();toggleFav('fev-ig')" title="Favoritar">☆</button></div>Instagram<button class="fav-btn" id="fav-fev-ig" onclick="event.stopPropagation();toggleFav('fev-ig')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('fev-fb')"><div class="sub-link-dot" style="background:var(--fb)"><button class="fav-btn" id="fav-fev-fb" onclick="event.stopPropagation();toggleFav('fev-fb')" title="Favoritar">☆</button></div>Facebook<button class="fav-btn" id="fav-fev-fb" onclick="event.stopPropagation();toggleFav('fev-fb')" title="Favoritar">☆</button></div>
       </div>
     </div>
     <div class="month-item has-data" id="nav-mar">
@@ -322,10 +1350,10 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
         <span class="month-chevron">›</span>
       </div>
       <div class="month-sub">
-        <div class="sub-link" onclick="showPage('mar-yt1')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Sistemas</div>
-        <div class="sub-link" onclick="showPage('mar-yt2')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Cortes2</div>
-        <div class="sub-link" onclick="showPage('mar-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
-        <div class="sub-link" onclick="showPage('mar-fb')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook</div>
+        <div class="sub-link" onclick="showPage('mar-yt1')"><div class="sub-link-dot" style="background:var(--yt)"><button class="fav-btn" id="fav-mar-yt1" onclick="event.stopPropagation();toggleFav('mar-yt1')" title="Favoritar">☆</button></div>Myse Sistemas<button class="fav-btn" id="fav-mar-yt1" onclick="event.stopPropagation();toggleFav('mar-yt1')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('mar-yt2')"><div class="sub-link-dot" style="background:var(--yt)"><button class="fav-btn" id="fav-mar-yt2" onclick="event.stopPropagation();toggleFav('mar-yt2')" title="Favoritar">☆</button></div>Myse Cortes2<button class="fav-btn" id="fav-mar-yt2" onclick="event.stopPropagation();toggleFav('mar-yt2')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('mar-ig')"><div class="sub-link-dot" style="background:var(--ig)"><button class="fav-btn" id="fav-mar-ig" onclick="event.stopPropagation();toggleFav('mar-ig')" title="Favoritar">☆</button></div>Instagram<button class="fav-btn" id="fav-mar-ig" onclick="event.stopPropagation();toggleFav('mar-ig')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('mar-fb')"><div class="sub-link-dot" style="background:var(--fb)"><button class="fav-btn" id="fav-mar-fb" onclick="event.stopPropagation();toggleFav('mar-fb')" title="Favoritar">☆</button></div>Facebook<button class="fav-btn" id="fav-mar-fb" onclick="event.stopPropagation();toggleFav('mar-fb')" title="Favoritar">☆</button></div>
       </div>
     </div>
     <div class="month-item has-data" id="nav-abr">
@@ -334,10 +1362,10 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
         <span class="month-chevron">›</span>
       </div>
       <div class="month-sub">
-        <div class="sub-link" onclick="showPage('abr-yt1')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Sistemas</div>
-        <div class="sub-link" onclick="showPage('abr-yt2')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Cortes2</div>
-        <div class="sub-link" onclick="showPage('abr-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
-        <div class="sub-link" onclick="showPage('abr-fb')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook</div>
+        <div class="sub-link" onclick="showPage('abr-yt1')"><div class="sub-link-dot" style="background:var(--yt)"><button class="fav-btn" id="fav-abr-yt1" onclick="event.stopPropagation();toggleFav('abr-yt1')" title="Favoritar">☆</button></div>Myse Sistemas<button class="fav-btn" id="fav-abr-yt1" onclick="event.stopPropagation();toggleFav('abr-yt1')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('abr-yt2')"><div class="sub-link-dot" style="background:var(--yt)"><button class="fav-btn" id="fav-abr-yt2" onclick="event.stopPropagation();toggleFav('abr-yt2')" title="Favoritar">☆</button></div>Myse Cortes2<button class="fav-btn" id="fav-abr-yt2" onclick="event.stopPropagation();toggleFav('abr-yt2')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('abr-ig')"><div class="sub-link-dot" style="background:var(--ig)"><button class="fav-btn" id="fav-abr-ig" onclick="event.stopPropagation();toggleFav('abr-ig')" title="Favoritar">☆</button></div>Instagram<button class="fav-btn" id="fav-abr-ig" onclick="event.stopPropagation();toggleFav('abr-ig')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('abr-fb')"><div class="sub-link-dot" style="background:var(--fb)"><button class="fav-btn" id="fav-abr-fb" onclick="event.stopPropagation();toggleFav('abr-fb')" title="Favoritar">☆</button></div>Facebook<button class="fav-btn" id="fav-abr-fb" onclick="event.stopPropagation();toggleFav('abr-fb')" title="Favoritar">☆</button></div>
       </div>
     </div>
     <div class="month-item has-data open" id="nav-mai">
@@ -346,13 +1374,13 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
         <span class="month-chevron">›</span>
       </div>
       <div class="month-sub">
-        <div class="sub-link" onclick="showPage('mai-yt1')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Sistemas</div>
-        <div class="sub-link" onclick="showPage('mai-yt2')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Cortes2</div>
-        <div class="sub-link" onclick="showPage('mai-yt3')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse_systems</div>
-        <div class="sub-link" onclick="showPage('mai-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
-        <div class="sub-link" id="link-mai-fb1" onclick="showPage('mai-fb1')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook Myse</div>
-        <div class="sub-link" onclick="showPage('mai-fb2')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook FazNota</div>
-        <div class="sub-link" onclick="showPage('mai-fb3')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook Foodi</div>
+        <div class="sub-link" onclick="showPage('mai-yt1')"><div class="sub-link-dot" style="background:var(--yt)"><button class="fav-btn" id="fav-mai-yt1" onclick="event.stopPropagation();toggleFav('mai-yt1')" title="Favoritar">☆</button></div>Myse Sistemas<button class="fav-btn" id="fav-mai-yt1" onclick="event.stopPropagation();toggleFav('mai-yt1')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('mai-yt2')"><div class="sub-link-dot" style="background:var(--yt)"><button class="fav-btn" id="fav-mai-yt2" onclick="event.stopPropagation();toggleFav('mai-yt2')" title="Favoritar">☆</button></div>Myse Cortes2<button class="fav-btn" id="fav-mai-yt2" onclick="event.stopPropagation();toggleFav('mai-yt2')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('mai-yt3')"><div class="sub-link-dot" style="background:var(--yt)"><button class="fav-btn" id="fav-mai-yt3" onclick="event.stopPropagation();toggleFav('mai-yt3')" title="Favoritar">☆</button></div>Myse_systems<button class="fav-btn" id="fav-mai-yt3" onclick="event.stopPropagation();toggleFav('mai-yt3')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('mai-ig')"><div class="sub-link-dot" style="background:var(--ig)"><button class="fav-btn" id="fav-mai-ig" onclick="event.stopPropagation();toggleFav('mai-ig')" title="Favoritar">☆</button></div>Instagram<button class="fav-btn" id="fav-mai-ig" onclick="event.stopPropagation();toggleFav('mai-ig')" title="Favoritar">☆</button></div>
+        <div class="sub-link" id="link-mai-fb1" onclick="showPage('mai-fb1')"><div class="sub-link-dot" style="background:var(--fb)"><button class="fav-btn" id="fav-mai-fb1" onclick="event.stopPropagation();toggleFav('mai-fb1')" title="Favoritar">☆</button></div>Facebook Myse</div>
+        <div class="sub-link" onclick="showPage('mai-fb2')"><div class="sub-link-dot" style="background:var(--fb)"><button class="fav-btn" id="fav-mai-fb2" onclick="event.stopPropagation();toggleFav('mai-fb2')" title="Favoritar">☆</button></div>Facebook FazNota<button class="fav-btn" id="fav-mai-fb2" onclick="event.stopPropagation();toggleFav('mai-fb2')" title="Favoritar">☆</button></div>
+        <div class="sub-link" onclick="showPage('mai-fb3')"><div class="sub-link-dot" style="background:var(--fb)"><button class="fav-btn" id="fav-mai-fb3" onclick="event.stopPropagation();toggleFav('mai-fb3')" title="Favoritar">☆</button></div>Facebook Foodi<button class="fav-btn" id="fav-mai-fb3" onclick="event.stopPropagation();toggleFav('mai-fb3')" title="Favoritar">☆</button></div>
       </div>
     </div>
     <div class="sidebar-section">Análise</div>
@@ -362,6 +1390,7 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
     </div>
     <div class="sidebar-bottom">
       <button id="dark-btn" type="button" onclick="toggleDark()">🌙 Modo Escuro</button>
+      <button type="button" onclick="openAdmin()" style="width:100%;background:#fff0f0;border:1px solid rgba(232,25,44,0.2);color:#E8192C;font-size:11px;font-weight:600;font-family:'Sora',sans-serif;padding:7px;border-radius:8px;cursor:pointer;margin-bottom:8px;transition:all 0.2s;" onclick="openAdmin()">⚙️ Atualizar Dados</button>
       <div class="updated">Por <strong style="color:var(--red);">RIKELME</strong></div>
       <div class="updated" style="margin-top:2px;">Atualizado 01/06/2026</div>
     </div>
@@ -371,6 +1400,7 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
   <div class="main">
     <div class="topbar">
       <div class="topbar-left">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
         <img src="data:image/jpeg;base64,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cVeCGK3LeiDD5qtypVbj91U/HCKRcImETCJhEwiYRMImETCKNvUV5WtrOj26EZRZpBG8DOSEWaGVJU5MFcqjcDGxCsQrNsN9strmkatMtG+hGsagg766GIPRZX2WxluD4nRvHgljS4OA3LXNc0wJEkTLZI1AUBeTv0761d0n1idbrrxYVIAyVAw77Su201lQf5SsCMOzI4JXLOnYz/3TP7o24bnd30BBggrZmPd6VxcNdRwymaDTI8RxBqR+60S2kesuI+yQdVcGtWVFVEVURAFVVAVVVRsqqo2AUAAAAbAZKAQtFPe57i5xJJMkkySTxJ4zxX656vlQf418qdQva1Tu9DTacenzI8Wq17dptXs0wvKbS7Fb2cNdalmVnEgkvW41ULIkCzFJICLg9Y9NerS6NS0np6QthUntS60lu/Hc0rW7tixauX9JhSoHmUTWHaMSX6DOpZJAyEoSKZx4As/xqfU2aB400yLT6AJbrLPJansX2mIj4pDP0tMA6bOSYZCUXinIihTy39M2pw6SunWauiVrDfwuG7qVO3ZtT6nWjvQWNZ9xHPplQRPfhjlRUDzjlO28kfTVmIvT0D0v6hVnjsLZrTums6hqIjkknijXSnfXbunaev4c46q6rqsU9mdEi3jjjX8f2ddZCL1PDfp51GlNpd2K5HbvQnVJtT91LJHWmtanVeSZqgSCWZIW1KOoBHLIRDTTivIwxxsRdH5FeUtuhb1K7YjpUU1AViNJ0yzYtUIbMT2ns6gr2K9JVs3/AHEYmWClAp6CMz2HcspFM2ETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwi//Z" alt="Myse">
         <div>
           <div id="topbar-title">Selecione um mês</div>
@@ -379,6 +1409,8 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
       </div>
       <div class="topbar-right">
         <button id="share-btn" type="button" onclick="shareLink()">🔗 Compartilhar</button>
+        <button type="button" onclick="window.print()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:11px;font-weight:600;font-family:'Sora',sans-serif;padding:5px 12px;border-radius:20px;cursor:pointer;">🖨️ Imprimir</button>
+        <button type="button" onclick="exportCSV()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:11px;font-weight:600;font-family:'Sora',sans-serif;padding:5px 12px;border-radius:20px;cursor:pointer;">📥 Exportar CSV</button>
         <div id="topbar-badge">2026</div>
       </div>
     </div>
@@ -426,8 +1458,14 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
       <div class="chart-box"><div class="chart-box-label">Views por semana</div><div class="chart-wrap"><canvas id="c-fev-yt1-week"></canvas></div></div>
       <div class="slabel">destaques de conteúdo</div>
       <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Emita nota fiscal pela maquininha do cartão</div><div class="best-stat">581 views · 137,0% retenção</div></div>
+      <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-fev-yt1" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('fev-yt1')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-fev-yt1">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+      </div>
     </div>
-
     <!-- ══════ FEV — IG ══════ -->
     <div class="page-section" id="page-fev-ig">
       <div class="no-data-state-wrap"><div class="icon">📸</div><p>Dados de Instagram para fevereiro não disponíveis.<br>Postagens regulares iniciaram em maio/2026.</p></div>
@@ -480,8 +1518,14 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
       <div class="slabel">destaques de conteúdo</div>
       <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Desistir não é uma opção #estrategia #myse</div><div class="best-stat">1.482 views</div></div>
       <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">CHEGA DE ANOTAR VENDAS NO PAPEL E NA CANETA!</div><div class="best-stat">602,8% de retenção — as pessoas assistiram várias vezes!</div></div>
+      <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mar-yt1" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mar-yt1')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mar-yt1">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+      </div>
     </div>
-
     <!-- ══════ MAR — YT2 ══════ -->
     <div class="page-section" id="page-mar-yt2">
             <div class="ai-box" id="ai-mar-yt2">
@@ -525,8 +1569,14 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
       <div class="slabel">destaques de conteúdo</div>
       <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Não perca o momento #estrategia #myse</div><div class="best-stat">2.308 views</div></div>
       <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">Diga adeus aos computadores #faznota #myse</div><div class="best-stat">81,5% de retenção</div></div>
+      <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mar-yt2" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mar-yt2')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mar-yt2">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+      </div>
     </div>
-
     <div class="page-section" id="page-mar-ig"><div class="no-data-state">
         <div class="no-data-icon">📸</div>
         <div class="no-data-title">Sem dados registrados</div>
@@ -584,8 +1634,14 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
       <div class="slabel">destaques de conteúdo</div>
       <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">O Fim de uma Era: O que eu vi no litoral me assustou!</div><div class="best-stat">877 views</div></div>
       <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">VOCÊ PRECISA VER ISSO ANTES DE VENDER DE NOVO</div><div class="best-stat">186,2% de retenção</div></div>
+      <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-abr-yt1" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('abr-yt1')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-abr-yt1">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+      </div>
     </div>
-
     <!-- ══════ ABR — YT2 ══════ -->
     <div class="page-section" id="page-abr-yt2">
             <div class="ai-box" id="ai-abr-yt2">
@@ -626,8 +1682,14 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
       <div class="slabel">destaques de conteúdo</div>
       <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Distração à La Carte?😂 #shorts #foodi #myse</div><div class="best-stat">1.544 views</div></div>
       <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">O GOLPE DO BACON🐷 #empreendedorismo</div><div class="best-stat">101,19% de retenção</div></div>
+      <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-abr-yt2" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('abr-yt2')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-abr-yt2">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+      </div>
     </div>
-
     <div class="page-section" id="page-abr-ig"><div class="no-data-state">
         <div class="no-data-icon">📸</div>
         <div class="no-data-title">Sem dados registrados</div>
@@ -643,7 +1705,20 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
 
     <!-- ══════ MAI — YT1 ══════ -->
     <div class="page-section" id="page-mai-yt1">
-            <div class="ai-box" id="ai-mai-yt1">
+            <div class="score-wrap">
+        <div class="score-circle excellent">8.2</div>
+        <div class="score-info">
+          <div class="score-title">Score de Performance — Maio 2026</div>
+          <div class="score-desc">Canal em recuperacao forte apos queda em abril. 42 videos publicados e CTR de 2,77% indicam boa saude.</div>
+          <div class="score-breakdown">
+            <span class="score-tag pos">Views +52% ↑</span>
+            <span class="score-tag pos">Consistencia ↑</span>
+            <span class="score-tag neg">CTR caiu vs abr</span>
+            <span class="score-tag neu">Sem monetizacao</span>
+          </div>
+        </div>
+      </div>
+      <div class="ai-box" id="ai-mai-yt1">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-yt1">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-yt1"></div>
@@ -683,11 +1758,30 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
       <div class="slabel">destaques de conteúdo</div>
       <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Eu ignorei ele de propósito #empreendedorismo</div><div class="best-stat">939 views</div></div>
       <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">Emita nota fiscal pela maquininha do cartão</div><div class="best-stat">128,3% de retenção</div></div>
+      <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mai-yt1" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-yt1')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mai-yt1">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+      </div>
     </div>
-
     <!-- ══════ MAI — YT2 ══════ -->
     <div class="page-section" id="page-mai-yt2">
-            <div class="ai-box" id="ai-mai-yt2">
+            <div class="score-wrap">
+        <div class="score-circle good">7.4</div>
+        <div class="score-info">
+          <div class="score-title">Score de Performance — Maio 2026</div>
+          <div class="score-desc">Canal em crescimento leve (+14,7%). Publico muito bem definido: 95% masculino, 25-44 anos. Base solida para crescimento.</div>
+          <div class="score-breakdown">
+            <span class="score-tag pos">Publico definido ↑</span>
+            <span class="score-tag pos">57 videos ↑</span>
+            <span class="score-tag neg">Inscritos +4 apenas</span>
+            <span class="score-tag neu">Recuperando</span>
+          </div>
+        </div>
+      </div>
+      <div class="ai-box" id="ai-mai-yt2">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Cortes2 · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-yt2">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-yt2"></div>
@@ -728,8 +1822,14 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
       <div class="slabel">destaques de conteúdo</div>
       <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">O seu funcionário mudou de vida de repente? Cuidado!</div><div class="best-stat">1.052 views</div></div>
       <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">ESTÃO TE ROUBANDO? 💸 A Myse te ajuda a descobrir.</div><div class="best-stat">249,8% de retenção</div></div>
+      <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mai-yt2" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-yt2')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mai-yt2">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+      </div>
     </div>
-
     <!-- MAI YT3, IG, FB (resumidos) -->
     <div class="page-section" id="page-mai-yt3">
             <div class="ai-box" id="ai-mai-yt3">
@@ -915,8 +2015,38 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
           <div class="metric-row"><span class="metric-name">Curitiba, PR</span><span class="metric-val">2,6%</span></div>
         </div>
       </div>
-    </div>
-
+      <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mai-yt3" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-yt3')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mai-yt3">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+        <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mai-ig" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-ig')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mai-ig">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+        <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mai-fb1" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-fb1')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mai-fb1">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+        <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mai-fb2" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-fb2')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mai-fb2">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+        <div class="notes-wrap" style="margin-top:4px;">
+        <div class="notes-label">📝 Minhas Anotacoes</div>
+        <textarea class="notes-textarea" id="notes-mai-fb3" placeholder="Adicione observacoes sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-fb3')">Salvar</button>
+        <div class="notes-saved" id="notes-saved-mai-fb3">✅ Salvo!</div>
+        <div style="clear:both;"></div>
+      </div>
+    </div>    </div>    </div>    </div>    </div>
     <!-- ══════ COMPARATIVO ══════ -->
     <div class="page-section" id="page-compare">
       <div class="summary-pill">📊 Compare a evolução dos canais ao longo dos meses. <strong>Março foi o pico</strong> do Myse Sistemas com 11.541 views. O Cortes2 começou forte mas estabilizou. Maio mostrou recuperação geral.</div>
@@ -983,17 +2113,130 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
         </div>
         <div style="font-size:11px;color:#bbb;font-family:'JetBrains Mono',monospace;">Atualizado em 01/06/2026</div>
       </div>
+
+
+    <!-- RANKING PAGE -->
+    <div class="page-section" id="page-ranking">
+      <div class="summary-pill">🏆 <strong>Ranking dos melhores videos</strong> de todos os canais e meses. Ordenado por visualizacoes.</div>
+      <div class="slabel">top videos — todos os meses</div>
+      <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+        <div style="background:var(--red);padding:10px 16px;display:flex;justify-content:space-between;">
+          <span style="color:#fff;font-size:12px;font-weight:600;">Video</span>
+          <span style="color:rgba(255,255,255,0.8);font-size:11px;">Canal · Mes · Views</span>
+        </div>
+        <div class="ranking-item"><div class="ranking-pos gold">1</div><div class="ranking-info"><div class="ranking-title">Nao perca o momento #estrategia #myse</div><div class="ranking-meta">Myse Cortes2 · Marco 2026</div></div><div class="ranking-views">13.817</div></div>
+        <div class="ranking-item"><div class="ranking-pos silver">2</div><div class="ranking-info"><div class="ranking-title">Desistir nao e uma opcao #estrategia #myse</div><div class="ranking-meta">Myse Sistemas · Marco 2026</div></div><div class="ranking-views">11.541</div></div>
+        <div class="ranking-item"><div class="ranking-pos bronze">3</div><div class="ranking-info"><div class="ranking-title">O seu funcionario mudou de vida de repente? Cuidado!</div><div class="ranking-meta">Myse Cortes2 · Maio 2026</div></div><div class="ranking-views">1.052</div></div>
+        <div class="ranking-item"><div class="ranking-pos other">4</div><div class="ranking-info"><div class="ranking-title">Eu ignorei ele de proposito #empreendedorismo</div><div class="ranking-meta">Myse Sistemas · Maio 2026</div></div><div class="ranking-views">939</div></div>
+        <div class="ranking-item"><div class="ranking-pos other">5</div><div class="ranking-info"><div class="ranking-title">O Fim de uma Era: O que eu vi no litoral me assustou!</div><div class="ranking-meta">Myse Sistemas · Abril 2026</div></div><div class="ranking-views">877</div></div>
+        <div class="ranking-item"><div class="ranking-pos other">6</div><div class="ranking-info"><div class="ranking-title">Distração a La Carte #shorts #foodi #myse</div><div class="ranking-meta">Myse Cortes2 · Abril 2026</div></div><div class="ranking-views">1.544</div></div>
+        <div class="ranking-item"><div class="ranking-pos other">7</div><div class="ranking-info"><div class="ranking-title">Emita nota fiscal pela maquininha do cartao</div><div class="ranking-meta">Myse Sistemas · Fevereiro 2026</div></div><div class="ranking-views">581</div></div>
+        <div class="ranking-item"><div class="ranking-pos other">8</div><div class="ranking-info"><div class="ranking-title">ESTAO TE ROUBANDO? A Myse te ajuda a descobrir.</div><div class="ranking-meta">Myse Cortes2 · Maio 2026</div></div><div class="ranking-views">249,8% ret.</div></div>
+      </div>
     </div>
 
-  </div>
-</div>
-</div>
+    <!-- METAS PAGE -->
+    <div class="page-section" id="page-metas">
+      <div class="summary-pill">🎯 <strong>Defina metas mensais</strong> para cada canal e acompanhe o percentual atingido. Os dados sao salvos automaticamente.</div>
+      <div class="slabel">definir metas — maio 2026</div>
+      <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px 20px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+        <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:12px;">Digite a meta de views para cada canal:</div>
+        <div class="meta-input-row"><label>Myse Sistemas (YT)</label><input type="number" id="meta-yt1" placeholder="ex: 8000" oninput="updateMetas()"></div>
+        <div class="meta-input-row"><label>Myse Cortes2 (YT)</label><input type="number" id="meta-yt2" placeholder="ex: 6000" oninput="updateMetas()"></div>
+        <div class="meta-input-row"><label>Instagram</label><input type="number" id="meta-ig" placeholder="ex: 20000" oninput="updateMetas()"></div>
+        <div class="meta-input-row"><label>Facebook Myse</label><input type="number" id="meta-fb1" placeholder="ex: 7000" oninput="updateMetas()"></div>
+        <div class="meta-input-row"><label>Facebook FazNota</label><input type="number" id="meta-fb2" placeholder="ex: 2000" oninput="updateMetas()"></div>
+        <div class="meta-input-row"><label>Facebook Foodi</label><input type="number" id="meta-fb3" placeholder="ex: 500" oninput="updateMetas()"></div>
+      </div>
+      <div class="slabel">resultado vs meta — maio 2026</div>
+      <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px 20px;box-shadow:0 1px 4px rgba(0,0,0,0.05);" id="metas-result">
+        <div style="color:#bbb;font-size:12px;text-align:center;padding:20px;">Define as metas acima para ver o resultado</div>
+      </div>
+    </div>
+
+    <!-- PAUTA IA PAGE -->
+    <div class="page-section" id="page-pauta">
+      <div class="summary-pill">💡 <strong>Sugestoes de pauta geradas por IA</strong> com base nos dados de melhor desempenho. Clique em gerar para receber novas ideias.</div>
+      <div class="slabel">sugestoes de pauta — proximos videos</div>
+      <div id="pauta-content" style="margin-bottom:12px;">
+        <div style="text-align:center;padding:30px;color:#bbb;font-size:13px;">Clique em <strong style="color:var(--red);">Gerar Pautas</strong> para receber sugestoes baseadas nos seus dados.</div>
+      </div>
+      <button onclick="gerarPautas()" id="pauta-btn" style="width:100%;padding:12px;background:linear-gradient(135deg,#E8192C,#c8101f);color:#fff;font-size:13px;font-weight:600;font-family:'Sora',sans-serif;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 16px rgba(232,25,44,0.3);transition:all 0.2s;">🤖 Gerar Sugestoes de Pauta com IA</button>
+    </div>
+
+    <!-- MAPA PAGE -->
+    <div class="page-section" id="page-mapa">
+      <div class="summary-pill">📍 <strong>Distribuicao geografica</strong> do publico com base nos dados de Facebook e YouTube de maio 2026.</div>
+      <div class="slabel">principais cidades — maio 2026</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+          <div style="font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">Facebook Myse</div>
+          <div class="meta-row"><span class="meta-label">Toledo, PR</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:43.7%"></div></div><span class="meta-pct over">43,7%</span></div>
+          <div class="meta-row"><span class="meta-label">Cascavel, PR</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:15.5%"></div></div><span class="meta-pct over">15,5%</span></div>
+          <div class="meta-row"><span class="meta-label">Rio de Janeiro, RJ</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:12.2%"></div></div><span class="meta-pct over">12,2%</span></div>
+          <div class="meta-row"><span class="meta-label">Sao Paulo, SP</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:9.6%"></div></div><span class="meta-pct over">9,6%</span></div>
+          <div class="meta-row"><span class="meta-label">Porto Alegre, RS</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:4.1%"></div></div><span class="meta-pct over">4,1%</span></div>
+        </div>
+        <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+          <div style="font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">Facebook Foodi</div>
+          <div class="meta-row"><span class="meta-label">Toledo, PR</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:63.8%"></div></div><span class="meta-pct over">63,8%</span></div>
+          <div class="meta-row"><span class="meta-label">Cascavel, PR</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:20%"></div></div><span class="meta-pct over">20,0%</span></div>
+          <div class="meta-row"><span class="meta-label">Foz do Iguacu, PR</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:6.7%"></div></div><span class="meta-pct over">6,7%</span></div>
+          <div class="meta-row"><span class="meta-label">Curitiba, PR</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:2.6%"></div></div><span class="meta-pct over">2,6%</span></div>
+        </div>
+      </div>
+      <div class="slabel">distribuicao por pais — youtube cortes2</div>
+      <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+        <div class="meta-row"><span class="meta-label">Brasil</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:83.1%"></div></div><span class="meta-pct over">83,1%</span></div>
+        <div class="meta-row"><span class="meta-label">Portugal</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:3%"></div></div><span class="meta-pct over">3,0%</span></div>
+        <div class="meta-row"><span class="meta-label">Angola</span><div class="meta-bar-wrap"><div class="meta-bar-fill over" style="width:1%"></div></div><span class="meta-pct over">1,0%</span></div>
+      </div>
+      <div class="slabel">destaque geografico</div>
+      <div class="insight-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">
+        <div style="background:#fff5f5;border:1px solid rgba(232,25,44,0.15);border-radius:10px;padding:14px;"><div style="font-size:20px;margin-bottom:6px;">🏙️</div><div style="font-size:13px;font-weight:600;">Toledo, PR domina</div><div style="font-size:11px;color:#888;margin-top:4px;">Aparece como cidade #1 em todas as paginas do Facebook — base local forte.</div></div>
+        <div style="background:#fff5f5;border:1px solid rgba(232,25,44,0.15);border-radius:10px;padding:14px;"><div style="font-size:20px;margin-bottom:6px;">🇧🇷</div><div style="font-size:13px;font-weight:600;">Brasil = +80% do alcance</div><div style="font-size:11px;color:#888;margin-top:4px;">Todos os canais tem Brasil como origem dominante, com destaque para o Parana.</div></div>
+        <div style="background:#fff5f5;border:1px solid rgba(232,25,44,0.15);border-radius:10px;padding:14px;"><div style="font-size:20px;margin-bottom:6px;">🇵🇹</div><div style="font-size:13px;font-weight:600;">Portugal presente</div><div style="font-size:11px;color:#888;margin-top:4px;">Portugal aparece em 2nd/3rd lugar no YouTube — audiencia lusofona crescendo.</div></div>
+      </div>
+    </div>
+
+    <!-- HISTORICO PAGE -->
+    <div class="page-section" id="page-historico">
+      <div class="summary-pill">📋 <strong>Historico de atualizacoes</strong> do dashboard. Registra quando e o que foi alterado.</div>
+      <div class="slabel">registro de alteracoes</div>
+      <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:16px 20px;box-shadow:0 1px 4px rgba(0,0,0,0.05);" id="history-list">
+        <div class="history-item">
+          <div class="history-dot"></div>
+          <div class="history-text"><strong>Dashboard criado</strong> — Site publicado com dados de fevereiro a maio de 2026.</div>
+          <div class="history-time">01/06/2026</div>
+        </div>
+        <div class="history-item">
+          <div class="history-dot" style="background:var(--blue)"></div>
+          <div class="history-text"><strong>IA assistente adicionada</strong> — Chat com acesso a todos os dados do dashboard.</div>
+          <div class="history-time">03/06/2026</div>
+        </div>
+        <div class="history-item">
+          <div class="history-dot" style="background:var(--amber)"></div>
+          <div class="history-text"><strong>Painel de edicao adicionado</strong> — Agora e possivel atualizar dados diretamente no site.</div>
+          <div class="history-time">03/06/2026</div>
+        </div>
+      </div>
+      <div class="slabel" style="margin-top:16px;">adicionar registro manual</div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <input type="text" id="history-input" placeholder="Descreva a alteracao feita..." style="flex:1;padding:10px 14px;border:1px solid #e0e0e0;border-radius:8px;font-size:12px;font-family:'Sora',sans-serif;outline:none;">
+        <button onclick="addHistory()" style="background:var(--red);border:none;color:#fff;font-size:12px;font-weight:600;font-family:'Sora',sans-serif;padding:10px 16px;border-radius:8px;cursor:pointer;white-space:nowrap;">+ Adicionar</button>
+      </div>
+    </div>
 
 <!-- HOME -->
       <div class="page-section active" id="page-home">
         <div class="home-inner">
           <img src="data:image/jpeg;base64,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cVeCGK3LeiDD5qtypVbj91U/HCKRcImETCJhEwiYRMImETCKNvUV5WtrOj26EZRZpBG8DOSEWaGVJU5MFcqjcDGxCsQrNsN9strmkatMtG+hGsagg766GIPRZX2WxluD4nRvHgljS4OA3LXNc0wJEkTLZI1AUBeTv0761d0n1idbrrxYVIAyVAw77Su201lQf5SsCMOzI4JXLOnYz/3TP7o24bnd30BBggrZmPd6VxcNdRwymaDTI8RxBqR+60S2kesuI+yQdVcGtWVFVEVURAFVVAVVVRsqqo2AUAAAAbAZKAQtFPe57i5xJJMkkySTxJ4zxX656vlQf418qdQva1Tu9DTacenzI8Wq17dptXs0wvKbS7Fb2cNdalmVnEgkvW41ULIkCzFJICLg9Y9NerS6NS0np6QthUntS60lu/Hc0rW7tixauX9JhSoHmUTWHaMSX6DOpZJAyEoSKZx4As/xqfU2aB400yLT6AJbrLPJansX2mIj4pDP0tMA6bOSYZCUXinIihTy39M2pw6SunWauiVrDfwuG7qVO3ZtT6nWjvQWNZ9xHPplQRPfhjlRUDzjlO28kfTVmIvT0D0v6hVnjsLZrTums6hqIjkknijXSnfXbunaev4c46q6rqsU9mdEi3jjjX8f2ddZCL1PDfp51GlNpd2K5HbvQnVJtT91LJHWmtanVeSZqgSCWZIW1KOoBHLIRDTTivIwxxsRdH5FeUtuhb1K7YjpUU1AViNJ0yzYtUIbMT2ns6gr2K9JVs3/AHEYmWClAp6CMz2HcspFM2ETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwi//Z" alt="Myse">
-          <div class="home-ai">
+          <div class="alert-banner" id="smart-alert">
+        <div class="alert-banner-icon">🚨</div>
+        <p id="smart-alert-text"></p>
+        <button class="alert-banner-close" onclick="document.getElementById('smart-alert').classList.remove('show')">x</button>
+      </div>
+      <div class="home-ai">
             <div class="home-ai-header">🤖 Resumo IA — Maio 2026</div>
             <div id="home-ai-text" class="loading"></div>
           </div>
@@ -1006,7 +2249,238 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
             <div class="home-card"><div class="home-card-num">3</div><div class="home-card-label">Plataformas</div></div>
           </div>
           <div class="home-updated">Atualizado em 01/06/2026</div>
+    </div>
 
+  </div>
+</div>
+</div>
+
+
+
+<!-- ADMIN PANEL -->
+<div id="admin-screen">
+  <div class="admin-topbar">
+    <div class="admin-topbar-title">⚙️ Painel de Atualização de Dados</div>
+    <div class="admin-topbar-right">
+      <button class="admin-close-btn" onclick="closeAdmin()">✕ Fechar</button>
+      <button class="admin-save-btn" onclick="saveAdminData()">💾 Salvar e Aplicar</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="admin-header-box">
+      <h2>Atualizar dados do Dashboard</h2>
+      <p>Selecione o mês e preencha os campos abaixo. Clique em <strong>Salvar e Aplicar</strong> para atualizar o site.</p>
+    </div>
+
+    <div style="max-width:1200px;margin:0 auto;">
+      <label style="font-size:11px;font-weight:600;color:#555;display:block;margin-bottom:6px;">Mês de referência</label>
+      <select class="admin-month-select" id="admin-month">
+        <option value="fev">Fevereiro 2026</option>
+        <option value="mar">Março 2026</option>
+        <option value="abr">Abril 2026</option>
+        <option value="mai" selected>Maio 2026</option>
+      </select>
+    </div>
+
+    <div class="admin-tabs" style="max-width:1200px;margin:0 auto 16px;">
+      <button class="admin-tab active" onclick="switchAdminTab('yt')">▶️ YouTube</button>
+      <button class="admin-tab" onclick="switchAdminTab('ig')">📸 Instagram</button>
+      <button class="admin-tab" onclick="switchAdminTab('fb')">📘 Facebook</button>
+    </div>
+
+    <!-- YOUTUBE TAB -->
+    <div class="admin-tab-content active" id="admin-tab-yt">
+      <div class="admin-grid">
+
+        <!-- Myse Sistemas -->
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div class="admin-card-icon" style="background:#ffecec;">▶️</div>
+            <div><h3>Myse Sistemas</h3><p>Canal principal</p></div>
+          </div>
+          <div class="admin-card-body">
+            <div class="admin-section-label">Visão Geral</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Visualizações</label><input type="number" id="yt1-views" placeholder="ex: 6732"></div>
+              <div class="admin-field"><label>Vídeos publicados</label><input type="number" id="yt1-videos" placeholder="ex: 42"></div>
+            </div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Inscritos novos</label><input type="number" id="yt1-subs-new" placeholder="ex: 10"></div>
+              <div class="admin-field"><label>Inscritos perdidos</label><input type="number" id="yt1-subs-lost" placeholder="ex: 2"></div>
+            </div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Tempo exibição (h)</label><input type="number" id="yt1-hours" placeholder="ex: 14.9" step="0.1"></div>
+              <div class="admin-field"><label>Impressões</label><input type="number" id="yt1-impressions" placeholder="ex: 19353"></div>
+            </div>
+            <div class="admin-field"><label>CTR (%)</label><input type="number" id="yt1-ctr" placeholder="ex: 2.77" step="0.01"></div>
+            <div class="admin-section-label">Engajamento</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Curtidas</label><input type="number" id="yt1-likes" placeholder="ex: 149"></div>
+              <div class="admin-field"><label>Comentários</label><input type="number" id="yt1-comments" placeholder="ex: 5"></div>
+            </div>
+            <div class="admin-field"><label>Compartilhamentos</label><input type="number" id="yt1-shares" placeholder="ex: 53"></div>
+            <div class="admin-section-label">Semanas (views)</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Semana 1</label><input type="number" id="yt1-w1" placeholder="ex: 1645"></div>
+              <div class="admin-field"><label>Semana 2</label><input type="number" id="yt1-w2" placeholder="ex: 938"></div>
+            </div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Semana 3</label><input type="number" id="yt1-w3" placeholder="ex: 3018"></div>
+              <div class="admin-field"><label>Semana 4</label><input type="number" id="yt1-w4" placeholder="ex: 941"></div>
+            </div>
+            <div class="admin-section-label">Destaques</div>
+            <div class="admin-field"><label>Vídeo mais visto (título)</label><input type="text" id="yt1-top-title" placeholder="ex: Título do vídeo"></div>
+            <div class="admin-field"><label>Vídeo mais visto (views)</label><input type="number" id="yt1-top-views" placeholder="ex: 939"></div>
+          </div>
+        </div>
+
+        <!-- Myse Cortes2 -->
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div class="admin-card-icon" style="background:#ffecec;">▶️</div>
+            <div><h3>Myse Cortes2</h3><p>Canal de cortes</p></div>
+          </div>
+          <div class="admin-card-body">
+            <div class="admin-section-label">Visão Geral</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Visualizações</label><input type="number" id="yt2-views" placeholder="ex: 5511"></div>
+              <div class="admin-field"><label>Vídeos publicados</label><input type="number" id="yt2-videos" placeholder="ex: 57"></div>
+            </div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Inscritos novos</label><input type="number" id="yt2-subs-new" placeholder="ex: 6"></div>
+              <div class="admin-field"><label>Inscritos perdidos</label><input type="number" id="yt2-subs-lost" placeholder="ex: 2"></div>
+            </div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Tempo exibição (h)</label><input type="number" id="yt2-hours" placeholder="ex: 17.2" step="0.1"></div>
+              <div class="admin-field"><label>CTR (%)</label><input type="number" id="yt2-ctr" placeholder="ex: 2.25" step="0.01"></div>
+            </div>
+            <div class="admin-section-label">Engajamento</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Curtidas</label><input type="number" id="yt2-likes" placeholder="ex: 87"></div>
+              <div class="admin-field"><label>Compartilhamentos</label><input type="number" id="yt2-shares" placeholder="ex: 4"></div>
+            </div>
+            <div class="admin-section-label">Semanas (views)</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Semana 1</label><input type="number" id="yt2-w1" placeholder="ex: 709"></div>
+              <div class="admin-field"><label>Semana 2</label><input type="number" id="yt2-w2" placeholder="ex: 2094"></div>
+            </div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Semana 3</label><input type="number" id="yt2-w3" placeholder="ex: 1164"></div>
+              <div class="admin-field"><label>Semana 4</label><input type="number" id="yt2-w4" placeholder="ex: 1508"></div>
+            </div>
+            <div class="admin-section-label">Destaques</div>
+            <div class="admin-field"><label>Vídeo mais visto (título)</label><input type="text" id="yt2-top-title" placeholder="ex: Título do vídeo"></div>
+            <div class="admin-field"><label>Vídeo mais visto (views)</label><input type="number" id="yt2-top-views" placeholder="ex: 1052"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- INSTAGRAM TAB -->
+    <div class="admin-tab-content" id="admin-tab-ig">
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div class="admin-card-icon" style="background:#fdf0f7;">📸</div>
+            <div><h3>@mysesistemas</h3><p>Instagram</p></div>
+          </div>
+          <div class="admin-card-body">
+            <div class="admin-section-label">Visão Geral</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Visualizações</label><input type="number" id="ig-views" placeholder="ex: 18434"></div>
+              <div class="admin-field"><label>Contas alcançadas</label><input type="number" id="ig-reach" placeholder="ex: 2077"></div>
+            </div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Seguidores total</label><input type="number" id="ig-followers" placeholder="ex: 362"></div>
+              <div class="admin-field"><label>Interações</label><input type="number" id="ig-interactions" placeholder="ex: 93"></div>
+            </div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Visitas ao perfil</label><input type="number" id="ig-profile-visits" placeholder="ex: 88"></div>
+              <div class="admin-field"><label>Cliques em links</label><input type="number" id="ig-link-clicks" placeholder="ex: 9"></div>
+            </div>
+            <div class="admin-section-label">Distribuição</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Views Reels (%)</label><input type="number" id="ig-reels-pct" placeholder="ex: 93.5" step="0.1"></div>
+              <div class="admin-field"><label>Não seguidores (%)</label><input type="number" id="ig-non-followers-pct" placeholder="ex: 96.2" step="0.1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FACEBOOK TAB -->
+    <div class="admin-tab-content" id="admin-tab-fb">
+      <div class="admin-grid">
+
+        <!-- Facebook Myse -->
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div class="admin-card-icon" style="background:#eef3ff;font-size:18px;font-weight:700;color:#1a55c0;">f</div>
+            <div><h3>Facebook Myse</h3><p>Página principal</p></div>
+          </div>
+          <div class="admin-card-body">
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Visualizações</label><input type="number" id="fb1-views" placeholder="ex: 5736"></div>
+              <div class="admin-field"><label>Seguidores total</label><input type="number" id="fb1-followers" placeholder="ex: 899"></div>
+            </div>
+            <div class="admin-section-label">Engajamento</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Reações</label><input type="number" id="fb1-reactions" placeholder="ex: 26"></div>
+              <div class="admin-field"><label>Comentários</label><input type="number" id="fb1-comments" placeholder="ex: 2"></div>
+            </div>
+            <div class="admin-field"><label>Compartilhamentos</label><input type="number" id="fb1-shares" placeholder="ex: 18"></div>
+          </div>
+        </div>
+
+        <!-- Facebook FazNota -->
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div class="admin-card-icon" style="background:#eef3ff;font-size:18px;font-weight:700;color:#1a55c0;">f</div>
+            <div><h3>Facebook FazNota</h3><p>Página FazNota</p></div>
+          </div>
+          <div class="admin-card-body">
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Visualizações</label><input type="number" id="fb2-views" placeholder="ex: 1105"></div>
+              <div class="admin-field"><label>Seguidores total</label><input type="number" id="fb2-followers" placeholder="ex: 304"></div>
+            </div>
+            <div class="admin-section-label">Engajamento</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Reações</label><input type="number" id="fb2-reactions" placeholder="ex: 10"></div>
+              <div class="admin-field"><label>Compartilhamentos</label><input type="number" id="fb2-shares" placeholder="ex: 11"></div>
+            </div>
+            <div class="admin-field"><label>Views 3 segundos</label><input type="number" id="fb2-views3s" placeholder="ex: 470"></div>
+          </div>
+        </div>
+
+        <!-- Facebook Foodi -->
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div class="admin-card-icon" style="background:#eef3ff;font-size:18px;font-weight:700;color:#1a55c0;">f</div>
+            <div><h3>Facebook Foodi</h3><p>Página Foodi</p></div>
+          </div>
+          <div class="admin-card-body">
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Visualizações</label><input type="number" id="fb3-views" placeholder="ex: 381"></div>
+              <div class="admin-field"><label>Seguidores total</label><input type="number" id="fb3-followers" placeholder="ex: 5440"></div>
+            </div>
+            <div class="admin-section-label">Engajamento</div>
+            <div class="admin-field-row">
+              <div class="admin-field"><label>Reações</label><input type="number" id="fb3-reactions" placeholder="ex: 4"></div>
+              <div class="admin-field"><label>Compartilhamentos</label><input type="number" id="fb3-shares" placeholder="ex: 12"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="max-width:1200px;margin:16px auto 0;">
+      <div class="admin-success" id="admin-success">✅ Dados salvos e aplicados com sucesso!</div>
+    </div>
+
+  </div>
+</div>
 
 <!-- EXEC SUMMARY -->
 <button class="exec-trigger" onclick="openExec()">⚡ Resumo Executivo</button>
@@ -1035,6 +2509,67 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
   <div class="glossary-item"><div class="glossary-term">Inscritos líquidos</div><div class="glossary-def">Novos inscritos menos os que cancelaram.</div></div>
   <div class="glossary-item"><div class="glossary-term">Shorts Feed</div><div class="glossary-def">Pessoas que encontraram o vídeo rolando os Shorts.</div></div>
 </div>
+<!-- WELCOME SCREEN -->
+<div id="welcome-screen" style="display:none;">
+  <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAqRXhpZgAASUkqAAgAAAABADEBAgAHAAAAGgAAAAAAAABQaWNhc2EAAP/bAIQAAwICCAgICAgICAgICAgKCAgICAgICAgICAgICAgICAgICAgJCAgICAgICAgICggICAgJCQoKCAwPCggNCAgKCAEDBAQGBQYKBgYKDQoKCg0LDQ4NDgoNDhALDg0OCg0QDQ4KEA4LDgoPCg4LDQ4KDQsNDhAPDQ0PDg4PDQ8NDQ0N/8AAEQgAoACgAwERAAIRAQMRAf/EAB0AAQADAQEAAwEAAAAAAAAAAAAHCAkGBQECAwT/xAA3EAACAgEDAgUCBAQEBwAAAAABAgMEAAUREhMhBgcIFCIJMSMyQVEVQmFxJDNigRYlNENSgpH/xAAdAQEAAQUBAQEAAAAAAAAAAAAABQMEBgcIAQIJ/8QAPxEAAQMCBAMFBQUGBQUAAAAAAQACEQMEBRIhMUFRYQYHEyJxFDKBkaFCQ1KxwSNicpKi8BXD0dLhJDNjgsL/2gAMAwEAAhEDEQA/ANU8ImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhFmz62PN68viGzXq3rtaKrDVhKV7c8EbSNF7ln4QyKpbjYRCxG/x2/QZj90c9Uw53lgQHOEaTwIn3guse77ArR2C069xQpVHVX1HAvpMcQ0OyAS5pIEsJAHPqvC8O+rjU6ukRabSntzalZnlksXLDSXJ0DssUFWks5mJd441YtxKpzIRTI7vF8sqvY3I0nWSSSXH0Ezyk/QayJG67D2FziT767ZTZbUmNDKTA2m0wC51SoW5IDS4gagmPMcoAdDHi27qHXH8Qkv+6TZx757QsJv3Df4giVd9tw3bf8A2ym06cfjM/XX0lZ/Y07Lwf8Aom0fCdI/ZNp5D08vlMcQp/8AIT1uXNLq3K91pdQAi56d1pGd0scwphlmblIaxRjL8mYp0yi/5iBbijXfSBHvcgTsfXeOPThwA1l2l7vbbE7ijWtA23l0VsrQAWQTmawQM8jLoBOYOOxJirzO8zNe1Jfd6jLfNWweMXwsV9NIbkyxwqoWs/bcBiZJXUDk7kb5bio55zOJPXUN56fZ9NzG5KzPB8IwbDXezWLKPi09XeZj6oiAS4mXt6gBrQToAv18jfP69oluvLHZmNJXVbVRpHkgeszDqlIS3FJkTd45UCsGAB5Izo/0KxpHPOg1PIgTOnpy1kDhovjtF2ZtMatqlN9NorEEsqBoDg8A5ZfEuaTo9rpEa6EAiRvWF4m1Sh4guxxalqENeYQWq8cV+1HGsc0Sq4VElVUHuI59go222/sPbhh8Z4LncCAHuEAgcAQNwdlivYSzw6/wWjUqW1F9RhfTeXUKZJLXEiXFpJ8jmalTx9O3zFsXK2pwWrNizLBPBMr2ZpZ3WKxEyBVeVnYKHrOeIOwJ32+Xe9sDGZkkxB1JMTI3M/hK1t3pYVRs7i2rW9NlJlRj2kMY1oLmOBktaAJioNenRdz63PONtK0cxwSmK7qDe2rsjcZY4wA1qdCCrrwi2iEid0kmhOXF5ULWZRu4xPIcddI5AjYkLHe73ARiuJipWbmo24zvBEhx2Yw6EHM7Ug7tY4KiPld4i1jUr0NU6zqkUJ5TW7B1G6Fq0oFMtuwzGRlXpwq3AuOLSGNT+fIMUi4hoc8T/wCR+g4nc7DbTeBxXR+M2mF4dZvuPY7d79G02ezUpqVXnKxgGUE5nEZo1ygngup85fWbqeoM0NGebTtNT4QJDI6W5Yk2CSWrQYzdRwvJo4pEQBuDGcgyNdVKzquklreQJB6SdHA8xpxBndQ+A9gcPw9oq3bG3Fy7Vxc0FjXGZDKUZYEwC4EyJGT3RwVPyb8QXI1vpp+qWUYCSOzxneSRSOSvFybrSKwO6tGrBv0JzxrHkaAx6H+z6rJamPYLZvNk64t6ZBgsloDTtDoGVpHEOIjjCuD9PvS9V/5nLfnv9KFoacVS5JYPTnCdeZuhY7wsIpawBULyDtuOynLqxa6XOOaNNDm31nQ7cNuMzstFd51bDh7NTsmUczw+o6pTazzNJyNGdnv+Zr5mYIEcVy3qS9ec3Wlo6C6okZ4S6nxSQyOp2daaOGj6Q24+5dX6nyMaqBHNIrXTnEtp6DUTGp9OUHYkGeAiCZrsn3bUvDbd4wCS4S2hJblBGhqOBDpO+QERpmJMsFaofCHiLWomsiHV9ThHJus5szxsVLBhCZG4ysrKy8IAxU/HiOwy0Y15MjMepk78ieHotsuvsEwWoKGe2tnmBlAY0iYjNAloIIM1Ikayvjy98+NZ0ecNWuWF6RKPTtPLLWPFtmilrSN+GwK8C0fSmT5AMvcZ4yo5pzNJ9OGk6Rw6xB0TFOzeFYvSIr0WHPBFWmGteJGjm1APMDMgOzNOhIOi1Z8q/MKLVdOqahCOKWow/AkMY5ASksRYbAmKVXjJ2G5U9hk9SqCowPGk/Q8R8DouL8ZwuphV7VsqurqTomIzDQtdHDO0gj1XV5VUMmETCLG3zx8Sm5rOq2SQRJcshCPsYopWhh/ff8GNNz+p/b7ZjRJc5zjxc75SQPoAu8eztoLTCrWgBGWjTJ/icA939Tirv+gTyOiq0F1ieMNcvcvbsyjeCmCVUJvvs1kqZmcbFozCvbi3KSs6QjxSNTIHQfX3on0jkuee8ztFUur04ZSdFGhGcA+/U3M8/DnKBwcHHiIjL6l1mI3tKQceste00m23PpPNEIeX68eaT8d+2/P+uUb0HxGkbQZ+bY+UFZf3SMqC0u3GchqUwOWYNfmjrBZPwUWejbyWj1nVwLKCSlRT3NlGG6TMW4V679x8ZHDSMCrK8cUiEfiZQo0hVfkdqAJOvyBHJ2vqAQd1mXb3tA/B8MPgOy165yMIOrBEveNN2iGjUEOeHDZXz9WrwJ4a1bqqnT9vwRSo4iZpI0rcR9gyzmIpt+VgpG2wyVu4FF3DgPUkAfWIXNvYgVn49aeETm8SSQdcoDi+TyLA7NzErKXQNBa1Yr1VOzWpoaynbfZp5UiB2/XYvkDUAc3K7Z3l/m0/VdoXNyLWjUuHaikx7z/6NLv0VxvqV+EOM2lX1Ts8c9KVx+hiZZ66Hvv3Elojsdtj+4ySvGw9rtNQQeemo/Ny0R3S32aldWbjs5lVo/iBY8/SnK8H6bniDhq1+r+limJt/wDVVsIoG39VtMf9jlO0cBVji5p/pI/3KS72LXPh1C4406xb8KjCZ+dIfNcF61PNb+J65Okbb1tO5UYfvxMiN/i5ACB3acGLcbhkhjYHZspVn+JULuA8o+G/pJ0P8IWSd3+C/wCGYSx7xFS4iq7o0jyN+DfN0LyDspr9MfpulPhnVbXAC/rdOxBT57ApUaNhCvIjdBcl2lY7lTGK52+JyrToGpQeRu9pDeUQY4keY6yOEclr/tf2spjHrW3k+BZVqb6kcagcMxjj4LfK397OOKo5bqMpeORWR1LRyRupSSN1JV0dWAZHQgqysAVIIIyxIFRpHAyP0I6EbHkV0Sx4Ia9hDgQHAgyHA6ggjQg7gjcLQvyL9f1KyIquroKFgBUFsbGhKQFUM5/PULEn4yB4VAJM67hRLUrwAAVdOvDj/Ltx06rl7tH3ZXdsXXGGnx6ep8P7xu5gDatHNsOM+4d13Xrb81H07QpPbuVm1B0pRSIe6Ryo8k8isCCN4I3RXU7q7oR9txUvKmWnlH2jHHbUnUbaAweaxzu9wZuI4u3xhLLdpquaRuWloa0jj53AkHcAhZp+B56aXKz30mkpJIr2Yq4QyyxJ8ukgd4k2kYKj/iIRGXIPILkPtGkjiBExyE6a7bjTiutcRbdPtqjbNzW13NIY585WuOmYwHHyiS3Q+YCdJV5dS+pDpkUPClpd0lFCxRymrWhUKNlXeGWyURQAAFiOwGwAyQF/pDaZHKS0D6F0fJc60u6i/q1M11dUgCZc5viPcZ3MObTknq5Ub8WeI5tQu2LToDYuzvKY4UOxknfdYokG7MdyEUfJ3O25ZmJNi9+7j/cnl8YA/MroqytKWH2lO3Yf2dBgbmcfstGrnO2HM7AcIAWrfph8vptL0LT6VgbTokksydt45LM0tlojsSCYjN0iQSCVJB2OTVrT8OkGnQ6mORcSY+Eri3tfilLFMYuLqhrTc5rWn8QY1rA7h7+XMJHFSll2sOTCLnfMXxQKOn3rh3IqVrFjYbbnowvIAN9huSuw3I7kZSqvFNjnnYAn5KUwqzN7e0LUb1alNnpmcBPwnVYqJEeIVQS2wAAG5LHsAAPuSewA+5zGjLGcXFo+Jgfqv0CJBdJ0G/oP0gLbLwR4bWlSqU0GyVa8Fdf17QxLGO/6n4/f9cyamwMYGDYAD5L8+cQu3Xl1VuX71XvefVzi79Vmj66/E3ufElpP0pw1ainfffaP3Tf22e067fup/fIOuQ6s4jcQ35Cf/orrbu4tPZ8CpO41n1ah6a+GPmKYPxVifpseGOGm6hcK7NZtiFWP88VWFCu3+kS2J1/uGy9sWnzOI4gDqAJ+hcVqzvZvM9/b2wMinSLiOTqjjPxLWMPpC9z6ifiYw6FHXG29y5BG3f8A7cKyWiR+/wCJDEP/AG/pnt8fI1pEy4fCJdPzAUd3WWgrYu6sfuaT3D1cW04+T3H4KnvpA8Me78SaWhTkkMklt/2T20Mksbn+1gQgfsxB/TLGiCajQOevoAT+cLevbq89lwK5cDBe1tMdc7mgj4szT0V3PXr4R914dnlClnozV7abfcAP7eY/1VYLErkH/wAd/uBkhfMmmHASWkH5+Un4BxXPfdrfezY2ymTDa7KlM/LO0epexoHr1Wfnkr5qyaNeN2Ibv7a7AoI3HUmrv7csNxui2lgZxv8AkDfbtkaxxYcw3g/l/rC6c7QYLTxm0FpU0HiUXnWPK14zxvqaZfl6wv6fT/5TvrerVqJLGJiZ7sm55LViKmdi24bnMzLArjciSVW7gHPhlPORSHHrrA3MyD0nmQVR7T403BcNqXYgOEMpCNC905RERDAC4j8LSOIWvdeOOJY4l4RqAI4kGyjZF7Ii9vyovZR9gP6Zkmg0XDbi+qXVHS4nVx33O5PUnc8VD3nd6S9J1svNJGat5h/1tbZZGIAC+4jI6dgAKq7yDqBAFWSMbbWlW1ZUObY8xx23Gx29Y2IWddnu22JYKBSpu8WgPun6gbk5Hb05knymJ1LSswfMLwXJp163QldJJKkrws8f5H47FXA7leSkEoSSh3U7lTkMQWkg7hdgYXiDMRtKV5TBa2q0OAO45jrBBg8RrxUgeJPENq14V04Suzw0NVt0oSSSRG9GCzFGSSdxFznVB2CR8EAAQZ8tf5Mp2a4tH8rXR8JMchpwWMWlrb23aO4NMBr69rSqu6kVXsc6P3oaXc3STqV4HkN4FpanqcNG/benHYV0hmTpjlZ+JihJlBQCUc1XfYtJ00HdwDUY0OeGkwDx6/8APM8YHFSfaXEbvDbB93Z0hWdTILmmdGa5nQCCcuhPJsk6CRcyn9NfSQfxNQ1Nx+yNUj3/ANzWc/8AzY5f+wCZzu9PLr9CtCP72cSI8lvQHqKh/wAwKYvLX026Do8qPVqRC2d+nPYkM9nspDmFpmYxfEkN0Fj3BO/Y5dU7enTMga8yZ5bcthoFgmLdrMYxemWXNVxpaSxjQxm+mYNAzagRnJ12Us5dLCkwiYRQl6ypbH/Dt6KpFNNPZ6FcJBE80hjknjM/wjV22MCygnbtv/bLG9cW0jAmSBsTpInQa7Stg9ghQ/xuhUuXNYynnfL3hokNdl8xIHvlsaqgPkn5LalNrGlpLp96GEW60k0k9KzHEsUMizScnkjVF5JGUG5HcjIZk1HtaA4ajdjhoCCdSANQIXTPaHtBY0cLunU7ik9/hVGta2sxxLngtENDiTBdJjgFrXmTriVZDeaHg/Vbup6hb/hmqOtm3ZmRjp9z/KeZ+iP8nsFi4KAe4AGYs55zOzBxMu+7dzMcNYEaruPB7/DrOwt7b2m3Bp0qbSPaKXvBozfa4uklaMekfwXJQ8PadBMrJMySWJUdGjdGszSThHRvkrRpIsZDbHdfsPsJ20ZlpDfWTrvqSekROy5W7b4gy/xu4rUiCwFrGkEEEU2tZII0IcWkiOar59RTTbtuzpderTu2EgiszyGvVsTRB7DxxxhmiRk6irXk+JPJVffYCQb2F84io0Q4gA7McdyOIB2g/NbP7rK1raULqtcVqVN1R1Noz1WNMMDiYDiDBL267Ejpp5n09fKy3DqV65aq2qwhqrBELNeWAO1mZXcp1UQsUWsAeO+wfv8AcZ5ZNzVC+HDKI1aROYjmBMZfqrzvQxm2rWFC1tqtOrnql7slRr4DGkAHKTGY1OP4dOKuF52R1jo+qLbkENZ6dpJpfuY0eF15KNmLOCRwUKzM/EAMSAZWuGupuDtiCCtFdnzXGJ2zrZueoK1Itb+IhwME6QDHmJIgSSQsaVf47nt23P8ATt3zH5gSdOfT49F3qRrAWnvoi8ijpOm+6sIVvakI5pVYENBXAJrVyrbFHCu0so2VhI/Bt+iu0xaUi1uZ27voOA4epniY4Lj/ALwu0YxW/wDZ6JmhbZmtIiHvMZ3yNwSA1mpGUSPeKjT6hPh7WLU2nipRtzUaqvMZ6qtMRckYgF4oOU0ft4olKTsoXeZwGBHe2vmuc4S0lrRO06k8tSC3gep5LLu6+6wy1pXBua9NleqQ3LUIb+zA4PdDXeI5xzMBmGAkQqrVvPbxDAGqDVNVQvuvSkmnacbjjtGZQ08fYdumy8TuRse+WrXvaIDjH8R/XVbmf2bwSuRcm1t3Aa5g1gaeOobDHb65gZ4r0PLz0067q8/4dKxGrtylu3klghBcszSNJMBLYYnct0VmcsQW25Fs8p0nu0Y077nTrMneekyfiVaYp2twfCaXnrMcWiG0qRa52kANDWnLTAG2ctEDSYhX7t+kqm3hxdAEndAJludMcxfDFza6ZJ2VnLRmIPuK7GISDs+S5th4Xhg9Z1335jTpO2i5oZ22um46cZy7+U0s2nhRHh5oGoABDo98Zi3gs8vMf076zpcjx26E7Iu+1ivG9mrIoP5lmjUhQfvwmEUgH3QZDvpub5Xt36SDtx5ax5oJ5LqPCu1WF4mwPtrhocfsPcGPaeRYSJ9WFw5Fefovmdrj7Q1tS1puPxEMF3UG4j7BRHHIdvtttsMplp/E74VH/kD+SurjB8IZ+1r21qJ1zPo0RPXMW6qwfo68s9fGvVtTtU7wrhLMNq1f5pKUetIY+ItutmUGcRAFEdRu3cbEi7taZ8Rr8p2IzGQY1018xk/TWdgdX9u8XwY4PUsLetS8SabmU6UESHtmSwFjfLm3IO3RaI5OrltMImETCJhEwiYRMImEXAedfnTV0GmLttJ5EaRYESugd2ldXZVJdkRF4oxLO6jtt3JUGhWrCkJIJ9PQn0G3FZN2f7P3GO3XstsWNcGl5L3QA0EAnQOJ3GgB+QJGcPqF9VV7X26TKKunowaOpGxYuV/LJak7dV1O5VFVI4+3xdlEhha1R1YjNoBwnToTtMcOAPMgFdWdl+xlngI8QHxbgiHVCIyzuKbdcgOxJJceYByqRPRX6W21CaLVr8ZFCu4kqxMCPezxturkfzVYXG5/lmkAX5IsqtWtqJqODz7o/qP+g+p6TOLd4HbJthSdhtm4GvUBFRw+5aRqOj3g+rW66EtI0ZybXKyjrXfOZY9TGlVqF6/Yjjqz3XqmkkNCvclmhrzWGuW6jyBzXsOUpx2pVSJiUUtEshFz171P1jIkFOhqGo25rOq1IatYUY3lXRJ0ralaEt25UrLXgsyJAA86zyu26QuiyOhF9vFXqKlrajFpi+Htbs2LEEtuA130MRywVxUFpg1jV4Gj9vLdggYSpHzkLdPrIvPCL7aJ6lIpor9ttM1KDS9P/ihk1adtMFOUaRPPXstDGmoSXyrSVpuk0tOJWVdyUDLuRfSz6pKKwaLL7e6ZNbnjrQVAlf3VXlYjqTT3ENgIlenamggsPBJYZHljCpJuSCL36/nrTfXG0FUnaytaa01gCI1FeuaRmps/V6wuRwajStGMwdPozxN1CSVBF8+UnnMusp7itQvRafLGJqWo2DSWveiLcVeCGK3LeiDD5qtypVbj91U/HCKRcImETCJhEwiYRMImETCKNvUV5WtrOj26EZRZpBG8DOSEWaGVJU5MFcqjcDGxCsQrNsN9strmkatMtG+hGsagg766GIPRZX2WxluD4nRvHgljS4OA3LXNc0wJEkTLZI1AUBeTv0761d0n1idbrrxYVIAyVAw77Su201lQf5SsCMOzI4JXLOnYz/3TP7o24bnd30BBggrZmPd6VxcNdRwymaDTI8RxBqR+60S2kesuI+yQdVcGtWVFVEVURAFVVAVVVRsqqo2AUAAAAbAZKAQtFPe57i5xJJMkkySTxJ4zxX656vlQf418qdQva1Tu9DTacenzI8Wq17dptXs0wvKbS7Fb2cNdalmVnEgkvW41ULIkCzFJICLg9Y9NerS6NS0np6QthUntS60lu/Hc0rW7tixauX9JhSoHmUTWHaMSX6DOpZJAyEoSKZx4As/xqfU2aB400yLT6AJbrLPJansX2mIj4pDP0tMA6bOSYZCUXinIihTy39M2pw6SunWauiVrDfwuG7qVO3ZtT6nWjvQWNZ9xHPplQRPfhjlRUDzjlO28kfTVmIvT0D0v6hVnjsLZrTums6hqIjkknijXSnfXbunaev4c46q6rqsU9mdEi3jjjX8f2ddZCL1PDfp51GlNpd2K5HbvQnVJtT91LJHWmtanVeSZqgSCWZIW1KOoBHLIRDTTivIwxxsRdH5FeUtuhb1K7YjpUU1AViNJ0yzYtUIbMT2ns6gr2K9JVs3/AHEYmWClAp6CMz2HcspFM2ETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwi//Z" class="welcome-logo" alt="Myse">
+  <div class="welcome-greeting" id="welcome-greeting">Bom dia!</div>
+  <div class="welcome-date" id="welcome-date"></div>
+  <div class="welcome-highlight">
+    <div class="welcome-highlight-label">Destaque de Maio 2026</div>
+    <div class="welcome-highlight-text" id="welcome-highlight-text">Instagram liderou com <strong>18.434 views</strong> — 96,2% de nao seguidores via Reels. FazNota cresceu +15.685% no Facebook.</div>
+  </div>
+  <div class="welcome-stats">
+    <div class="welcome-stat"><div class="welcome-stat-num">37.902</div><div class="welcome-stat-label">Views totais</div></div>
+    <div class="welcome-stat"><div class="welcome-stat-num">7</div><div class="welcome-stat-label">Canais ativos</div></div>
+    <div class="welcome-stat"><div class="welcome-stat-num">+14</div><div class="welcome-stat-label">Novos inscritos YT</div></div>
+    <div class="welcome-stat"><div class="welcome-stat-num">3</div><div class="welcome-stat-label">Plataformas</div></div>
+  </div>
+  <button class="welcome-btn" onclick="closeWelcome()">Entrar no Dashboard</button>
+  <div class="welcome-skip" onclick="closeWelcome(true)">Nao mostrar novamente hoje</div>
+</div>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+
+<!-- AI CHAT BUTTON -->
+<button id="ai-chat-btn" onclick="toggleChat()" title="Assistente IA Myse">
+  🤖<span class="chat-dot"></span>
+</button>
+
+<!-- AI CHAT PANEL -->
+<div id="ai-chat-panel">
+  <div class="chat-head">
+    <div class="chat-head-avatar">🤖</div>
+    <div class="chat-head-info">
+      <div class="chat-head-name">Assistente Myse IA</div>
+      <div class="chat-head-status">Online — Pronto para ajudar</div>
+    </div>
+    <button class="chat-head-close" onclick="toggleChat()">x</button>
+  </div>
+  <div class="chat-context-badge">Analisando dados Fev-Mai 2026</div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="chat-msg ai">
+      <div class="chat-msg-avatar">🤖</div>
+      <div>
+        <div class="chat-msg-bubble">Ola! Sou o assistente da Myse Sistemas. Tenho acesso a todos os dados do dashboard de fevereiro a maio de 2026. Como posso ajudar?</div>
+        <div class="chat-msg-time">agora</div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-suggestions">
+    <button class="chat-suggestion-btn" onclick="askSuggestion(this)">Melhor canal do mes?</button>
+    <button class="chat-suggestion-btn" onclick="askSuggestion(this)">O que caiu mais?</button>
+    <button class="chat-suggestion-btn" onclick="askSuggestion(this)">O que melhorar?</button>
+    <button class="chat-suggestion-btn" onclick="askSuggestion(this)">Destaque de maio?</button>
+    <button class="chat-suggestion-btn" onclick="askSuggestion(this)">Comparar meses</button>
+    <button class="chat-suggestion-btn" onclick="askSuggestion(this)">Previsao junho?</button>
+  </div>
+  <div class="chat-input-area">
+    <input type="text" id="chat-input" placeholder="Pergunte sobre os dados..." maxlength="300">
+    <button id="chat-send-btn" onclick="sendChat()">></button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <canvas id="particles" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.12;"></canvas>
 
@@ -1499,12 +3034,810 @@ function initDashboard() {
   initParticles();
   addAlertBadge();
   setTimeout(addSparklines, 800);
+  loadSavedData();
+  loadMetas();
+  loadNotes();
+  loadHistory();
+  loadFavorites();
+  checkSmartAlerts();
+  showWelcome();
+  checkURLParams();
   loadHomeAI();
   const last = sessionStorage.getItem('lastPage');
   if (last) showPage(last);
 }
 
+
+// ── ADMIN PANEL ──
+function openAdmin() {
+  document.getElementById('admin-screen').classList.add('open');
+  loadAdminCurrentData();
+}
+
+function closeAdmin() {
+  document.getElementById('admin-screen').classList.remove('open');
+}
+
+function switchAdminTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('admin-tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function loadAdminCurrentData() {
+  // Pre-fill with current May data
+  const d = {
+    'yt1-views': 6732, 'yt1-videos': 42, 'yt1-subs-new': 10, 'yt1-subs-lost': 2,
+    'yt1-hours': 14.9, 'yt1-impressions': 19353, 'yt1-ctr': 2.77,
+    'yt1-likes': 149, 'yt1-comments': 5, 'yt1-shares': 53,
+    'yt1-w1': 1645, 'yt1-w2': 938, 'yt1-w3': 3018, 'yt1-w4': 941,
+    'yt1-top-title': 'Eu ignorei ele de propósito #empreendedorismo',
+    'yt1-top-views': 939,
+    'yt2-views': 5511, 'yt2-videos': 57, 'yt2-subs-new': 6, 'yt2-subs-lost': 2,
+    'yt2-hours': 17.2, 'yt2-ctr': 2.25,
+    'yt2-likes': 87, 'yt2-shares': 4,
+    'yt2-w1': 709, 'yt2-w2': 2094, 'yt2-w3': 1164, 'yt2-w4': 1508,
+    'yt2-top-title': 'O seu funcionário mudou de vida de repente? Cuidado!',
+    'yt2-top-views': 1052,
+    'ig-views': 18434, 'ig-reach': 2077, 'ig-followers': 362,
+    'ig-interactions': 93, 'ig-profile-visits': 88, 'ig-link-clicks': 9,
+    'ig-reels-pct': 93.5, 'ig-non-followers-pct': 96.2,
+    'fb1-views': 5736, 'fb1-followers': 899, 'fb1-reactions': 26,
+    'fb1-comments': 2, 'fb1-shares': 18,
+    'fb2-views': 1105, 'fb2-followers': 304, 'fb2-reactions': 10,
+    'fb2-shares': 11, 'fb2-views3s': 470,
+    'fb3-views': 381, 'fb3-followers': 5440, 'fb3-reactions': 4, 'fb3-shares': 12,
+  };
+  // Load saved data if exists
+  try {
+    const saved = JSON.parse(localStorage.getItem('dashData') || '{}');
+    Object.assign(d, saved);
+  } catch(e) {}
+
+  Object.entries(d).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  });
+}
+
+function saveAdminData() {
+  const fields = [
+    'yt1-views','yt1-videos','yt1-subs-new','yt1-subs-lost','yt1-hours',
+    'yt1-impressions','yt1-ctr','yt1-likes','yt1-comments','yt1-shares',
+    'yt1-w1','yt1-w2','yt1-w3','yt1-w4','yt1-top-title','yt1-top-views',
+    'yt2-views','yt2-videos','yt2-subs-new','yt2-subs-lost','yt2-hours','yt2-ctr',
+    'yt2-likes','yt2-shares','yt2-w1','yt2-w2','yt2-w3','yt2-w4',
+    'yt2-top-title','yt2-top-views',
+    'ig-views','ig-reach','ig-followers','ig-interactions',
+    'ig-profile-visits','ig-link-clicks','ig-reels-pct','ig-non-followers-pct',
+    'fb1-views','fb1-followers','fb1-reactions','fb1-comments','fb1-shares',
+    'fb2-views','fb2-followers','fb2-reactions','fb2-shares','fb2-views3s',
+    'fb3-views','fb3-followers','fb3-reactions','fb3-shares',
+  ];
+
+  const data = {};
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = isNaN(el.value) || el.type === 'text' ? el.value : parseFloat(el.value) || 0;
+  });
+
+  // Save to localStorage
+  try { localStorage.setItem('dashData', JSON.stringify(data)); } catch(e) {}
+
+  // Apply to dashboard
+  applyDashData(data);
+
+  // Show success
+  const s = document.getElementById('admin-success');
+  s.classList.add('show');
+  setTimeout(() => s.classList.remove('show'), 3000);
+  showToast('✅ Dados atualizados!', 'success');
+}
+
+function applyDashData(data) {
+  const month = document.getElementById('admin-month').value;
+  const prefix = month + '-';
+
+  // Helper to update KPI value
+  function setKpi(pageId, index, value, sub) {
+    const kpis = document.querySelectorAll('#page-' + pageId + ' .kpi-value');
+    if (kpis[index]) kpis[index].textContent = typeof value === 'number' ? value.toLocaleString('pt-BR') : value;
+    if (sub !== undefined) {
+      const subs = document.querySelectorAll('#page-' + pageId + ' .kpi-sub');
+      if (subs[index]) subs[index].textContent = sub;
+    }
+  }
+
+  // Helper to update metric row value
+  function setMetric(pageId, label, value) {
+    const rows = document.querySelectorAll('#page-' + pageId + ' .metric-row');
+    rows.forEach(row => {
+      const nameEl = row.querySelector('.metric-name');
+      const valEl = row.querySelector('.metric-val');
+      if (nameEl && valEl && nameEl.textContent.toLowerCase().includes(label.toLowerCase())) {
+        valEl.textContent = typeof value === 'number' ? value.toLocaleString('pt-BR') : value;
+      }
+    });
+  }
+
+  // ── YouTube Myse Sistemas ──
+  if (data['yt1-views']) {
+    setKpi(prefix + 'yt1', 0, data['yt1-views']);
+    const subsLiq = (data['yt1-subs-new'] || 0) - (data['yt1-subs-lost'] || 0);
+    setKpi(prefix + 'yt1', 1, (subsLiq >= 0 ? '+' : '') + subsLiq, '+' + data['yt1-subs-new'] + ' novos · -' + data['yt1-subs-lost'] + ' perdidos');
+    setKpi(prefix + 'yt1', 2, data['yt1-videos']);
+    setKpi(prefix + 'yt1', 3, data['yt1-hours'] + 'h');
+    setMetric(prefix + 'yt1', 'Impressões', data['yt1-impressions']);
+    setMetric(prefix + 'yt1', 'CTR', data['yt1-ctr'] + '%');
+    setMetric(prefix + 'yt1', 'Curtidas', data['yt1-likes']);
+    setMetric(prefix + 'yt1', 'Comentários', data['yt1-comments']);
+    setMetric(prefix + 'yt1', 'Compartilhamentos', data['yt1-shares']);
+    // Update best video
+    const bestBoxes = document.querySelectorAll('#page-' + prefix + 'yt1 .best-title');
+    if (bestBoxes[0] && data['yt1-top-title']) bestBoxes[0].textContent = data['yt1-top-title'];
+    const bestStats = document.querySelectorAll('#page-' + prefix + 'yt1 .best-stat');
+    if (bestStats[0] && data['yt1-top-views']) bestStats[0].textContent = data['yt1-top-views'].toLocaleString('pt-BR') + ' views';
+    // Update week chart
+    const weeks = [data['yt1-w1'], data['yt1-w2'], data['yt1-w3'], data['yt1-w4']].filter(w => w > 0);
+    if (weeks.length > 0) updateWeekChart('c-' + prefix + 'yt1-week', weeks);
+  }
+
+  // ── YouTube Myse Cortes2 ──
+  if (data['yt2-views']) {
+    setKpi(prefix + 'yt2', 0, data['yt2-views']);
+    const subsLiq2 = (data['yt2-subs-new'] || 0) - (data['yt2-subs-lost'] || 0);
+    setKpi(prefix + 'yt2', 1, (subsLiq2 >= 0 ? '+' : '') + subsLiq2, '+' + data['yt2-subs-new'] + ' novos · -' + data['yt2-subs-lost'] + ' perdidos');
+    setKpi(prefix + 'yt2', 2, data['yt2-videos']);
+    setKpi(prefix + 'yt2', 3, data['yt2-hours'] + 'h');
+    setMetric(prefix + 'yt2', 'CTR', data['yt2-ctr'] + '%');
+    setMetric(prefix + 'yt2', 'Curtidas', data['yt2-likes']);
+    setMetric(prefix + 'yt2', 'Compartilhamentos', data['yt2-shares']);
+    const bestBoxes2 = document.querySelectorAll('#page-' + prefix + 'yt2 .best-title');
+    if (bestBoxes2[0] && data['yt2-top-title']) bestBoxes2[0].textContent = data['yt2-top-title'];
+    const bestStats2 = document.querySelectorAll('#page-' + prefix + 'yt2 .best-stat');
+    if (bestStats2[0] && data['yt2-top-views']) bestStats2[0].textContent = data['yt2-top-views'].toLocaleString('pt-BR') + ' views';
+    const weeks2 = [data['yt2-w1'], data['yt2-w2'], data['yt2-w3'], data['yt2-w4']].filter(w => w > 0);
+    if (weeks2.length > 0) updateWeekChart('c-' + prefix + 'yt2-week', weeks2);
+  }
+
+  // ── Instagram ──
+  if (data['ig-views']) {
+    setKpi(prefix + 'ig', 0, data['ig-views']);
+    setKpi(prefix + 'ig', 1, data['ig-reach']);
+    setKpi(prefix + 'ig', 2, data['ig-followers']);
+    setKpi(prefix + 'ig', 3, data['ig-interactions']);
+    setMetric(prefix + 'ig', 'Visitas ao perfil', data['ig-profile-visits']);
+    setMetric(prefix + 'ig', 'Cliques em links', data['ig-link-clicks']);
+    setMetric(prefix + 'ig', 'Reels', data['ig-reels-pct'] + '%');
+    setMetric(prefix + 'ig', 'Não seguidores', data['ig-non-followers-pct'] + '%');
+  }
+
+  // ── Facebook ──
+  if (data['fb1-views']) {
+    setKpi(prefix + 'fb1', 0, data['fb1-views']);
+    setKpi(prefix + 'fb1', 2, data['fb1-followers']);
+    setMetric(prefix + 'fb1', 'Reações', data['fb1-reactions']);
+    setMetric(prefix + 'fb1', 'Comentários', data['fb1-comments']);
+    setMetric(prefix + 'fb1', 'Compartilhamentos', data['fb1-shares']);
+  }
+  if (data['fb2-views']) {
+    setKpi(prefix + 'fb2', 0, data['fb2-views']);
+    setKpi(prefix + 'fb2', 2, data['fb2-followers']);
+    setKpi(prefix + 'fb2', 3, data['fb2-views3s']);
+    setMetric(prefix + 'fb2', 'Reações', data['fb2-reactions']);
+    setMetric(prefix + 'fb2', 'Compartilhamentos', data['fb2-shares']);
+  }
+  if (data['fb3-views']) {
+    setKpi(prefix + 'fb3', 0, data['fb3-views']);
+    setKpi(prefix + 'fb3', 2, data['fb3-followers']);
+    setMetric(prefix + 'fb3', 'Reações', data['fb3-reactions']);
+    setMetric(prefix + 'fb3', 'Compartilhamentos', data['fb3-shares']);
+  }
+}
+
+function updateWeekChart(canvasId, newData) {
+  const chart = chartRegistry[canvasId];
+  if (!chart) return;
+  const max = Math.max(...newData);
+  chart.data.datasets[0].data = newData;
+  chart.data.datasets[0].backgroundColor = newData.map(v => v === max ? '#E8192C' : '#e0d4d4');
+  chart.update();
+}
+
+// Load saved data on dashboard init
+function loadSavedData() {
+  try {
+    const saved = localStorage.getItem('dashData');
+    if (saved) applyDashData(JSON.parse(saved));
+  } catch(e) {}
+}
+
+
+// AI CHAT
+const DASH_CTX = `Voce e um assistente de analise de marketing digital da Myse Sistemas. Responda SEMPRE em portugues, de forma clara, objetiva e amigavel. Use emojis.
+
+DADOS DO DASHBOARD:
+
+YOUTUBE - Myse Sistemas:
+- Fevereiro: 1.023 views, +3 inscritos, 0 videos, CTR 6,25%
+- Marco: 11.541 views (+1028%), +18 inscritos, 22 videos, CTR 4,06% - PICO
+- Abril: 4.418 views (-61,7%), +5 inscritos, 16 videos, CTR 4,91%
+- Maio: 6.732 views (+52,4%), +8 inscritos, 42 videos, CTR 2,77%, Shorts 98%
+Engajamento maio: 149 curtidas, 5 comentarios, 53 shares
+
+YOUTUBE - Myse Cortes2 (criado 23/03):
+- Marco: 13.817 views em apenas 9 dias!
+- Abril: 4.805 views (-65,2%), 23 videos
+- Maio: 5.511 views (+14,7%), 57 videos, publico 95% masculino, Brasil 83%, Portugal 3%
+
+YOUTUBE - Myse_systems (criado 04/05): 3 views, canal novo
+
+INSTAGRAM @mysesistemas - Maio:
+- 18.434 views (CAMPEA - maior de todos os canais!)
+- 2.077 contas alcancadas, 362 seguidores, 93 interacoes
+- 96,2% views de NAO seguidores - alcance organico excepcional
+- Reels = 93,5% das views
+
+FACEBOOK - Myse (maio):
+- 5.736 views (-12%), 899 seguidores, 100 engajamentos (+96%)
+- Toledo PR 43,7%, Cascavel PR 15,5%
+
+FACEBOOK - FazNota (maio):
+- 1.105 views (+15.685%!!!), 304 seguidores
+- Reels 86,7%, views 3s: 470
+
+FACEBOOK - Foodi (maio):
+- 381 views (+1.488%), 5.440 seguidores (MAIOR BASE)
+- Engajamento baixo relativo ao tamanho - grande oportunidade!
+
+TOTAIS MAIO: 37.902 views totais
+YouTube: 12.246 | Instagram: 18.434 | Facebook: 7.222
+
+TENDENCIAS:
+- Marco foi o pico historico do YouTube
+- Instagram lidera com alcance organico impressionante
+- FazNota explodiu em maio
+- Foodi tem potencial nao aproveitado
+- Shorts dominam o trafego YT (80-98%)
+- Publico: masculino 80%+, 25-44 anos, Brasil 82%+
+
+Responda concisamente (max 4 frases). Use dados especificos. Para previsoes, baseie-se nas tendencias.`;
+
+let chatHistory = [];
+let chatOpen = false;
+let chatTyping = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const panel = document.getElementById('ai-chat-panel');
+  panel.classList.toggle('open', chatOpen);
+  if (chatOpen) setTimeout(() => document.getElementById('chat-input').focus(), 100);
+}
+
+function askSuggestion(btn) {
+  document.getElementById('chat-input').value = btn.textContent.trim();
+  sendChat();
+}
+
+function addChatMsg(text, type) {
+  const messages = document.getElementById('chat-messages');
+  const time = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  const avatar = type === 'user' ? '👤' : '🤖';
+  const msg = document.createElement('div');
+  msg.className = 'chat-msg ' + type;
+  msg.innerHTML = '<div class="chat-msg-avatar">' + avatar + '</div><div><div class="chat-msg-bubble">' + text.replace(/\n/g,'<br>') + '</div><div class="chat-msg-time">' + time + '</div></div>';
+  messages.appendChild(msg);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function showTyping() {
+  const messages = document.getElementById('chat-messages');
+  const t = document.createElement('div');
+  t.className = 'chat-msg ai'; t.id = 'chat-typing';
+  t.innerHTML = '<div class="chat-msg-avatar">🤖</div><div class="chat-typing"><span></span><span></span><span></span></div>';
+  messages.appendChild(t);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('chat-typing');
+  if (t) t.remove();
+}
+
+async function sendChat() {
+  if (chatTyping) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addChatMsg(text, 'user');
+  chatHistory.push({role:'user', content:text});
+  chatTyping = true;
+  document.getElementById('chat-send-btn').disabled = true;
+  showTyping();
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        system: DASH_CTX,
+        messages: chatHistory.slice(-10)
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Desculpe, nao consegui processar.';
+    chatHistory.push({role:'assistant', content:reply});
+    hideTyping();
+    addChatMsg(reply, 'ai');
+  } catch(e) {
+    hideTyping();
+    addChatMsg('Erro de conexao. Tente novamente.', 'ai');
+  }
+  chatTyping = false;
+  document.getElementById('chat-send-btn').disabled = false;
+  document.getElementById('chat-input').focus();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const ci = document.getElementById('chat-input');
+    if (ci) ci.addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
+  }, 600);
+});
+
 // ── BOOT ──
+
+// ── METAS ──
+const REALIZADOS = {
+  'meta-yt1': 6732, 'meta-yt2': 5511, 'meta-ig': 18434,
+  'meta-fb1': 5736, 'meta-fb2': 1105, 'meta-fb3': 381
+};
+const META_LABELS = {
+  'meta-yt1': 'Myse Sistemas (YT)', 'meta-yt2': 'Myse Cortes2 (YT)',
+  'meta-ig': 'Instagram', 'meta-fb1': 'Facebook Myse',
+  'meta-fb2': 'Facebook FazNota', 'meta-fb3': 'Facebook Foodi'
+};
+
+function updateMetas() {
+  const result = document.getElementById('metas-result');
+  if (!result) return;
+  let html = '';
+  let hasMeta = false;
+  Object.keys(REALIZADOS).forEach(id => {
+    const input = document.getElementById(id);
+    if (!input || !input.value) return;
+    hasMeta = true;
+    const meta = parseFloat(input.value);
+    const real = REALIZADOS[id];
+    const pct = Math.round((real / meta) * 100);
+    const over = real >= meta;
+    const barW = Math.min(pct, 100);
+    html += '<div class="meta-row">' +
+      '<span class="meta-label">' + META_LABELS[id] + '</span>' +
+      '<div class="meta-bar-wrap"><div class="meta-bar-fill ' + (over ? 'over' : 'under') + '" style="width:' + barW + '%"></div></div>' +
+      '<span class="meta-pct ' + (over ? 'over' : 'under') + '">' + pct + '%</span>' +
+      '</div>' +
+      '<div style="font-size:10px;color:#aaa;margin:-6px 0 10px 140px;">Realizado: ' + real.toLocaleString('pt-BR') + ' / Meta: ' + meta.toLocaleString('pt-BR') + '</div>';
+  });
+  result.innerHTML = hasMeta ? html : '<div style="color:#bbb;font-size:12px;text-align:center;padding:20px;">Define as metas acima para ver o resultado</div>';
+  // Save metas
+  const metas = {};
+  Object.keys(REALIZADOS).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value) metas[id] = el.value;
+  });
+  try { localStorage.setItem('dashMetas', JSON.stringify(metas)); } catch(e) {}
+  checkConfetti();
+}
+
+function loadMetas() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('dashMetas') || '{}');
+    Object.entries(saved).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    });
+    if (Object.keys(saved).length > 0) updateMetas();
+  } catch(e) {}
+}
+
+// ── PAUTA IA ──
+async function gerarPautas() {
+  const btn = document.getElementById('pauta-btn');
+  const container = document.getElementById('pauta-content');
+  btn.textContent = '🤖 Gerando sugestoes...';
+  btn.disabled = true;
+  container.innerHTML = '<div style="text-align:center;padding:20px;color:#bbb;">Analisando dados e gerando ideias...</div>';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: 'Voce e um especialista em marketing de conteudo digital. Baseado nos dados fornecidos, sugira exatamente 5 ideias de pauta para videos. Responda APENAS em JSON: {"pautas":[{"titulo":"","por_que":"","formato":"Short|Video longo|Reel","canal":"YouTube|Instagram|Facebook"}]}',
+        messages: [{role:'user', content:'Dados Myse Sistemas: melhor video foi Desistir nao e uma opcao (1.482 views, marco). No YouTube o publico e 80% masculino 25-44 anos, empreendedores. Melhor retencao: CHEGA DE ANOTAR VENDAS NO PAPEL (602%). No Instagram, Reels tem 96% alcance nao seguidores. FazNota cresceu +15685% com Reels sobre nota fiscal. Produtos: sistemas de gestao, emissao de nota fiscal, controle de vendas para pequenos negocios. Sugira 5 pautas de videos que devem performar bem.'}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    container.innerHTML = parsed.pautas.map((p, i) =>
+      '<div class="pauta-item">' +
+      '<div class="pauta-num">' + (i+1) + '</div>' +
+      '<div class="pauta-content">' +
+      '<div class="pauta-title">' + p.titulo + '</div>' +
+      '<div class="pauta-why">' + p.por_que + '</div>' +
+      '<span class="pauta-tag">' + p.formato + '</span>' +
+      '<span class="pauta-tag" style="margin-left:4px;background:#f0f6ff;color:#1a6fd4;">' + p.canal + '</span>' +
+      '</div></div>'
+    ).join('');
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--red);font-size:12px;padding:16px;">Erro ao gerar sugestoes. Tente novamente.</div>';
+  }
+  btn.textContent = '🤖 Gerar Novas Sugestoes';
+  btn.disabled = false;
+}
+
+// ── HISTORICO ──
+function loadHistory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('dashHistory') || '[]');
+    const list = document.getElementById('history-list');
+    if (!list || saved.length === 0) return;
+    saved.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = '<div class="history-dot" style="background:var(--blue)"></div>' +
+        '<div class="history-text"><strong>' + item.text + '</strong></div>' +
+        '<div class="history-time">' + item.time + '</div>';
+      list.appendChild(div);
+    });
+  } catch(e) {}
+}
+
+function addHistory() {
+  const input = document.getElementById('history-input');
+  if (!input || !input.value.trim()) return;
+  const text = input.value.trim();
+  const time = new Date().toLocaleDateString('pt-BR');
+  // Add to DOM
+  const list = document.getElementById('history-list');
+  const div = document.createElement('div');
+  div.className = 'history-item';
+  div.innerHTML = '<div class="history-dot" style="background:var(--blue)"></div>' +
+    '<div class="history-text"><strong>' + text + '</strong></div>' +
+    '<div class="history-time">' + time + '</div>';
+  list.insertBefore(div, list.firstChild);
+  // Save
+  try {
+    const saved = JSON.parse(localStorage.getItem('dashHistory') || '[]');
+    saved.unshift({text, time});
+    localStorage.setItem('dashHistory', JSON.stringify(saved.slice(0, 50)));
+  } catch(e) {}
+  input.value = '';
+  showToast('Registro adicionado!', 'success');
+}
+
+// ── EXPORT CSV ──
+function exportCSV() {
+  const rows = [
+    ['Canal','Mes','Views','Inscritos/Seguidores','Engajamento','CTR','Videos'],
+    ['Myse Sistemas YT','Fevereiro 2026',1023,3,'',6.25,0],
+    ['Myse Sistemas YT','Marco 2026',11541,18,199,4.06,22],
+    ['Myse Sistemas YT','Abril 2026',4418,5,76,4.91,16],
+    ['Myse Sistemas YT','Maio 2026',6732,8,207,2.77,42],
+    ['Myse Cortes2 YT','Marco 2026',13817,0,130,3.16,17],
+    ['Myse Cortes2 YT','Abril 2026',4805,0,61,4.44,23],
+    ['Myse Cortes2 YT','Maio 2026',5511,4,96,2.25,57],
+    ['Instagram','Maio 2026',18434,362,93,'',''],
+    ['Facebook Myse','Maio 2026',5736,899,100,'',''],
+    ['Facebook FazNota','Maio 2026',1105,304,21,'',''],
+    ['Facebook Foodi','Maio 2026',381,5440,18,'',''],
+  ];
+  const csv = rows.map(r => r.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'myse_dashboard_dados.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV exportado!', 'success');
+}
+
+// ── URL PARAMS (link direto por mes) ──
+function checkURLParams() {
+  const params = new URLSearchParams(window.location.search);
+  const mes = params.get('mes');
+  const canal = params.get('canal');
+  if (canal) {
+    showPage(canal);
+  } else if (mes) {
+    const pageMap = {'fevereiro':'fev-yt1','marco':'mar-yt1','abril':'abr-yt1','maio':'mai-yt1','comparativo':'compare'};
+    if (pageMap[mes.toLowerCase()]) showPage(pageMap[mes.toLowerCase()]);
+  }
+}
+
+
+// ── WELCOME SCREEN ──
+function showWelcome() {
+  // Only show if user is authenticated
+  if (sessionStorage.getItem('auth') !== '1') return;
+  const skipped = sessionStorage.getItem('welcomeSkipped');
+  if (skipped) return;
+  const screen = document.getElementById('welcome-screen');
+  if (!screen) return;
+  // Set greeting based on time
+  const h = new Date().getHours();
+  const greeting = h < 12 ? 'Bom dia!' : h < 18 ? 'Boa tarde!' : 'Boa noite!';
+  const dateEl = document.getElementById('welcome-greeting');
+  if (dateEl) dateEl.textContent = greeting;
+  // Set date
+  const dateStr = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const dateDiv = document.getElementById('welcome-date');
+  if (dateDiv) dateDiv.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  screen.classList.add('open');
+}
+
+function closeWelcome(skip) {
+  const screen = document.getElementById('welcome-screen');
+  if (screen) screen.classList.remove('open');
+  if (skip) sessionStorage.setItem('welcomeSkipped', '1');
+}
+
+// ── SMART ALERTS ──
+function checkSmartAlerts() {
+  const alerts = [];
+  // Facebook Myse dropped -12%
+  alerts.push('Facebook Myse teve queda de <strong>-12%</strong> em views em maio. Considere aumentar a frequencia de Reels.');
+  if (alerts.length > 0) {
+    const banner = document.getElementById('smart-alert');
+    const text = document.getElementById('smart-alert-text');
+    if (banner && text) {
+      text.innerHTML = '⚠️ ' + alerts[0];
+      banner.classList.add('show');
+    }
+  }
+}
+
+// ── SEARCH ──
+const ALL_PAGES = [
+  {id:'fev-yt1', label:'Myse Sistemas — Fevereiro', color:'#CC0000'},
+  {id:'mar-yt1', label:'Myse Sistemas — Março', color:'#CC0000'},
+  {id:'abr-yt1', label:'Myse Sistemas — Abril', color:'#CC0000'},
+  {id:'mai-yt1', label:'Myse Sistemas — Maio', color:'#CC0000'},
+  {id:'mar-yt2', label:'Myse Cortes2 — Março', color:'#CC0000'},
+  {id:'abr-yt2', label:'Myse Cortes2 — Abril', color:'#CC0000'},
+  {id:'mai-yt2', label:'Myse Cortes2 — Maio', color:'#CC0000'},
+  {id:'mai-yt3', label:'Myse_systems — Maio', color:'#CC0000'},
+  {id:'mai-ig', label:'Instagram — Maio', color:'#a01060'},
+  {id:'mai-fb1', label:'Facebook Myse — Maio', color:'#1a55c0'},
+  {id:'mai-fb2', label:'Facebook FazNota — Maio', color:'#1a55c0'},
+  {id:'mai-fb3', label:'Facebook Foodi — Maio', color:'#1a55c0'},
+  {id:'compare', label:'Comparativo de Meses', color:'#E8192C'},
+  {id:'ranking', label:'Ranking de Videos', color:'#E8192C'},
+  {id:'metas', label:'Metas vs Realizado', color:'#E8192C'},
+  {id:'pauta', label:'Sugestoes de Pauta IA', color:'#E8192C'},
+  {id:'mapa', label:'Mapa do Publico', color:'#E8192C'},
+  {id:'historico', label:'Historico', color:'#E8192C'},
+];
+
+function searchChannels(query) {
+  const results = document.getElementById('search-results');
+  if (!results) return;
+  if (!query.trim()) { results.style.display = 'none'; return; }
+  const q = query.toLowerCase();
+  const matches = ALL_PAGES.filter(p => p.label.toLowerCase().includes(q)).slice(0, 6);
+  if (matches.length === 0) { results.style.display = 'none'; return; }
+  results.innerHTML = matches.map(p =>
+    '<div class="search-result-item" data-page="' + p.id + '">' +
+    '<div class="search-result-dot" style="background:' + p.color + '"></div>' + p.label + '</div>'
+  ).join('');
+  results.style.display = 'block';
+  results.querySelectorAll('.search-result-item').forEach(el => {
+    el.addEventListener('click', () => {
+      showPage(el.dataset.page);
+      document.getElementById('search-input').value = '';
+      results.style.display = 'none';
+    });
+  });
+}
+
+// Close search on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('#search-wrap')) {
+    const r = document.getElementById('search-results');
+    if (r) r.style.display = 'none';
+  }
+});
+
+// ── FAVORITES ──
+let favorites = [];
+
+function loadFavorites() {
+  try { favorites = JSON.parse(localStorage.getItem('dashFavs') || '[]'); } catch(e) { favorites = []; }
+  renderFavorites();
+  document.getElementById('sidebar-favs').addEventListener('click', e => {
+    const link = e.target.closest('.fav-link');
+    if (link && link.dataset.page) showPage(link.dataset.page);
+  });
+  favorites.forEach(id => {
+    const btn = document.getElementById('fav-' + id);
+    if (btn) { btn.textContent = '★'; btn.classList.add('active'); }
+  });
+}
+
+function toggleFav(pageId) {
+  const idx = favorites.indexOf(pageId);
+  if (idx === -1) {
+    favorites.push(pageId);
+    const btn = document.getElementById('fav-' + pageId);
+    if (btn) { btn.textContent = '★'; btn.classList.add('active'); }
+    showToast('Adicionado aos favoritos!', 'success');
+  } else {
+    favorites.splice(idx, 1);
+    const btn = document.getElementById('fav-' + pageId);
+    if (btn) { btn.textContent = '☆'; btn.classList.remove('active'); }
+    showToast('Removido dos favoritos', '');
+  }
+  try { localStorage.setItem('dashFavs', JSON.stringify(favorites)); } catch(e) {}
+  renderFavorites();
+}
+
+function renderFavorites() {
+  const container = document.getElementById('sidebar-favs');
+  if (!container) return;
+  if (favorites.length === 0) {
+    container.innerHTML = '<div style="font-size:10px;color:#ccc;padding:4px 8px;">Nenhum favorito ainda</div>';
+    return;
+  }
+  container.innerHTML = favorites.map(id => {
+    const page = ALL_PAGES.find(p => p.id === id);
+    if (!page) return '';
+    return '<div class="fav-link" data-page="' + id + '">' +
+      '<div style="width:5px;height:5px;border-radius:50%;background:' + page.color + ';flex-shrink:0;"></div>' +
+      '<span>★ ' + page.label + '</span></div>';
+  }).join('');
+}
+
+// ── MOBILE MENU ──
+function toggleMobileMenu() {
+  document.querySelector('.sidebar').classList.toggle('mobile-open');
+  document.getElementById('mobile-overlay').classList.toggle('show');
+}
+
+function closeMobileMenu() {
+  document.querySelector('.sidebar').classList.remove('mobile-open');
+  document.getElementById('mobile-overlay').classList.remove('show');
+}
+
+
+// ── NOTES ──
+function saveNote(pageId) {
+  const textarea = document.getElementById('notes-' + pageId);
+  const saved = document.getElementById('notes-saved-' + pageId);
+  if (!textarea) return;
+  try {
+    const notes = JSON.parse(localStorage.getItem('dashNotes') || '{}');
+    notes[pageId] = textarea.value;
+    localStorage.setItem('dashNotes', JSON.stringify(notes));
+    if (saved) { saved.style.display = 'block'; setTimeout(() => saved.style.display = 'none', 2000); }
+    showToast('Nota salva!', 'success');
+  } catch(e) {}
+}
+
+function loadNotes() {
+  try {
+    const notes = JSON.parse(localStorage.getItem('dashNotes') || '{}');
+    Object.entries(notes).forEach(([id, text]) => {
+      const el = document.getElementById('notes-' + id);
+      if (el) el.value = text;
+    });
+  } catch(e) {}
+}
+
+// ── GROWTH CALCULATOR ──
+function calcGrowth() {
+  const views = parseFloat(document.getElementById('calc-views').value) || 0;
+  const rate = parseFloat(document.getElementById('calc-rate').value) / 100 || 0;
+  const subs = parseFloat(document.getElementById('calc-subs').value) || 0;
+  const result = document.getElementById('calc-result');
+  if (!views || !rate) { if (result) result.style.display = 'none'; return; }
+  if (result) result.style.display = 'block';
+  const calc = (n) => Math.round(views * Math.pow(1 + rate, n)).toLocaleString('pt-BR');
+  const calcSubs = (n) => Math.round(subs * Math.pow(1 + rate * 0.3, n)).toLocaleString('pt-BR');
+  const el3 = document.getElementById('calc-3m');
+  const el6 = document.getElementById('calc-6m');
+  const el12 = document.getElementById('calc-12m');
+  const els6 = document.getElementById('calc-subs-6m');
+  if (el3) el3.textContent = calc(3) + ' views/mes';
+  if (el6) el6.textContent = calc(6) + ' views/mes';
+  if (el12) el12.textContent = calc(12) + ' views/mes';
+  if (els6) els6.textContent = calcSubs(6) + ' inscritos';
+}
+
+// ── COMPARE TWO CANALS ──
+const CANAL_DATA = {
+  'mai-yt1': {name:'Myse Sistemas (Mai)', views:6732, subs:8, videos:42, ctr:2.77, likes:149, shares:53, hours:14.9, platform:'YouTube'},
+  'abr-yt1': {name:'Myse Sistemas (Abr)', views:4418, subs:5, videos:16, ctr:4.91, likes:66, shares:10, hours:8.9, platform:'YouTube'},
+  'mar-yt1': {name:'Myse Sistemas (Mar)', views:11541, subs:18, videos:22, ctr:4.06, likes:162, shares:33, hours:25.3, platform:'YouTube'},
+  'fev-yt1': {name:'Myse Sistemas (Fev)', views:1023, subs:3, videos:0, ctr:6.25, likes:11, shares:7, hours:5.4, platform:'YouTube'},
+  'mai-yt2': {name:'Myse Cortes2 (Mai)', views:5511, subs:4, videos:57, ctr:2.25, likes:87, shares:4, hours:17.2, platform:'YouTube'},
+  'abr-yt2': {name:'Myse Cortes2 (Abr)', views:4805, subs:0, videos:23, ctr:4.44, likes:60, shares:1, hours:9.96, platform:'YouTube'},
+  'mar-yt2': {name:'Myse Cortes2 (Mar)', views:13817, subs:0, videos:17, ctr:3.16, likes:129, shares:1, hours:20.2, platform:'YouTube'},
+  'mai-ig': {name:'Instagram (Mai)', views:18434, subs:362, videos:0, ctr:0, likes:93, shares:0, hours:0, platform:'Instagram'},
+  'mai-fb1': {name:'Facebook Myse (Mai)', views:5736, subs:899, videos:0, ctr:0, likes:26, shares:18, hours:0, platform:'Facebook'},
+  'mai-fb2': {name:'Facebook FazNota (Mai)', views:1105, subs:304, videos:0, ctr:0, likes:10, shares:11, hours:0, platform:'Facebook'},
+  'mai-fb3': {name:'Facebook Foodi (Mai)', views:381, subs:5440, videos:0, ctr:0, likes:4, shares:12, hours:0, platform:'Facebook'},
+};
+
+function runCompareTwo() {
+  const aId = document.getElementById('cmp-a').value;
+  const bId = document.getElementById('cmp-b').value;
+  const result = document.getElementById('compare-two-result');
+  if (!result) return;
+  if (!aId || !bId) { result.innerHTML = '<div style="text-align:center;padding:40px;color:#bbb;font-size:13px;">Selecione dois canais acima</div>'; return; }
+  if (aId === bId) { result.innerHTML = '<div style="text-align:center;padding:20px;color:#E8192C;font-size:12px;">Selecione canais diferentes!</div>'; return; }
+  const a = CANAL_DATA[aId];
+  const b = CANAL_DATA[bId];
+  if (!a || !b) return;
+
+  const row = (label, aVal, bVal, format) => {
+    const aNum = parseFloat(String(aVal).replace(/[^0-9.]/g,'')) || 0;
+    const bNum = parseFloat(String(bVal).replace(/[^0-9.]/g,'')) || 0;
+    const aWin = aNum > bNum;
+    const bWin = bNum > aNum;
+    const fmt = (v) => typeof v === 'number' ? v.toLocaleString('pt-BR') + (format || '') : v;
+    return '<tr><td>' + label + '</td>' +
+      '<td class="' + (aWin ? 'winner' : '') + '">' + fmt(aVal) + (aWin ? ' ✓' : '') + '</td>' +
+      '<td class="' + (bWin ? 'winner' : '') + '">' + fmt(bVal) + (bWin ? ' ✓' : '') + '</td></tr>';
+  };
+
+  result.innerHTML = '<table class="cmp-table">' +
+    '<thead><tr><th>Metrica</th><th class="a">' + a.name + '</th><th class="b">' + b.name + '</th></tr></thead>' +
+    '<tbody>' +
+    row('Visualizacoes', a.views, b.views) +
+    row('Seguidores/Inscritos', a.subs, b.subs) +
+    (a.videos || b.videos ? row('Videos publicados', a.videos, b.videos) : '') +
+    (a.ctr || b.ctr ? row('CTR', a.ctr, b.ctr, '%') : '') +
+    row('Curtidas/Reacoes', a.likes, b.likes) +
+    row('Compartilhamentos', a.shares, b.shares) +
+    (a.hours || b.hours ? row('Horas exibidas', a.hours, b.hours, 'h') : '') +
+    row('Plataforma', a.platform, b.platform) +
+    '</tbody></table>' +
+    '<div style="margin-top:12px;font-size:11px;color:#bbb;font-style:italic;">✓ = melhor resultado entre os dois canais</div>';
+}
+
+// ── CONFETTI ── (triggered when meta is achieved)
+function launchConfetti() {
+  const colors = ['#E8192C','#1a6fd4','#22c97a','#f5a623','#a01060'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = 'left:' + Math.random()*100 + 'vw;top:-10px;background:' + colors[Math.floor(Math.random()*colors.length)] + ';animation-duration:' + (1.5+Math.random()*1.5) + 's;transform:rotate(' + Math.random()*360 + 'deg);';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }, i * 30);
+  }
+}
+
+// Watch metas for 100%+ achievement
+function checkConfetti() {
+  Object.keys(REALIZADOS).forEach(id => {
+    const input = document.getElementById(id);
+    if (!input || !input.value) return;
+    const meta = parseFloat(input.value);
+    const real = REALIZADOS[id];
+    if (real >= meta) launchConfetti();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Setup lock buttons
   document.getElementById('lock-btn').addEventListener('click', unlock);
