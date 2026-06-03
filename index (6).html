@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Myse Sistemas — Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;font-family:'Sora',sans-serif;background:#f0f0f2;color:#111;}
+:root{
+  --red:#E8192C;--red2:#c8101f;
+  --surface:#fff;--surface2:#f8f8f9;--surface3:#f0f0f2;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --text:#111;--muted:#555;--faint:#999;
+  --green:#0a8a50;--green-bg:rgba(10,138,80,0.08);
+  --amber:#c47a00;--blue:#1a6fd4;
+  --yt:#CC0000;--ig:#a01060;--fb:#1a55c0;
+  --sw:220px;
+}
+
+/* LOCK SCREEN */
+#lock-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#E8192C,#a00018);display:flex;align-items:center;justify-content:center;}
+#lock-screen.hidden{display:none;}
+.lock-card{background:#fff;border-radius:20px;padding:40px 36px;max-width:360px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.3);}
+.lock-logo{width:68px;height:68px;border-radius:12px;object-fit:cover;margin:0 auto 18px;display:block;}
+.lock-title{font-size:20px;font-weight:700;color:#111;margin-bottom:4px;}
+.lock-sub{font-size:13px;color:#888;margin-bottom:24px;}
+.lock-wrap{position:relative;margin-bottom:10px;}
+#lock-input{width:100%;padding:12px 44px 12px 16px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:'Sora',sans-serif;outline:none;transition:border-color 0.2s;}
+#lock-input:focus{border-color:#E8192C;}
+#lock-input.error{border-color:#E8192C;animation:shake 0.4s ease;}
+.lock-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;color:#aaa;background:none;border:none;}
+#lock-error{font-size:12px;color:#E8192C;height:16px;margin-bottom:10px;opacity:0;transition:opacity 0.2s;}
+#lock-error.show{opacity:1;}
+.lock-btn{width:100%;padding:12px;background:linear-gradient(135deg,#E8192C,#c8101f);color:#fff;font-size:14px;font-weight:600;font-family:'Sora',sans-serif;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 16px rgba(232,25,44,0.3);transition:all 0.2s;}
+.lock-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(232,25,44,0.4);}
+.lock-footer{font-size:11px;color:#ccc;margin-top:18px;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+/* LAYOUT */
+.app{display:flex;width:100vw;height:100vh;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);min-width:var(--sw);height:100vh;overflow-y:auto;overflow-x:hidden;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sidebar-logo{padding:16px;background:linear-gradient(135deg,#E8192C,#c8101f);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.sidebar-logo img{width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+.sidebar-logo-text{font-size:13px;font-weight:700;color:#fff;}
+.sidebar-logo-sub{font-size:10px;color:rgba(255,255,255,0.75);margin-top:1px;}
+.sidebar-section{padding:14px 12px 4px;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#bbb;}
+.month-item{margin:2px 8px;border-radius:8px;}
+.month-item-btn{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background 0.15s;}
+.month-item-btn:hover{background:#f5f5f5;}
+.month-item.active .month-item-btn,.month-item.open .month-item-btn{background:rgba(232,25,44,0.08);}
+.month-item-left{display:flex;align-items:center;gap:8px;}
+.month-dot{width:7px;height:7px;border-radius:50%;background:#ddd;flex-shrink:0;}
+.month-item.has-data .month-dot{background:#999;}
+.month-item.active .month-dot{background:var(--red);}
+.month-label{font-size:12px;font-weight:500;color:#999;}
+.month-item.has-data .month-label,.month-item.active .month-label{color:#111;}
+.month-chevron{font-size:11px;color:#ccc;transition:transform 0.2s;}
+.month-item.open .month-chevron{transform:rotate(90deg);}
+.month-sub{display:none;padding:2px 0 6px 22px;}
+.month-item.open .month-sub{display:block;}
+.sub-link{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;font-size:11px;color:#999;cursor:pointer;transition:all 0.15s;}
+.sub-link:hover{background:#f5f5f5;color:#111;}
+.sub-link.active{background:rgba(232,25,44,0.08);color:var(--red);}
+.sub-link-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.nav-alert{display:inline-block;background:#E8192C;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:8px;margin-left:4px;}
+.sidebar-compare{margin:6px 8px;border-radius:8px;background:#fff8f8;border:1px solid rgba(232,25,44,0.15);padding:10px 12px;cursor:pointer;transition:all 0.2s;}
+.sidebar-compare:hover,.sidebar-compare.active{background:#ffe8e8;border-color:var(--red);}
+.sidebar-compare p{font-size:12px;font-weight:600;color:#111;}
+.sidebar-compare span{font-size:10px;color:#888;}
+.sidebar-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--border);}
+#dark-btn{width:100%;background:#f8f8f9;border:1px solid var(--border);color:#888;font-size:11px;font-weight:500;font-family:'Sora',sans-serif;padding:7px;border-radius:8px;cursor:pointer;margin-bottom:8px;transition:all 0.2s;}
+.updated{font-size:10px;color:#ccc;text-align:center;}
+
+/* MAIN */
+.main{flex:1;min-width:0;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:52px;flex-shrink:0;background:linear-gradient(90deg,#E8192C,#c8101f);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 2px 12px rgba(232,25,44,0.25);}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-left img{width:26px;height:26px;border-radius:5px;object-fit:cover;}
+#topbar-title{font-size:14px;font-weight:600;color:#fff;}
+#topbar-sub{font-size:11px;color:rgba(255,255,255,0.75);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+#share-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:11px;font-weight:600;font-family:'Sora',sans-serif;padding:5px 12px;border-radius:20px;cursor:pointer;transition:all 0.2s;}
+#share-btn:hover{background:rgba(255,255,255,0.25);}
+#topbar-badge{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.9);background:rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.2);padding:4px 10px;border-radius:20px;}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 24px 40px;}
+.page-section{display:none;}
+.page-section.active{display:block;animation:fadeUp 0.3s ease both;}
+#page-home.active{display:flex;align-items:center;justify-content:center;}
+#page-home{height:calc(100vh - 52px);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* HOME */
+.home-inner{text-align:center;max-width:540px;width:100%;}
+.home-inner>img{width:68px;height:68px;border-radius:12px;object-fit:cover;margin-bottom:18px;box-shadow:0 4px 20px rgba(232,25,44,0.2);}
+.home-title{font-size:24px;font-weight:700;color:#111;margin-bottom:8px;letter-spacing:-0.5px;}
+.home-sub{font-size:13px;color:#888;line-height:1.8;margin-bottom:24px;}
+.home-cards{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;}
+.home-card{background:#fff;border:1px solid rgba(232,25,44,0.12);border-radius:12px;padding:14px 20px;min-width:105px;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.home-card-num{font-size:22px;font-weight:700;color:#E8192C;}
+.home-card-label{font-size:11px;color:#888;margin-top:3px;}
+.home-updated{font-size:11px;color:#ccc;font-family:'JetBrains Mono',monospace;}
+.home-ai{background:#f0f6ff;border-left:3px solid #1a6fd4;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:20px;text-align:left;}
+.home-ai-header{font-size:10px;font-weight:600;color:#1a6fd4;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;}
+#home-ai-text{font-size:12px;color:#555;line-height:1.6;}
+#home-ai-text.loading{background:linear-gradient(90deg,#e8eef8 25%,#d8e8f8 50%,#e8eef8 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;height:36px;border-radius:4px;}
+@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+
+/* SECTION LABEL */
+.slabel{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#bbb;display:flex;align-items:center;gap:10px;margin:20px 0 12px;}
+.slabel::after{content:'';flex:1;height:1px;background:#eee;}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:16px;}
+.kpi{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:all 0.2s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(232,25,44,0.1);border-color:rgba(232,25,44,0.2);}
+.kpi-bar{position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi.trend-up{border-top:2px solid var(--green)!important;}
+.kpi.trend-down{border-top:2px solid var(--red2)!important;}
+.kpi-label{font-size:10px;color:#888;margin-bottom:6px;display:flex;align-items:center;gap:4px;}
+.kpi-value{font-size:22px;font-weight:700;color:#111;letter-spacing:-0.5px;}
+.kpi-sub{font-size:10px;color:#bbb;margin-top:4px;}
+.kpi-sub.up{color:var(--green);}
+.kpi-sub.down{color:var(--red2);}
+.kpi-sparkline{height:30px;margin-top:6px;}
+.help{font-size:10px;color:#ccc;cursor:help;position:relative;}
+.help:hover::after{content:attr(data-tip);position:absolute;left:0;top:16px;background:#222;color:#fff;font-size:10px;padding:4px 8px;border-radius:5px;white-space:nowrap;z-index:100;}
+
+/* METRICS */
+.metrics-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px;}
+.metric-box{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.metric-box-head{padding:8px 12px;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#fff;}
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f2;}
+.metric-row:last-child{border-bottom:none;}
+.metric-name{font-size:11px;color:#888;}
+.metric-val{font-size:12px;font-weight:500;font-family:'JetBrains Mono',monospace;color:#111;}
+.metric-val.up{color:var(--green);}
+.metric-val.down{color:var(--red2);}
+
+/* SUMMARY PILL */
+.summary-pill{background:#fff8f8;border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:14px;font-size:12px;color:#555;line-height:1.6;border-top:1px solid rgba(232,25,44,0.1);border-right:1px solid rgba(232,25,44,0.1);border-bottom:1px solid rgba(232,25,44,0.1);}
+.summary-pill strong{color:var(--red);}
+
+/* AI BOX */
+.ai-box{background:#f0f6ff;border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:14px;border-top:1px solid rgba(26,111,212,0.1);border-right:1px solid rgba(26,111,212,0.1);border-bottom:1px solid rgba(26,111,212,0.1);}
+.ai-box-header{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.ai-box-icon{font-size:13px;}
+.ai-box-title{font-size:10px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:0.05em;}
+.ai-box-content{font-size:12px;color:#555;line-height:1.6;}
+.ai-box-content.loading{background:linear-gradient(90deg,#e8eef8 25%,#d8e8f8 50%,#e8eef8 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;height:48px;border-radius:4px;color:transparent;}
+.ai-suggestions{margin-top:8px;display:flex;flex-direction:column;gap:5px;}
+.ai-suggestion{display:flex;align-items:flex-start;gap:7px;background:rgba(26,111,212,0.06);border-radius:6px;padding:7px 10px;font-size:11px;color:#555;line-height:1.5;}
+.ai-suggestion .num{width:16px;height:16px;border-radius:50%;background:rgba(26,111,212,0.15);color:var(--blue);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+
+/* ALERT */
+.alert-drop{background:#fff0f0;border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;border-top:1px solid rgba(232,25,44,0.1);border-right:1px solid rgba(232,25,44,0.1);border-bottom:1px solid rgba(232,25,44,0.1);}
+.alert-drop-icon{font-size:16px;flex-shrink:0;}
+.alert-drop p{font-size:12px;color:#cc2233;line-height:1.5;}
+.alert-drop strong{color:#a00018;}
+
+/* BEST BOX */
+.best-box{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:border-color 0.2s;}
+.best-box:hover{border-color:rgba(232,25,44,0.2);}
+.best-label{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#bbb;margin-bottom:5px;}
+.best-title{font-size:12px;font-weight:500;color:#111;}
+.best-stat{font-size:11px;color:#888;margin-top:3px;font-family:'JetBrains Mono',monospace;}
+
+/* CHART BOX */
+.chart-box{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.chart-box-label{font-size:10px;font-weight:500;color:#888;margin-bottom:10px;}
+.chart-wrap{position:relative;height:160px;}
+
+/* BADGES */
+.best-month-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(196,122,0,0.1);border:1px solid rgba(196,122,0,0.25);color:#c47a00;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;margin-left:6px;}
+
+/* COMPARE */
+.compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:16px;}
+.compare-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.compare-card h4{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;}
+.comp-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.comp-table th{background:var(--red);color:#fff;padding:9px 12px;font-size:10px;font-weight:600;text-align:left;}
+.comp-table td{padding:9px 12px;font-size:11px;border-bottom:1px solid #f0f0f2;font-family:'JetBrains Mono',monospace;}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr:nth-child(even) td{background:#f8f8f9;}
+.comp-table td:first-child{font-family:'Sora',sans-serif;font-weight:500;}
+.comp-table .total-row td{background:#fff5f5;font-weight:600;color:var(--red2);}
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.prog-label{font-size:11px;color:#888;width:110px;flex-shrink:0;}
+.prog-bar-wrap{flex:1;height:5px;background:#f0f0f2;border-radius:3px;overflow:hidden;}
+.prog-bar{height:100%;border-radius:3px;}
+.prog-val{font-size:11px;font-family:'JetBrains Mono',monospace;color:#888;width:45px;text-align:right;flex-shrink:0;}
+
+/* NO DATA */
+.no-data-state{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 20px;min-height:300px;}
+.no-data-icon{font-size:48px;margin-bottom:14px;opacity:0.5;}
+.no-data-title{font-size:17px;font-weight:700;color:#111;margin-bottom:8px;}
+.no-data-desc{font-size:13px;color:#888;line-height:1.7;max-width:380px;margin-bottom:18px;}
+.no-data-desc strong{color:#111;}
+.no-data-pill{background:#fff0f0;border:1px solid rgba(232,25,44,0.2);color:#888;font-size:11px;padding:7px 16px;border-radius:20px;}
+
+/* EXEC SUMMARY */
+.exec-summary{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;}
+.exec-summary.open{display:flex;}
+.exec-card{background:#fff;border-radius:18px;padding:36px;max-width:460px;width:90%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.exec-close{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:50%;background:#f0f0f2;border:none;cursor:pointer;font-size:12px;color:#888;}
+.exec-title{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;}
+.exec-month{font-size:20px;font-weight:700;margin-bottom:22px;}
+.exec-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;}
+.exec-num{text-align:center;}
+.exec-num-val{font-size:24px;font-weight:700;letter-spacing:-1px;}
+.exec-num-label{font-size:11px;color:#888;margin-top:2px;}
+.exec-insight{background:#f8f8f9;border-radius:8px;padding:12px;font-size:12px;color:#555;line-height:1.6;}
+.exec-insight strong{color:#111;}
+.exec-btn{display:flex;align-items:center;justify-content:center;background:#f0f0f2;border:1px solid rgba(0,0,0,0.08);color:#888;font-size:11px;padding:8px;border-radius:8px;cursor:pointer;margin-top:14px;width:100%;font-family:'Sora',sans-serif;transition:all 0.15s;}
+.exec-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* EXEC TRIGGER */
+.exec-trigger{position:fixed;bottom:20px;left:calc(var(--sw) + 20px);z-index:200;background:var(--red);border:none;color:#fff;font-size:11px;font-weight:600;font-family:'Sora',sans-serif;padding:8px 16px;border-radius:20px;cursor:pointer;box-shadow:0 4px 16px rgba(232,25,44,0.4);transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.exec-trigger:hover{transform:translateY(-2px);}
+
+/* GLOSSARY */
+.glossary-btn{position:fixed;bottom:20px;right:20px;z-index:200;width:36px;height:36px;border-radius:50%;background:var(--red);border:none;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;box-shadow:0 4px 14px rgba(232,25,44,0.4);}
+.glossary-panel{display:none;position:fixed;bottom:64px;right:20px;z-index:200;width:270px;background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:12px;padding:14px;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
+.glossary-panel.open{display:block;}
+.glossary-title{font-size:12px;font-weight:600;margin-bottom:10px;}
+.glossary-item{margin-bottom:8px;}
+.glossary-term{font-size:11px;font-weight:600;color:var(--red);}
+.glossary-def{font-size:11px;color:#888;line-height:1.5;margin-top:1px;}
+
+/* TOAST */
+.toast{position:fixed;top:62px;right:20px;z-index:500;background:#111;color:#fff;font-size:12px;padding:10px 16px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3);opacity:0;transform:translateY(-8px);transition:all 0.3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{background:linear-gradient(135deg,#0a8a50,#0d6e40);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:#f5f5f5;}
+::-webkit-scrollbar-thumb{background:rgba(232,25,44,0.3);border-radius:2px;}
+
+/* ANIMATIONS */
+.page-section.active .kpi{animation:popIn 0.35s ease both;}
+.page-section.active .kpi:nth-child(1){animation-delay:0.04s;}
+.page-section.active .kpi:nth-child(2){animation-delay:0.08s;}
+.page-section.active .kpi:nth-child(3){animation-delay:0.12s;}
+.page-section.active .kpi:nth-child(4){animation-delay:0.16s;}
+.page-section.active .metric-box{animation:slideIn 0.3s ease both;}
+.page-section.active .metric-box:nth-child(1){animation-delay:0.06s;}
+.page-section.active .metric-box:nth-child(2){animation-delay:0.12s;}
+.page-section.active .metric-box:nth-child(3){animation-delay:0.18s;}
+@keyframes popIn{0%{opacity:0;transform:scale(0.9);}70%{transform:scale(1.02);}100%{opacity:1;transform:scale(1);}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
+
+/* DARK MODE */
+body.dark{background:#0d0d0f;}
+body.dark .sidebar{background:#141418;border-color:rgba(255,255,255,0.07);}
+body.dark .kpi{background:#1a1a22;border-color:rgba(255,255,255,0.06);color:#f0f0f5;}
+body.dark .kpi-value{color:#f0f0f5;}
+body.dark .metric-box{background:#1a1a22;border-color:rgba(255,255,255,0.06);}
+body.dark .metric-row{border-color:rgba(255,255,255,0.05);}
+body.dark .metric-name,.dark .metric-val{color:#aaa;}
+body.dark .metric-val{color:#f0f0f5;}
+body.dark .chart-box,.dark .best-box,.dark .compare-card{background:#1a1a22;border-color:rgba(255,255,255,0.06);}
+body.dark .best-title{color:#f0f0f5;}
+body.dark .exec-card{background:#1a1a22;}
+body.dark .exec-insight{background:#141418;}
+body.dark .glossary-panel{background:#1a1a22;border-color:rgba(255,255,255,0.1);}
+body.dark .home-card{background:#1a1a22;}
+body.dark .home-title{color:#f0f0f5;}
+body.dark #page-home{background:radial-gradient(ellipse at center,rgba(232,25,44,0.1) 0%,transparent 70%);}
+body.dark ::-webkit-scrollbar-track{background:#141418;}
+</style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="lock-screen">
+  <div class="lock-card">
+    <img src="data:image/jpeg;base64,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cVeCGK3LeiDD5qtypVbj91U/HCKRcImETCJhEwiYRMImETCKNvUV5WtrOj26EZRZpBG8DOSEWaGVJU5MFcqjcDGxCsQrNsN9strmkatMtG+hGsagg766GIPRZX2WxluD4nRvHgljS4OA3LXNc0wJEkTLZI1AUBeTv0761d0n1idbrrxYVIAyVAw77Su201lQf5SsCMOzI4JXLOnYz/3TP7o24bnd30BBggrZmPd6VxcNdRwymaDTI8RxBqR+60S2kesuI+yQdVcGtWVFVEVURAFVVAVVVRsqqo2AUAAAAbAZKAQtFPe57i5xJJMkkySTxJ4zxX656vlQf418qdQva1Tu9DTacenzI8Wq17dptXs0wvKbS7Fb2cNdalmVnEgkvW41ULIkCzFJICLg9Y9NerS6NS0np6QthUntS60lu/Hc0rW7tixauX9JhSoHmUTWHaMSX6DOpZJAyEoSKZx4As/xqfU2aB400yLT6AJbrLPJansX2mIj4pDP0tMA6bOSYZCUXinIihTy39M2pw6SunWauiVrDfwuG7qVO3ZtT6nWjvQWNZ9xHPplQRPfhjlRUDzjlO28kfTVmIvT0D0v6hVnjsLZrTums6hqIjkknijXSnfXbunaev4c46q6rqsU9mdEi3jjjX8f2ddZCL1PDfp51GlNpd2K5HbvQnVJtT91LJHWmtanVeSZqgSCWZIW1KOoBHLIRDTTivIwxxsRdH5FeUtuhb1K7YjpUU1AViNJ0yzYtUIbMT2ns6gr2K9JVs3/AHEYmWClAp6CMz2HcspFM2ETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwi//Z" class="lock-logo" alt="Myse">
+    <div class="lock-title">Dashboard Myse</div>
+    <div class="lock-sub">Digite a senha para acessar</div>
+    <div class="lock-wrap">
+      <input type="password" id="lock-input" placeholder="Senha de acesso">
+      <button class="lock-eye" id="lock-eye" type="button">👁</button>
+    </div>
+    <div id="lock-error">Senha incorreta. Tente novamente.</div>
+    <button class="lock-btn" type="button" id="lock-btn">Entrar</button>
+    <div class="lock-footer">Myse Sistemas · Analytics Dashboard</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="app" id="dashboard" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="data:image/jpeg;base64,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cVeCGK3LeiDD5qtypVbj91U/HCKRcImETCJhEwiYRMImETCKNvUV5WtrOj26EZRZpBG8DOSEWaGVJU5MFcqjcDGxCsQrNsN9strmkatMtG+hGsagg766GIPRZX2WxluD4nRvHgljS4OA3LXNc0wJEkTLZI1AUBeTv0761d0n1idbrrxYVIAyVAw77Su201lQf5SsCMOzI4JXLOnYz/3TP7o24bnd30BBggrZmPd6VxcNdRwymaDTI8RxBqR+60S2kesuI+yQdVcGtWVFVEVURAFVVAVVVRsqqo2AUAAAAbAZKAQtFPe57i5xJJMkkySTxJ4zxX656vlQf418qdQva1Tu9DTacenzI8Wq17dptXs0wvKbS7Fb2cNdalmVnEgkvW41ULIkCzFJICLg9Y9NerS6NS0np6QthUntS60lu/Hc0rW7tixauX9JhSoHmUTWHaMSX6DOpZJAyEoSKZx4As/xqfU2aB400yLT6AJbrLPJansX2mIj4pDP0tMA6bOSYZCUXinIihTy39M2pw6SunWauiVrDfwuG7qVO3ZtT6nWjvQWNZ9xHPplQRPfhjlRUDzjlO28kfTVmIvT0D0v6hVnjsLZrTums6hqIjkknijXSnfXbunaev4c46q6rqsU9mdEi3jjjX8f2ddZCL1PDfp51GlNpd2K5HbvQnVJtT91LJHWmtanVeSZqgSCWZIW1KOoBHLIRDTTivIwxxsRdH5FeUtuhb1K7YjpUU1AViNJ0yzYtUIbMT2ns6gr2K9JVs3/AHEYmWClAp6CMz2HcspFM2ETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwi//Z" alt="Myse">
+      <div>
+        <div class="sidebar-logo-text">Myse Sistemas</div>
+        <div class="sidebar-logo-sub">Analytics Dashboard</div>
+      </div>
+    </div>
+    <div class="sidebar-section">Meses</div>
+    <div class="month-item has-data" id="nav-fev">
+      <div class="month-item-btn" onclick="toggleMonth('fev')">
+        <div class="month-item-left"><div class="month-dot"></div><span class="month-label">Fev 2026</span></div>
+        <span class="month-chevron">›</span>
+      </div>
+      <div class="month-sub">
+        <div class="sub-link" onclick="showPage('fev-yt1')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Sistemas</div>
+        <div class="sub-link" onclick="showPage('fev-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
+        <div class="sub-link" onclick="showPage('fev-fb')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook</div>
+      </div>
+    </div>
+    <div class="month-item has-data" id="nav-mar">
+      <div class="month-item-btn" onclick="toggleMonth('mar')">
+        <div class="month-item-left"><div class="month-dot"></div><span class="month-label">Mar 2026</span></div>
+        <span class="month-chevron">›</span>
+      </div>
+      <div class="month-sub">
+        <div class="sub-link" onclick="showPage('mar-yt1')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Sistemas</div>
+        <div class="sub-link" onclick="showPage('mar-yt2')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Cortes2</div>
+        <div class="sub-link" onclick="showPage('mar-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
+        <div class="sub-link" onclick="showPage('mar-fb')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook</div>
+      </div>
+    </div>
+    <div class="month-item has-data" id="nav-abr">
+      <div class="month-item-btn" onclick="toggleMonth('abr')">
+        <div class="month-item-left"><div class="month-dot"></div><span class="month-label">Abr 2026</span></div>
+        <span class="month-chevron">›</span>
+      </div>
+      <div class="month-sub">
+        <div class="sub-link" onclick="showPage('abr-yt1')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Sistemas</div>
+        <div class="sub-link" onclick="showPage('abr-yt2')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Cortes2</div>
+        <div class="sub-link" onclick="showPage('abr-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
+        <div class="sub-link" onclick="showPage('abr-fb')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook</div>
+      </div>
+    </div>
+    <div class="month-item has-data open" id="nav-mai">
+      <div class="month-item-btn" onclick="toggleMonth('mai')">
+        <div class="month-item-left"><div class="month-dot"></div><span class="month-label">Mai 2026</span></div>
+        <span class="month-chevron">›</span>
+      </div>
+      <div class="month-sub">
+        <div class="sub-link" onclick="showPage('mai-yt1')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Sistemas</div>
+        <div class="sub-link" onclick="showPage('mai-yt2')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Cortes2</div>
+        <div class="sub-link" onclick="showPage('mai-yt3')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse_systems</div>
+        <div class="sub-link" onclick="showPage('mai-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
+        <div class="sub-link" id="link-mai-fb1" onclick="showPage('mai-fb1')"><div class="sub-link-dot" style="background:var(--fb)"></div>FB Myse</div>
+        <div class="sub-link" onclick="showPage('mai-fb2')"><div class="sub-link-dot" style="background:var(--fb)"></div>FB FazNota</div>
+        <div class="sub-link" onclick="showPage('mai-fb3')"><div class="sub-link-dot" style="background:var(--fb)"></div>FB Foodi</div>
+      </div>
+    </div>
+    <div class="sidebar-section">Análise</div>
+    <div class="sidebar-compare" id="nav-compare" onclick="showPage('compare')">
+      <p>📊 Comparativo</p>
+      <span>Meses lado a lado</span>
+    </div>
+    <div class="sidebar-bottom">
+      <button id="dark-btn" type="button" onclick="toggleDark()">🌙 Modo Escuro</button>
+      <div class="updated">Por <strong style="color:var(--red);">RIKELME</strong></div>
+      <div class="updated" style="margin-top:2px;">Atualizado 01/06/2026</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <img src="data:image/jpeg;base64,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cVeCGK3LeiDD5qtypVbj91U/HCKRcImETCJhEwiYRMImETCKNvUV5WtrOj26EZRZpBG8DOSEWaGVJU5MFcqjcDGxCsQrNsN9strmkatMtG+hGsagg766GIPRZX2WxluD4nRvHgljS4OA3LXNc0wJEkTLZI1AUBeTv0761d0n1idbrrxYVIAyVAw77Su201lQf5SsCMOzI4JXLOnYz/3TP7o24bnd30BBggrZmPd6VxcNdRwymaDTI8RxBqR+60S2kesuI+yQdVcGtWVFVEVURAFVVAVVVRsqqo2AUAAAAbAZKAQtFPe57i5xJJMkkySTxJ4zxX656vlQf418qdQva1Tu9DTacenzI8Wq17dptXs0wvKbS7Fb2cNdalmVnEgkvW41ULIkCzFJICLg9Y9NerS6NS0np6QthUntS60lu/Hc0rW7tixauX9JhSoHmUTWHaMSX6DOpZJAyEoSKZx4As/xqfU2aB400yLT6AJbrLPJansX2mIj4pDP0tMA6bOSYZCUXinIihTy39M2pw6SunWauiVrDfwuG7qVO3ZtT6nWjvQWNZ9xHPplQRPfhjlRUDzjlO28kfTVmIvT0D0v6hVnjsLZrTums6hqIjkknijXSnfXbunaev4c46q6rqsU9mdEi3jjjX8f2ddZCL1PDfp51GlNpd2K5HbvQnVJtT91LJHWmtanVeSZqgSCWZIW1KOoBHLIRDTTivIwxxsRdH5FeUtuhb1K7YjpUU1AViNJ0yzYtUIbMT2ns6gr2K9JVs3/AHEYmWClAp6CMz2HcspFM2ETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwi//Z" alt="Myse">
+        <div>
+          <div id="topbar-title">Selecione um mês</div>
+          <div id="topbar-sub">Use o menu lateral para navegar</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button id="share-btn" type="button" onclick="shareLink()">🔗 Compartilhar</button>
+        <div id="topbar-badge">2026</div>
+      </div>
+    </div>
+    <div class="content">
+      <!-- ══════ FEV — YT1 ══════ -->
+    <div class="page-section" id="page-fev-yt1">
+            <div class="ai-box" id="ai-fev-yt1">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Fevereiro 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-fev-yt1">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-fev-yt1"></div>
+      </div>
+      <div class="summary-pill">📊 Em fevereiro, o canal <strong>Myse Sistemas</strong> teve desempenho modesto com <strong>1.023 views</strong> — nenhum vídeo foi publicado no período, mas o canal manteve engajamento orgânico vindo principalmente da pesquisa do YouTube.</div>
+      <div class="slabel">visão geral — fevereiro 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--yt)"></div><div class="kpi-label">Visualizações <span class="help" data-tip="Quantas vezes os vídeos foram assistidos">ⓘ</span></div><div class="kpi-value">1.023</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Inscritos líquidos <span class="help" data-tip="Novos inscritos menos quem cancelou">ⓘ</span></div><div class="kpi-value">+3</div><div class="kpi-sub up">↑ +4 novos · -1 perdido</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--faint)"></div><div class="kpi-label">Vídeos publicados</div><div class="kpi-value">0</div><div class="kpi-sub">Nenhum vídeo novo</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Tempo de exibição <span class="help" data-tip="Total de horas assistidas no período">ⓘ</span></div><div class="kpi-value">5,4h</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Tráfego</div>
+          <div class="metric-row"><span class="metric-name">Impressões <span class="help" data-tip="Vezes que a thumbnail apareceu para alguém">ⓘ</span></span><span class="metric-val">6.587</span></div>
+          <div class="metric-row"><span class="metric-name">CTR <span class="help" data-tip="De 100 pessoas que viram, 6,25 clicaram">ⓘ</span></span><span class="metric-val">6,25%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #1</span><span class="metric-val">Pesquisa YT 83,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #2</span><span class="metric-val">Externa 5,5%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #3</span><span class="metric-val">Canais YT 4,0%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Curtidas</span><span class="metric-val">11</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">0</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">7</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#555">Audiência</div>
+          <div class="metric-row"><span class="metric-name">Gênero</span><span class="metric-val">80,1% masc.</span></div>
+          <div class="metric-row"><span class="metric-name">25-34 anos</span><span class="metric-val">38,2%</span></div>
+          <div class="metric-row"><span class="metric-name">35-44 anos</span><span class="metric-val">25,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">82,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Portugal</span><span class="metric-val">4,6%</span></div>
+        </div>
+      </div>
+      <div class="slabel">evolução semanal</div>
+      <div class="chart-box"><div class="chart-box-label">Views por semana</div><div class="chart-wrap"><canvas id="c-fev-yt1-week"></canvas></div></div>
+      <div class="slabel">destaques de conteúdo</div>
+      <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Emita nota fiscal pela maquininha do cartão</div><div class="best-stat">581 views · 137,0% retenção</div></div>
+    </div>
+
+    <!-- ══════ FEV — IG ══════ -->
+    <div class="page-section" id="page-fev-ig">
+      <div class="no-data-state-wrap"><div class="icon">📸</div><p>Dados de Instagram para fevereiro não disponíveis.<br>Postagens regulares iniciaram em maio/2026.</p></div>
+    </div>
+    <div class="page-section" id="page-fev-fb">
+      <div class="no-data-state-wrap"><div class="icon">📘</div><p>Dados de Facebook para fevereiro não disponíveis.<br>Postagens regulares iniciaram em maio/2026.</p></div>
+    </div>
+
+    <!-- ══════ MAR — YT1 ══════ -->
+    <div class="page-section" id="page-mar-yt1">
+            <div class="ai-box" id="ai-mar-yt1">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Março 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mar-yt1">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mar-yt1"></div>
+      </div>
+      <div class="summary-pill">🚀 Março foi o <strong>mês de virada</strong> do canal Myse Sistemas — com 22 vídeos publicados, as views explodiram para <strong>11.541</strong>, um crescimento enorme. O Feed de Shorts foi o motor principal, representando 82,6% do tráfego.</div>
+      <div class="slabel">visão geral — março 2026 <span class="best-month-badge">🏆 Melhor mês</span></div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--yt)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">11.541</div><div class="kpi-sub up">↑ 1.023 em fev (+1.028,2%)</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Inscritos líquidos</div><div class="kpi-value">+18</div><div class="kpi-sub up">↑ +19 novos · -1 perdido</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kpi-label">Vídeos publicados</div><div class="kpi-value">22</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Tempo de exibição</div><div class="kpi-value">25,3h</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Tráfego</div>
+          <div class="metric-row"><span class="metric-name">Impressões</span><span class="metric-val">14.512</span></div>
+          <div class="metric-row"><span class="metric-name">CTR</span><span class="metric-val">4,06%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #1</span><span class="metric-val">Shorts Feed 82,6%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #2</span><span class="metric-val">Pesquisa YT 9,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #3</span><span class="metric-val">Canais YT 4,9%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Curtidas</span><span class="metric-val">162</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">4</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">33</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#555">Audiência</div>
+          <div class="metric-row"><span class="metric-name">Gênero</span><span class="metric-val">80,1% masc.</span></div>
+          <div class="metric-row"><span class="metric-name">25-34 anos</span><span class="metric-val">38,2%</span></div>
+          <div class="metric-row"><span class="metric-name">35-44 anos</span><span class="metric-val">25,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">82,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Portugal</span><span class="metric-val">4,6%</span></div>
+        </div>
+      </div>
+      <div class="slabel">evolução semanal</div>
+      <div class="chart-box"><div class="chart-box-label">Views por semana — crescimento explosivo na semana 4 (total oficial: 11.541)</div><div class="chart-wrap"><canvas id="c-mar-yt1-week"></canvas></div></div>
+      <div class="slabel">destaques de conteúdo</div>
+      <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Desistir não é uma opção #estrategia #myse</div><div class="best-stat">1.482 views</div></div>
+      <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">CHEGA DE ANOTAR VENDAS NO PAPEL E NA CANETA!</div><div class="best-stat">602,8% de retenção — as pessoas assistiram várias vezes!</div></div>
+    </div>
+
+    <!-- ══════ MAR — YT2 ══════ -->
+    <div class="page-section" id="page-mar-yt2">
+            <div class="ai-box" id="ai-mar-yt2">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Cortes2 · Março 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mar-yt2">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mar-yt2"></div>
+      </div>
+      <div class="summary-pill">🆕 O canal <strong>Myse Cortes2</strong> foi criado em <strong>23/03/2026</strong> e já saiu forte — em apenas 9 dias acumulou <strong>13.817 views</strong>, impulsionado pelo Feed de Shorts que representou 97,3% do tráfego.</div>
+      <div class="slabel">visão geral — março 2026 (a partir de 23/03) <span class="best-month-badge">🏆 Melhor mês</span></div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--yt)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">13.817</div><div class="kpi-sub">Apenas 9 dias de canal</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Inscritos líquidos</div><div class="kpi-value">0</div><div class="kpi-sub">+5 novos · -5 perdidos</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kpi-label">Vídeos publicados</div><div class="kpi-value">17</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Tempo de exibição</div><div class="kpi-value">20,2h</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Tráfego</div>
+          <div class="metric-row"><span class="metric-name">Impressões</span><span class="metric-val">602</span></div>
+          <div class="metric-row"><span class="metric-name">CTR</span><span class="metric-val">3,16%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #1</span><span class="metric-val">Shorts Feed 97,3%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #2</span><span class="metric-val">Pesquisa YT 1,3%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Curtidas</span><span class="metric-val">129</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">0</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">1</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#555">Audiência</div>
+          <div class="metric-row"><span class="metric-name">Gênero</span><span class="metric-val">40,7% masc.</span></div>
+          <div class="metric-row"><span class="metric-name">25-34 anos</span><span class="metric-val">24,4%</span></div>
+          <div class="metric-row"><span class="metric-name">35-44 anos</span><span class="metric-val">20,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">86,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Portugal</span><span class="metric-val">8,2%</span></div>
+        </div>
+      </div>
+      <div class="slabel">evolução semanal</div>
+      <div class="chart-box"><div class="chart-box-label">Views por semana — canal criado em 23/03, apenas 2 semanas de dados</div><div class="chart-wrap"><canvas id="c-mar-yt2-week"></canvas></div></div>
+      <div class="slabel">destaques de conteúdo</div>
+      <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Não perca o momento #estrategia #myse</div><div class="best-stat">2.308 views</div></div>
+      <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">Diga adeus aos computadores #faznota #myse</div><div class="best-stat">81,5% de retenção</div></div>
+    </div>
+
+    <div class="page-section" id="page-mar-ig"><div class="no-data-state">
+        <div class="no-data-icon">📸</div>
+        <div class="no-data-title">Sem dados registrados</div>
+        <div class="no-data-desc">As informações de <strong>Instagram</strong> referentes a <strong>Março 2026</strong> não estão disponíveis no momento, pois não temos dados registrados para este período.</div>
+        <div class="no-data-pill">📅 Dados disponíveis a partir de Maio 2026</div>
+      </div></div>
+    <div class="page-section" id="page-mar-fb"><div class="no-data-state">
+        <div class="no-data-icon">📘</div>
+        <div class="no-data-title">Sem dados registrados</div>
+        <div class="no-data-desc">As informações de <strong>Facebook</strong> referentes a <strong>Março 2026</strong> não estão disponíveis no momento, pois não temos dados registrados para este período.</div>
+        <div class="no-data-pill">📅 Dados disponíveis a partir de Maio 2026</div>
+      </div></div>
+
+    <!-- ══════ ABR — YT1 ══════ -->
+    <div class="page-section" id="page-abr-yt1">
+            <div class="ai-box" id="ai-abr-yt1">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Abril 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-abr-yt1">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-abr-yt1"></div>
+      </div>
+      <div class="summary-pill">📉 Abril foi um mês de <strong>desaceleração</strong> para o Myse Sistemas — as views caíram de 11.541 para <strong>4.418</strong>. Apesar disso, o canal manteve boa atividade com 16 vídeos publicados e CTR de 4,91%, o melhor do período.</div>
+      <div class="slabel">visão geral — abril 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--yt)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">4.418</div><div class="kpi-sub down">↓ 11.541 em mar (-61,7%)</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Inscritos líquidos</div><div class="kpi-value">+5</div><div class="kpi-sub up">↑ +6 novos · -1 perdido</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kpi-label">Vídeos publicados</div><div class="kpi-value">16</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Tempo de exibição</div><div class="kpi-value">8,9h</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Tráfego</div>
+          <div class="metric-row"><span class="metric-name">Impressões</span><span class="metric-val">8.818</span></div>
+          <div class="metric-row"><span class="metric-name">CTR</span><span class="metric-val up">4,91%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #1</span><span class="metric-val">Shorts Feed 71,3%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #2</span><span class="metric-val">Pesquisa YT 21,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #3</span><span class="metric-val">Canais YT 3,4%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Curtidas</span><span class="metric-val">66</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">0</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">10</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#555">Audiência</div>
+          <div class="metric-row"><span class="metric-name">Gênero</span><span class="metric-val">80,1% masc.</span></div>
+          <div class="metric-row"><span class="metric-name">25-34 anos</span><span class="metric-val">38,2%</span></div>
+          <div class="metric-row"><span class="metric-name">35-44 anos</span><span class="metric-val">25,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">82,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Portugal</span><span class="metric-val">4,6%</span></div>
+        </div>
+      </div>
+      <div class="slabel">evolução semanal</div>
+      <div class="chart-box"><div class="chart-box-label">Views por semana · Os dias 26–30/04 não constam nos dados semanais (total oficial: 4.418)</div><div class="chart-wrap"><canvas id="c-abr-yt1-week"></canvas></div></div>
+      <div class="slabel">destaques de conteúdo</div>
+      <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">O Fim de uma Era: O que eu vi no litoral me assustou!</div><div class="best-stat">877 views</div></div>
+      <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">VOCÊ PRECISA VER ISSO ANTES DE VENDER DE NOVO</div><div class="best-stat">186,2% de retenção</div></div>
+    </div>
+
+    <!-- ══════ ABR — YT2 ══════ -->
+    <div class="page-section" id="page-abr-yt2">
+            <div class="ai-box" id="ai-abr-yt2">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Cortes2 · Abril 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-abr-yt2">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-abr-yt2"></div>
+      </div>
+      <div class="summary-pill">📊 Em abril, o <strong>Myse Cortes2</strong> publicou 23 vídeos e alcançou <strong>4.805 views</strong>. O Feed de Shorts continuou dominando com 96,3% do tráfego.</div>
+      <div class="slabel">visão geral — abril 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--yt)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">4.805</div><div class="kpi-sub down">↓ 13.817 em mar (-65,2%)</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--faint)"></div><div class="kpi-label">Inscritos líquidos</div><div class="kpi-value">0</div><div class="kpi-sub">+2 novos · -2 perdidos</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kpi-label">Vídeos publicados</div><div class="kpi-value">23</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Tempo de exibição</div><div class="kpi-value">9,96h</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Tráfego</div>
+          <div class="metric-row"><span class="metric-name">Impressões</span><span class="metric-val">586</span></div>
+          <div class="metric-row"><span class="metric-name">CTR</span><span class="metric-val">4,44%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #1</span><span class="metric-val">Shorts Feed 96,3%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #2</span><span class="metric-val">Pesquisa YT 1,9%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Curtidas</span><span class="metric-val">60</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">0</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">1</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#555">Audiência</div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">83,0%</span></div>
+          <div class="metric-row"><span class="metric-name">Portugal</span><span class="metric-val">2,0%</span></div>
+        </div>
+      </div>
+      <div class="slabel">evolução semanal</div>
+      <div class="chart-box"><div class="chart-box-label">Views por semana</div><div class="chart-wrap"><canvas id="c-abr-yt2-week"></canvas></div></div>
+      <div class="slabel">destaques de conteúdo</div>
+      <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Distração à La Carte?😂 #shorts #foodi #myse</div><div class="best-stat">1.544 views</div></div>
+      <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">O GOLPE DO BACON🐷 #empreendedorismo</div><div class="best-stat">101,19% de retenção</div></div>
+    </div>
+
+    <div class="page-section" id="page-abr-ig"><div class="no-data-state">
+        <div class="no-data-icon">📸</div>
+        <div class="no-data-title">Sem dados registrados</div>
+        <div class="no-data-desc">As informações de <strong>Instagram</strong> referentes a <strong>Abril 2026</strong> não estão disponíveis no momento, pois não temos dados registrados para este período.</div>
+        <div class="no-data-pill">📅 Dados disponíveis a partir de Maio 2026</div>
+      </div></div>
+    <div class="page-section" id="page-abr-fb"><div class="no-data-state">
+        <div class="no-data-icon">📘</div>
+        <div class="no-data-title">Sem dados registrados</div>
+        <div class="no-data-desc">As informações de <strong>Facebook</strong> referentes a <strong>Abril 2026</strong> não estão disponíveis no momento, pois não temos dados registrados para este período.</div>
+        <div class="no-data-pill">📅 Dados disponíveis a partir de Maio 2026</div>
+      </div></div>
+
+    <!-- ══════ MAI — YT1 ══════ -->
+    <div class="page-section" id="page-mai-yt1">
+            <div class="ai-box" id="ai-mai-yt1">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Maio 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mai-yt1">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mai-yt1"></div>
+      </div>
+      <div class="summary-pill">📈 Em maio, o Myse Sistemas <strong>se recuperou bem</strong> — saindo de 4.418 para <strong>6.732 views</strong> (+52,4%). Com 42 vídeos publicados, foi o mês com maior produção de conteúdo do canal.</div>
+      <div class="slabel">visão geral — maio 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--yt)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">6.732</div><div class="kpi-sub up">↑ 4.418 em abr (+52,4%)</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Inscritos líquidos</div><div class="kpi-value">+8</div><div class="kpi-sub up">↑ +10 novos · -2 perdidos</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kpi-label">Vídeos publicados</div><div class="kpi-value">42</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Tempo de exibição</div><div class="kpi-value">14,9h</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Tráfego</div>
+          <div class="metric-row"><span class="metric-name">Impressões</span><span class="metric-val">19.353</span></div>
+          <div class="metric-row"><span class="metric-name">CTR</span><span class="metric-val">2,77%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #1</span><span class="metric-val">Shorts Feed 98%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #2</span><span class="metric-val">Pesquisa YT</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Curtidas</span><span class="metric-val">149</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">5</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">53</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#555">Audiência</div>
+          <div class="metric-row"><span class="metric-name">Gênero</span><span class="metric-val">80,1% masc.</span></div>
+          <div class="metric-row"><span class="metric-name">25-34 anos</span><span class="metric-val">38,2%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">82,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Portugal</span><span class="metric-val">4,6%</span></div>
+        </div>
+      </div>
+      <div class="slabel">evolução semanal</div>
+      <div class="chart-box"><div class="chart-box-label">Views por semana</div><div class="chart-wrap"><canvas id="c-mai-yt1-week"></canvas></div></div>
+      <div class="slabel">destaques de conteúdo</div>
+      <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">Eu ignorei ele de propósito #empreendedorismo</div><div class="best-stat">939 views</div></div>
+      <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">Emita nota fiscal pela maquininha do cartão</div><div class="best-stat">128,3% de retenção</div></div>
+    </div>
+
+    <!-- ══════ MAI — YT2 ══════ -->
+    <div class="page-section" id="page-mai-yt2">
+            <div class="ai-box" id="ai-mai-yt2">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Cortes2 · Maio 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mai-yt2">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mai-yt2"></div>
+      </div>
+      <div class="summary-pill">📊 Em maio, o <strong>Myse Cortes2</strong> cresceu levemente com <strong>5.511 views</strong> (+14,7%). O público é 95% masculino e o canal começa a ter dados mais sólidos de audiência.</div>
+      <div class="slabel">visão geral — maio 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--yt)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">5.511</div><div class="kpi-sub up">↑ 4.805 em abr (+14,7%)</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Inscritos líquidos</div><div class="kpi-value">+4</div><div class="kpi-sub up">↑ +6 novos · -2 perdidos</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kpi-label">Vídeos publicados</div><div class="kpi-value">57</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Tempo de exibição</div><div class="kpi-value">17,2h</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Tráfego</div>
+          <div class="metric-row"><span class="metric-name">Impressões</span><span class="metric-val">2.353</span></div>
+          <div class="metric-row"><span class="metric-name">CTR</span><span class="metric-val">2,25%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #1</span><span class="metric-val">Shorts Feed 94,7%</span></div>
+          <div class="metric-row"><span class="metric-name">Fonte #2</span><span class="metric-val">Pesquisa YT 1,9%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#c00">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Curtidas</span><span class="metric-val">87</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">5</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">4</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#555">Audiência</div>
+          <div class="metric-row"><span class="metric-name">Gênero</span><span class="metric-val">95% masc.</span></div>
+          <div class="metric-row"><span class="metric-name">25-34 anos</span><span class="metric-val">24,6%</span></div>
+          <div class="metric-row"><span class="metric-name">35-44 anos</span><span class="metric-val">22,3%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">83,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Portugal</span><span class="metric-val">3,0%</span></div>
+        </div>
+      </div>
+      <div class="slabel">evolução semanal</div>
+      <div class="chart-box"><div class="chart-box-label">Views por semana</div><div class="chart-wrap"><canvas id="c-mai-yt2-week"></canvas></div></div>
+      <div class="slabel">destaques de conteúdo</div>
+      <div class="best-box"><div class="best-label">📹 Vídeo mais visto</div><div class="best-title">O seu funcionário mudou de vida de repente? Cuidado!</div><div class="best-stat">1.052 views</div></div>
+      <div class="best-box"><div class="best-label">⏱ Melhor retenção</div><div class="best-title">ESTÃO TE ROUBANDO? 💸 A Myse te ajuda a descobrir.</div><div class="best-stat">249,8% de retenção</div></div>
+    </div>
+
+    <!-- MAI YT3, IG, FB (resumidos) -->
+    <div class="page-section" id="page-mai-yt3">
+            <div class="ai-box" id="ai-mai-yt3">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse_systems · Maio 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mai-yt3">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mai-yt3"></div>
+      </div>
+      <div class="summary-pill">🆕 Canal <strong>Myse_systems</strong> criado em 04/05/2026 — ainda no início com apenas 1 vídeo publicado e 3 views. CTR de 8,33% é promissor para um canal recém-criado.</div>
+      <div class="slabel">visão geral — maio 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--faint)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">3</div><div class="kpi-sub">Canal novo — 04/05</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Inscritos líquidos</div><div class="kpi-value">+2</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--faint)"></div><div class="kpi-label">Vídeos publicados</div><div class="kpi-value">1</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">CTR</div><div class="kpi-value">8,33%</div><div class="kpi-sub up">Excelente para início</div></div>
+      </div>
+      <div class="best-box"><div class="best-label">📹 Único vídeo</div><div class="best-title">Ninguém imaginava que o suporte ficaria tão fácil!</div><div class="best-stat">3 views · 12 impressões · 6,78% retenção</div></div>
+    </div>
+
+    <div class="page-section" id="page-mai-ig">
+            <div class="ai-box" id="ai-mai-ig">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Instagram · Maio 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mai-ig">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mai-ig"></div>
+      </div>
+      <div class="summary-pill">🏆 Instagram foi o <strong>canal campeão de maio</strong> — com <strong>18.434 views</strong> e 96,2% vindo de não seguidores. Prova que os Reels estão alcançando muito além da base atual de 362 seguidores.</div>
+      <div class="slabel">visão geral — maio 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--ig)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">18.434</div><div class="kpi-sub up">🏆 Campeão do mês</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--ig)"></div><div class="kpi-label">Contas alcançadas</div><div class="kpi-value">2.077</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Seguidores</div><div class="kpi-value">362</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Interações</div><div class="kpi-value">93</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#9c2070">Origem das Views</div>
+          <div class="metric-row"><span class="metric-name">Não seguidores</span><span class="metric-val up">96,2%</span></div>
+          <div class="metric-row"><span class="metric-name">Seguidores</span><span class="metric-val">3,8%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#9c2070">Formato</div>
+          <div class="metric-row"><span class="metric-name">Reels</span><span class="metric-val">93,5%</span></div>
+          <div class="metric-row"><span class="metric-name">Posts</span><span class="metric-val">3,6%</span></div>
+          <div class="metric-row"><span class="metric-name">Stories</span><span class="metric-val">2,9%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#9c2070">Perfil</div>
+          <div class="metric-row"><span class="metric-name">Visitas ao perfil</span><span class="metric-val">88</span></div>
+          <div class="metric-row"><span class="metric-name">Cliques em links</span><span class="metric-val">9</span></div>
+          <div class="metric-row"><span class="metric-name">Engajamento único</span><span class="metric-val">48 contas</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-section" id="page-mai-fb1">
+            <div class="ai-box" id="ai-mai-fb1">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — FB Myse · Maio 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mai-fb1">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mai-fb1"></div>
+      </div>
+      <div class="summary-pill">📘 A página <strong>Myse no Facebook</strong> teve <strong>5.736 views</strong> em maio, queda de 12% vs abril. O engajamento cresceu +96% — sinal de que o conteúdo está mais relevante para quem já segue.</div>
+      <div class="slabel">visão geral — maio 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--fb)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">5.736</div><div class="kpi-sub down">↓ -12% vs abril</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Engajamento</div><div class="kpi-value">100</div><div class="kpi-sub up">↑ +96,1%</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Seguidores</div><div class="kpi-value">899</div><div class="kpi-sub up">↑ +3 no período</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Reações</span><span class="metric-val">26</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">2</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">18</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Audiência</div>
+          <div class="metric-row"><span class="metric-name">35-44 anos</span><span class="metric-val">29,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">96,8%</span></div>
+          <div class="metric-row"><span class="metric-name">Toledo, PR</span><span class="metric-val">43,7%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-section" id="page-mai-fb2">
+            <div class="ai-box" id="ai-mai-fb2">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — FB FazNota · Maio 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mai-fb2">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mai-fb2"></div>
+      </div>
+      <div class="summary-pill">🔥 A página <strong>FazNota no Facebook</strong> explodiu em maio — <strong>+15.685%</strong> em views, saindo de 939 para 1.105. Reels foram responsáveis por 86,7% das visualizações.</div>
+      <div class="slabel">visão geral — maio 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--fb)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">1.105</div><div class="kpi-sub up">↑ +15.685,7%</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Interações</div><div class="kpi-value">21</div><div class="kpi-sub up">↑ +100%</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Seguidores</div><div class="kpi-value">304</div><div class="kpi-sub up">↑ +1 no período</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Views 3s</div><div class="kpi-value">470</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Reações</span><span class="metric-val">10</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">0</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">11</span></div>
+          <div class="metric-row"><span class="metric-name">Views 1 minuto</span><span class="metric-val">31</span></div>
+          <div class="metric-row"><span class="metric-name">Não seguidores</span><span class="metric-val">76,2%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Formato</div>
+          <div class="metric-row"><span class="metric-name">Reel (views)</span><span class="metric-val">86,7%</span></div>
+          <div class="metric-row"><span class="metric-name">Outro (views)</span><span class="metric-val">5,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Foto (views)</span><span class="metric-val">5,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Reel (eng.)</span><span class="metric-val">71,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Foto (eng.)</span><span class="metric-val">28,5%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Audiência</div>
+          <div class="metric-row"><span class="metric-name">35–44 anos</span><span class="metric-val">26,5%</span></div>
+          <div class="metric-row"><span class="metric-name">25–34 anos</span><span class="metric-val">23,8%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">96,2%</span></div>
+          <div class="metric-row"><span class="metric-name">EUA</span><span class="metric-val">1,0%</span></div>
+          <div class="metric-row"><span class="metric-name">Paraguai</span><span class="metric-val">0,7%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Cidades</div>
+          <div class="metric-row"><span class="metric-name">Toledo, PR</span><span class="metric-val">38,0%</span></div>
+          <div class="metric-row"><span class="metric-name">Rio de Janeiro, RJ</span><span class="metric-val">24,1%</span></div>
+          <div class="metric-row"><span class="metric-name">Cascavel, PR</span><span class="metric-val">10,2%</span></div>
+          <div class="metric-row"><span class="metric-name">São Paulo, SP</span><span class="metric-val">7,9%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-section" id="page-mai-fb3">
+            <div class="ai-box" id="ai-mai-fb3">
+        <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — FB Foodi · Maio 2026</span></div>
+        <div class="ai-box-content loading" id="ai-content-mai-fb3">Carregando análise...</div>
+        <div class="ai-suggestions" id="ai-suggestions-mai-fb3"></div>
+      </div>
+      <div class="summary-pill">📊 A página <strong>Foodi</strong> tem a maior base de seguidores (5.440) mas ainda com baixo engajamento relativo. Em maio, as views cresceram +1.488% — os Reels estão começando a funcionar.</div>
+      <div class="slabel">visão geral — maio 2026</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-bar" style="background:var(--fb)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">381</div><div class="kpi-sub up">↑ +1.488%</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Engajamento</div><div class="kpi-value">18</div><div class="kpi-sub up">↑ +1.700%</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Seguidores</div><div class="kpi-value">5.440</div><div class="kpi-sub down">↓ -2 no período</div></div>
+        <div class="kpi"><div class="kpi-bar" style="background:var(--muted)"></div><div class="kpi-label">Views 3 segundos</div><div class="kpi-value">70</div><div class="kpi-sub up">↑ +100%</div></div>
+      </div>
+      <div class="metrics-cols">
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Engajamento</div>
+          <div class="metric-row"><span class="metric-name">Reações</span><span class="metric-val">4</span></div>
+          <div class="metric-row"><span class="metric-name">Comentários</span><span class="metric-val">0</span></div>
+          <div class="metric-row"><span class="metric-name">Compartilhamentos</span><span class="metric-val">12</span></div>
+          <div class="metric-row"><span class="metric-name">Shares vs Reações</span><span class="metric-val">75% / 25%</span></div>
+          <div class="metric-row"><span class="metric-name">Não seguidores</span><span class="metric-val">87,5%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Visualizações por tipo</div>
+          <div class="metric-row"><span class="metric-name">Reel</span><span class="metric-val">83,7%</span></div>
+          <div class="metric-row"><span class="metric-name">Foto</span><span class="metric-val">11,3%</span></div>
+          <div class="metric-row"><span class="metric-name">Várias fotos</span><span class="metric-val">3,4%</span></div>
+          <div class="metric-row"><span class="metric-name">Link</span><span class="metric-val">1,6%</span></div>
+          <div class="metric-row"><span class="metric-name">Não seguidores (views)</span><span class="metric-val">84,8%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Tráfego</div>
+          <div class="metric-row"><span class="metric-name">Reels</span><span class="metric-val">70,8%</span></div>
+          <div class="metric-row"><span class="metric-name">Sua Página</span><span class="metric-val">18,5%</span></div>
+          <div class="metric-row"><span class="metric-name">Feed</span><span class="metric-val">8,2%</span></div>
+          <div class="metric-row"><span class="metric-name">Indisponível</span><span class="metric-val">2,5%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Audiência</div>
+          <div class="metric-row"><span class="metric-name">35–44 anos</span><span class="metric-val">38,2%</span></div>
+          <div class="metric-row"><span class="metric-name">25–34 anos</span><span class="metric-val">35,0%</span></div>
+          <div class="metric-row"><span class="metric-name">Brasil</span><span class="metric-val">97,9%</span></div>
+          <div class="metric-row"><span class="metric-name">Paraguai</span><span class="metric-val">0,6%</span></div>
+          <div class="metric-row"><span class="metric-name">Portugal</span><span class="metric-val">0,4%</span></div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-box-head" style="background:#2a52a0">Cidades</div>
+          <div class="metric-row"><span class="metric-name">Toledo, PR</span><span class="metric-val">63,8%</span></div>
+          <div class="metric-row"><span class="metric-name">Cascavel, PR</span><span class="metric-val">20,0%</span></div>
+          <div class="metric-row"><span class="metric-name">Foz do Iguaçu, PR</span><span class="metric-val">6,7%</span></div>
+          <div class="metric-row"><span class="metric-name">Curitiba, PR</span><span class="metric-val">2,6%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ COMPARATIVO ══════ -->
+    <div class="page-section" id="page-compare">
+      <div class="summary-pill">📊 Compare a evolução dos canais ao longo dos meses. <strong>Março foi o pico</strong> do Myse Sistemas com 11.541 views. O Cortes2 começou forte mas estabilizou. Maio mostrou recuperação geral.</div>
+      <div class="slabel">evolução de views — myse sistemas (fev–mai)</div>
+      <div class="chart-box"><div class="chart-box-label">Views mensais — Myse Sistemas</div><div class="chart-wrap" style="height:200px;"><canvas id="c-comp-yt1"></canvas></div></div>
+      <div class="slabel">evolução de views — myse cortes2 (mar–mai)</div>
+      <div class="chart-box"><div class="chart-box-label">Views mensais — Myse Cortes2</div><div class="chart-wrap" style="height:200px;"><canvas id="c-comp-yt2"></canvas></div></div>
+      <div class="slabel">comparativo lado a lado — todos os canais youtube</div>
+      <div class="chart-box"><div class="chart-box-label">Views por mês · barras agrupadas</div><div class="chart-wrap" style="height:220px;"><canvas id="c-comp-all"></canvas></div></div>
+      <div class="slabel">evolução de inscritos líquidos — myse sistemas</div>
+      <div class="chart-box"><div class="chart-box-label">Inscritos ganhos por mês</div><div class="chart-wrap" style="height:160px;"><canvas id="c-comp-subs"></canvas></div></div>
+      <div class="slabel">resumo comparativo</div>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h4>Myse Sistemas — Views</h4>
+          <div class="prog-row"><span class="prog-label">Fev 2026</span><div class="prog-bar-wrap"><div class="prog-bar" style="width:8.9%;background:var(--faint)"></div></div><span class="prog-val">1.023</span></div>
+          <div class="prog-row"><span class="prog-label">Mar 2026</span><div class="prog-bar-wrap"><div class="prog-bar" style="width:100%;background:var(--red)"></div></div><span class="prog-val">11.541</span></div>
+          <div class="prog-row"><span class="prog-label">Abr 2026</span><div class="prog-bar-wrap"><div class="prog-bar" style="width:38.3%;background:var(--amber)"></div></div><span class="prog-val">4.418</span></div>
+          <div class="prog-row"><span class="prog-label">Mai 2026</span><div class="prog-bar-wrap"><div class="prog-bar" style="width:58.3%;background:var(--green)"></div></div><span class="prog-val">6.732</span></div>
+        </div>
+        <div class="compare-card">
+          <h4>Myse Cortes2 — Views</h4>
+          <div class="prog-row"><span class="prog-label">Mar 2026</span><div class="prog-bar-wrap"><div class="prog-bar" style="width:100%;background:var(--red)"></div></div><span class="prog-val">13.817</span></div>
+          <div class="prog-row"><span class="prog-label">Abr 2026</span><div class="prog-bar-wrap"><div class="prog-bar" style="width:34.8%;background:var(--amber)"></div></div><span class="prog-val">4.805</span></div>
+          <div class="prog-row"><span class="prog-label">Mai 2026</span><div class="prog-bar-wrap"><div class="prog-bar" style="width:39.9%;background:var(--green)"></div></div><span class="prog-val">5.511</span></div>
+        </div>
+        <div class="compare-card">
+          <h4>Insights da Comparação</h4>
+          <div style="font-size:11px;color:var(--muted);line-height:1.8;">
+            <div>🚀 <strong style="color:var(--text)">Março</strong> foi o pico — 11.541 + 13.817 views nos canais</div>
+            <div>📉 <strong style="color:var(--text)">Abril</strong> queda de -61,7% (YT1) e -65,2% (YT2)</div>
+            <div>📈 <strong style="color:var(--text)">Maio</strong> recuperação — YT1 +52,4%, YT2 +14,7%</div>
+            <div>🎯 <strong style="color:var(--text)">Shorts Feed</strong> domina o tráfego em todos os meses (+80%)</div>
+            <div>🌍 <strong style="color:var(--text)">Brasil</strong> representa +80% da audiência em ambos</div>
+            <div>📊 <strong style="color:var(--text)">Total engajamento YT:</strong> Fev:18 · Mar:329 · Abr:137 · Mai:306</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEFAULT -->
+    <div class="page-section active" id="page-home">
+      <div style="text-align:center;width:90%;max-width:600px;">
+        <img src="data:image/jpeg;base64,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cVeCGK3LeiDD5qtypVbj91U/HCKRcImETCJhEwiYRMImETCKNvUV5WtrOj26EZRZpBG8DOSEWaGVJU5MFcqjcDGxCsQrNsN9strmkatMtG+hGsagg766GIPRZX2WxluD4nRvHgljS4OA3LXNc0wJEkTLZI1AUBeTv0761d0n1idbrrxYVIAyVAw77Su201lQf5SsCMOzI4JXLOnYz/3TP7o24bnd30BBggrZmPd6VxcNdRwymaDTI8RxBqR+60S2kesuI+yQdVcGtWVFVEVURAFVVAVVVRsqqo2AUAAAAbAZKAQtFPe57i5xJJMkkySTxJ4zxX656vlQf418qdQva1Tu9DTacenzI8Wq17dptXs0wvKbS7Fb2cNdalmVnEgkvW41ULIkCzFJICLg9Y9NerS6NS0np6QthUntS60lu/Hc0rW7tixauX9JhSoHmUTWHaMSX6DOpZJAyEoSKZx4As/xqfU2aB400yLT6AJbrLPJansX2mIj4pDP0tMA6bOSYZCUXinIihTy39M2pw6SunWauiVrDfwuG7qVO3ZtT6nWjvQWNZ9xHPplQRPfhjlRUDzjlO28kfTVmIvT0D0v6hVnjsLZrTums6hqIjkknijXSnfXbunaev4c46q6rqsU9mdEi3jjjX8f2ddZCL1PDfp51GlNpd2K5HbvQnVJtT91LJHWmtanVeSZqgSCWZIW1KOoBHLIRDTTivIwxxsRdH5FeUtuhb1K7YjpUU1AViNJ0yzYtUIbMT2ns6gr2K9JVs3/AHEYmWClAp6CMz2HcspFM2ETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwi//Z" style="width:72px;height:72px;border-radius:14px;object-fit:cover;margin-bottom:20px;box-shadow:0 4px 20px rgba(232,25,44,0.2);" alt="Myse">
+        <div style="font-size:26px;font-weight:700;color:#111;margin-bottom:8px;letter-spacing:-0.5px;">Bem-vindo ao Dashboard Myse</div>
+        <div style="font-size:13px;color:#888;line-height:1.8;margin-bottom:32px;">Use o menu lateral para navegar pelos meses e canais.<br>Selecione <strong style="color:#E8192C;">Comparativo</strong> para ver a evolução ao longo do tempo.</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:28px;">
+          <div style="background:#fff;border:1px solid rgba(232,25,44,0.15);border-radius:12px;padding:16px 24px;min-width:110px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-size:24px;font-weight:700;color:#E8192C;">4</div>
+            <div style="font-size:11px;color:#888;margin-top:4px;">Meses analisados</div>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(232,25,44,0.15);border-radius:12px;padding:16px 24px;min-width:110px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-size:24px;font-weight:700;color:#E8192C;">7</div>
+            <div style="font-size:11px;color:#888;margin-top:4px;">Canais monitorados</div>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(232,25,44,0.15);border-radius:12px;padding:16px 24px;min-width:110px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-size:24px;font-weight:700;color:#E8192C;">37.902</div>
+            <div style="font-size:11px;color:#888;margin-top:4px;">Views em maio</div>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(232,25,44,0.15);border-radius:12px;padding:16px 24px;min-width:110px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-size:24px;font-weight:700;color:#E8192C;">3</div>
+            <div style="font-size:11px;color:#888;margin-top:4px;">Plataformas</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#bbb;font-family:'JetBrains Mono',monospace;">Atualizado em 01/06/2026</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- HOME -->
+      <div class="page-section active" id="page-home">
+        <div class="home-inner">
+          <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAqRXhpZgAASUkqAAgAAAABADEBAgAHAAAAGgAAAAAAAABQaWNhc2EAAP/bAIQAAwICCAgICAgICAgICAgKCAgICAgICAgICAgICAgICAgICAgJCAgICAgICAgICggICAgJCQoKCAwPCggNCAgKCAEDBAQGBQYKBgYKDQoKCg0LDQ4NDgoNDhALDg0OCg0QDQ4KEA4LDgoPCg4LDQ4KDQsNDhAPDQ0PDg4PDQ8NDQ0N/8AAEQgAoACgAwERAAIRAQMRAf/EAB0AAQADAQEAAwEAAAAAAAAAAAAHCAkGBQECAwT/xAA3EAACAgEDAgUCBAQEBwAAAAABAgMEAAUREhMhBgcIFCIJMSMyQVEVQmFxJDNigRYlNENSgpH/xAAdAQEAAQUBAQEAAAAAAAAAAAAABQMEBgcIAQIJ/8QAPxEAAQMCBAMFBQUGBQUAAAAAAQACEQMEBRIhMUFRYQYHEyJxFDKBkaFCQ1KxwSNicpKi8BXD0dLhJDNjgsL/2gAMAwEAAhEDEQA/ANU8ImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhFmz62PN68viGzXq3rtaKrDVhKV7c8EbSNF7ln4QyKpbjYRCxG/x2/QZj90c9Uw53lgQHOEaTwIn3guse77ArR2C069xQpVHVX1HAvpMcQ0OyAS5pIEsJAHPqvC8O+rjU6ukRabSntzalZnlksXLDSXJ0DssUFWks5mJd441YtxKpzIRTI7vF8sqvY3I0nWSSSXH0Ezyk/QayJG67D2FziT767ZTZbUmNDKTA2m0wC51SoW5IDS4gagmPMcoAdDHi27qHXH8Qkv+6TZx757QsJv3Df4giVd9tw3bf8A2ym06cfjM/XX0lZ/Y07Lwf8Aom0fCdI/ZNp5D08vlMcQp/8AIT1uXNLq3K91pdQAi56d1pGd0scwphlmblIaxRjL8mYp0yi/5iBbijXfSBHvcgTsfXeOPThwA1l2l7vbbE7ijWtA23l0VsrQAWQTmawQM8jLoBOYOOxJirzO8zNe1Jfd6jLfNWweMXwsV9NIbkyxwqoWs/bcBiZJXUDk7kb5bio55zOJPXUN56fZ9NzG5KzPB8IwbDXezWLKPi09XeZj6oiAS4mXt6gBrQToAv18jfP69oluvLHZmNJXVbVRpHkgeszDqlIS3FJkTd45UCsGAB5Izo/0KxpHPOg1PIgTOnpy1kDhovjtF2ZtMatqlN9NorEEsqBoDg8A5ZfEuaTo9rpEa6EAiRvWF4m1Sh4guxxalqENeYQWq8cV+1HGsc0Sq4VElVUHuI59go222/sPbhh8Z4LncCAHuEAgcAQNwdlivYSzw6/wWjUqW1F9RhfTeXUKZJLXEiXFpJ8jmalTx9O3zFsXK2pwWrNizLBPBMr2ZpZ3WKxEyBVeVnYKHrOeIOwJ32+Xe9sDGZkkxB1JMTI3M/hK1t3pYVRs7i2rW9NlJlRj2kMY1oLmOBktaAJioNenRdz63PONtK0cxwSmK7qDe2rsjcZY4wA1qdCCrrwi2iEid0kmhOXF5ULWZRu4xPIcddI5AjYkLHe73ARiuJipWbmo24zvBEhx2Yw6EHM7Ug7tY4KiPld4i1jUr0NU6zqkUJ5TW7B1G6Fq0oFMtuwzGRlXpwq3AuOLSGNT+fIMUi4hoc8T/wCR+g4nc7DbTeBxXR+M2mF4dZvuPY7d79G02ezUpqVXnKxgGUE5nEZo1ygngup85fWbqeoM0NGebTtNT4QJDI6W5Yk2CSWrQYzdRwvJo4pEQBuDGcgyNdVKzquklreQJB6SdHA8xpxBndQ+A9gcPw9oq3bG3Fy7Vxc0FjXGZDKUZYEwC4EyJGT3RwVPyb8QXI1vpp+qWUYCSOzxneSRSOSvFybrSKwO6tGrBv0JzxrHkaAx6H+z6rJamPYLZvNk64t6ZBgsloDTtDoGVpHEOIjjCuD9PvS9V/5nLfnv9KFoacVS5JYPTnCdeZuhY7wsIpawBULyDtuOynLqxa6XOOaNNDm31nQ7cNuMzstFd51bDh7NTsmUczw+o6pTazzNJyNGdnv+Zr5mYIEcVy3qS9ec3Wlo6C6okZ4S6nxSQyOp2daaOGj6Q24+5dX6nyMaqBHNIrXTnEtp6DUTGp9OUHYkGeAiCZrsn3bUvDbd4wCS4S2hJblBGhqOBDpO+QERpmJMsFaofCHiLWomsiHV9ThHJus5szxsVLBhCZG4ysrKy8IAxU/HiOwy0Y15MjMepk78ieHotsuvsEwWoKGe2tnmBlAY0iYjNAloIIM1Ikayvjy98+NZ0ecNWuWF6RKPTtPLLWPFtmilrSN+GwK8C0fSmT5AMvcZ4yo5pzNJ9OGk6Rw6xB0TFOzeFYvSIr0WHPBFWmGteJGjm1APMDMgOzNOhIOi1Z8q/MKLVdOqahCOKWow/AkMY5ASksRYbAmKVXjJ2G5U9hk9SqCowPGk/Q8R8DouL8ZwuphV7VsqurqTomIzDQtdHDO0gj1XV5VUMmETCLG3zx8Sm5rOq2SQRJcshCPsYopWhh/ff8GNNz+p/b7ZjRJc5zjxc75SQPoAu8eztoLTCrWgBGWjTJ/icA939Tirv+gTyOiq0F1ieMNcvcvbsyjeCmCVUJvvs1kqZmcbFozCvbi3KSs6QjxSNTIHQfX3on0jkuee8ztFUur04ZSdFGhGcA+/U3M8/DnKBwcHHiIjL6l1mI3tKQceste00m23PpPNEIeX68eaT8d+2/P+uUb0HxGkbQZ+bY+UFZf3SMqC0u3GchqUwOWYNfmjrBZPwUWejbyWj1nVwLKCSlRT3NlGG6TMW4V679x8ZHDSMCrK8cUiEfiZQo0hVfkdqAJOvyBHJ2vqAQd1mXb3tA/B8MPgOy165yMIOrBEveNN2iGjUEOeHDZXz9WrwJ4a1bqqnT9vwRSo4iZpI0rcR9gyzmIpt+VgpG2wyVu4FF3DgPUkAfWIXNvYgVn49aeETm8SSQdcoDi+TyLA7NzErKXQNBa1Yr1VOzWpoaynbfZp5UiB2/XYvkDUAc3K7Z3l/m0/VdoXNyLWjUuHaikx7z/6NLv0VxvqV+EOM2lX1Ts8c9KVx+hiZZ66Hvv3Elojsdtj+4ySvGw9rtNQQeemo/Ny0R3S32aldWbjs5lVo/iBY8/SnK8H6bniDhq1+r+limJt/wDVVsIoG39VtMf9jlO0cBVji5p/pI/3KS72LXPh1C4406xb8KjCZ+dIfNcF61PNb+J65Okbb1tO5UYfvxMiN/i5ACB3acGLcbhkhjYHZspVn+JULuA8o+G/pJ0P8IWSd3+C/wCGYSx7xFS4iq7o0jyN+DfN0LyDspr9MfpulPhnVbXAC/rdOxBT57ApUaNhCvIjdBcl2lY7lTGK52+JyrToGpQeRu9pDeUQY4keY6yOEclr/tf2spjHrW3k+BZVqb6kcagcMxjj4LfK397OOKo5bqMpeORWR1LRyRupSSN1JV0dWAZHQgqysAVIIIyxIFRpHAyP0I6EbHkV0Sx4Ia9hDgQHAgyHA6ggjQg7gjcLQvyL9f1KyIquroKFgBUFsbGhKQFUM5/PULEn4yB4VAJM67hRLUrwAAVdOvDj/Ltx06rl7tH3ZXdsXXGGnx6ep8P7xu5gDatHNsOM+4d13Xrb81H07QpPbuVm1B0pRSIe6Ryo8k8isCCN4I3RXU7q7oR9txUvKmWnlH2jHHbUnUbaAweaxzu9wZuI4u3xhLLdpquaRuWloa0jj53AkHcAhZp+B56aXKz30mkpJIr2Yq4QyyxJ8ukgd4k2kYKj/iIRGXIPILkPtGkjiBExyE6a7bjTiutcRbdPtqjbNzW13NIY585WuOmYwHHyiS3Q+YCdJV5dS+pDpkUPClpd0lFCxRymrWhUKNlXeGWyURQAAFiOwGwAyQF/pDaZHKS0D6F0fJc60u6i/q1M11dUgCZc5viPcZ3MObTknq5Ub8WeI5tQu2LToDYuzvKY4UOxknfdYokG7MdyEUfJ3O25ZmJNi9+7j/cnl8YA/MroqytKWH2lO3Yf2dBgbmcfstGrnO2HM7AcIAWrfph8vptL0LT6VgbTokksydt45LM0tlojsSCYjN0iQSCVJB2OTVrT8OkGnQ6mORcSY+Eri3tfilLFMYuLqhrTc5rWn8QY1rA7h7+XMJHFSll2sOTCLnfMXxQKOn3rh3IqVrFjYbbnowvIAN9huSuw3I7kZSqvFNjnnYAn5KUwqzN7e0LUb1alNnpmcBPwnVYqJEeIVQS2wAAG5LHsAAPuSewA+5zGjLGcXFo+Jgfqv0CJBdJ0G/oP0gLbLwR4bWlSqU0GyVa8Fdf17QxLGO/6n4/f9cyamwMYGDYAD5L8+cQu3Xl1VuX71XvefVzi79Vmj66/E3ufElpP0pw1ainfffaP3Tf22e067fup/fIOuQ6s4jcQ35Cf/orrbu4tPZ8CpO41n1ah6a+GPmKYPxVifpseGOGm6hcK7NZtiFWP88VWFCu3+kS2J1/uGy9sWnzOI4gDqAJ+hcVqzvZvM9/b2wMinSLiOTqjjPxLWMPpC9z6ifiYw6FHXG29y5BG3f8A7cKyWiR+/wCJDEP/AG/pnt8fI1pEy4fCJdPzAUd3WWgrYu6sfuaT3D1cW04+T3H4KnvpA8Me78SaWhTkkMklt/2T20Mksbn+1gQgfsxB/TLGiCajQOevoAT+cLevbq89lwK5cDBe1tMdc7mgj4szT0V3PXr4R914dnlClnozV7abfcAP7eY/1VYLErkH/wAd/uBkhfMmmHASWkH5+Un4BxXPfdrfezY2ymTDa7KlM/LO0epexoHr1Wfnkr5qyaNeN2Ibv7a7AoI3HUmrv7csNxui2lgZxv8AkDfbtkaxxYcw3g/l/rC6c7QYLTxm0FpU0HiUXnWPK14zxvqaZfl6wv6fT/5TvrerVqJLGJiZ7sm55LViKmdi24bnMzLArjciSVW7gHPhlPORSHHrrA3MyD0nmQVR7T403BcNqXYgOEMpCNC905RERDAC4j8LSOIWvdeOOJY4l4RqAI4kGyjZF7Ii9vyovZR9gP6Zkmg0XDbi+qXVHS4nVx33O5PUnc8VD3nd6S9J1svNJGat5h/1tbZZGIAC+4jI6dgAKq7yDqBAFWSMbbWlW1ZUObY8xx23Gx29Y2IWddnu22JYKBSpu8WgPun6gbk5Hb05knymJ1LSswfMLwXJp163QldJJKkrws8f5H47FXA7leSkEoSSh3U7lTkMQWkg7hdgYXiDMRtKV5TBa2q0OAO45jrBBg8RrxUgeJPENq14V04Suzw0NVt0oSSSRG9GCzFGSSdxFznVB2CR8EAAQZ8tf5Mp2a4tH8rXR8JMchpwWMWlrb23aO4NMBr69rSqu6kVXsc6P3oaXc3STqV4HkN4FpanqcNG/benHYV0hmTpjlZ+JihJlBQCUc1XfYtJ00HdwDUY0OeGkwDx6/8APM8YHFSfaXEbvDbB93Z0hWdTILmmdGa5nQCCcuhPJsk6CRcyn9NfSQfxNQ1Nx+yNUj3/ANzWc/8AzY5f+wCZzu9PLr9CtCP72cSI8lvQHqKh/wAwKYvLX026Do8qPVqRC2d+nPYkM9nspDmFpmYxfEkN0Fj3BO/Y5dU7enTMga8yZ5bcthoFgmLdrMYxemWXNVxpaSxjQxm+mYNAzagRnJ12Us5dLCkwiYRQl6ypbH/Dt6KpFNNPZ6FcJBE80hjknjM/wjV22MCygnbtv/bLG9cW0jAmSBsTpInQa7Stg9ghQ/xuhUuXNYynnfL3hokNdl8xIHvlsaqgPkn5LalNrGlpLp96GEW60k0k9KzHEsUMizScnkjVF5JGUG5HcjIZk1HtaA4ajdjhoCCdSANQIXTPaHtBY0cLunU7ik9/hVGta2sxxLngtENDiTBdJjgFrXmTriVZDeaHg/Vbup6hb/hmqOtm3ZmRjp9z/KeZ+iP8nsFi4KAe4AGYs55zOzBxMu+7dzMcNYEaruPB7/DrOwt7b2m3Bp0qbSPaKXvBozfa4uklaMekfwXJQ8PadBMrJMySWJUdGjdGszSThHRvkrRpIsZDbHdfsPsJ20ZlpDfWTrvqSekROy5W7b4gy/xu4rUiCwFrGkEEEU2tZII0IcWkiOar59RTTbtuzpderTu2EgiszyGvVsTRB7DxxxhmiRk6irXk+JPJVffYCQb2F84io0Q4gA7McdyOIB2g/NbP7rK1raULqtcVqVN1R1Noz1WNMMDiYDiDBL267Ejpp5n09fKy3DqV65aq2qwhqrBELNeWAO1mZXcp1UQsUWsAeO+wfv8AcZ5ZNzVC+HDKI1aROYjmBMZfqrzvQxm2rWFC1tqtOrnql7slRr4DGkAHKTGY1OP4dOKuF52R1jo+qLbkENZ6dpJpfuY0eF15KNmLOCRwUKzM/EAMSAZWuGupuDtiCCtFdnzXGJ2zrZueoK1Itb+IhwME6QDHmJIgSSQsaVf47nt23P8ATt3zH5gSdOfT49F3qRrAWnvoi8ijpOm+6sIVvakI5pVYENBXAJrVyrbFHCu0so2VhI/Bt+iu0xaUi1uZ27voOA4epniY4Lj/ALwu0YxW/wDZ6JmhbZmtIiHvMZ3yNwSA1mpGUSPeKjT6hPh7WLU2nipRtzUaqvMZ6qtMRckYgF4oOU0ft4olKTsoXeZwGBHe2vmuc4S0lrRO06k8tSC3gep5LLu6+6wy1pXBua9NleqQ3LUIb+zA4PdDXeI5xzMBmGAkQqrVvPbxDAGqDVNVQvuvSkmnacbjjtGZQ08fYdumy8TuRse+WrXvaIDjH8R/XVbmf2bwSuRcm1t3Aa5g1gaeOobDHb65gZ4r0PLz0067q8/4dKxGrtylu3klghBcszSNJMBLYYnct0VmcsQW25Fs8p0nu0Y077nTrMneekyfiVaYp2twfCaXnrMcWiG0qRa52kANDWnLTAG2ctEDSYhX7t+kqm3hxdAEndAJludMcxfDFza6ZJ2VnLRmIPuK7GISDs+S5th4Xhg9Z1335jTpO2i5oZ22um46cZy7+U0s2nhRHh5oGoABDo98Zi3gs8vMf076zpcjx26E7Iu+1ivG9mrIoP5lmjUhQfvwmEUgH3QZDvpub5Xt36SDtx5ax5oJ5LqPCu1WF4mwPtrhocfsPcGPaeRYSJ9WFw5Fefovmdrj7Q1tS1puPxEMF3UG4j7BRHHIdvtttsMplp/E74VH/kD+SurjB8IZ+1r21qJ1zPo0RPXMW6qwfo68s9fGvVtTtU7wrhLMNq1f5pKUetIY+ItutmUGcRAFEdRu3cbEi7taZ8Rr8p2IzGQY1018xk/TWdgdX9u8XwY4PUsLetS8SabmU6UESHtmSwFjfLm3IO3RaI5OrltMImETCJhEwiYRMImEXAedfnTV0GmLttJ5EaRYESugd2ldXZVJdkRF4oxLO6jtt3JUGhWrCkJIJ9PQn0G3FZN2f7P3GO3XstsWNcGl5L3QA0EAnQOJ3GgB+QJGcPqF9VV7X26TKKunowaOpGxYuV/LJak7dV1O5VFVI4+3xdlEhha1R1YjNoBwnToTtMcOAPMgFdWdl+xlngI8QHxbgiHVCIyzuKbdcgOxJJceYByqRPRX6W21CaLVr8ZFCu4kqxMCPezxturkfzVYXG5/lmkAX5IsqtWtqJqODz7o/qP+g+p6TOLd4HbJthSdhtm4GvUBFRw+5aRqOj3g+rW66EtI0ZybXKyjrXfOZY9TGlVqF6/Yjjqz3XqmkkNCvclmhrzWGuW6jyBzXsOUpx2pVSJiUUtEshFz171P1jIkFOhqGo25rOq1IatYUY3lXRJ0ralaEt25UrLXgsyJAA86zyu26QuiyOhF9vFXqKlrajFpi+Htbs2LEEtuA130MRywVxUFpg1jV4Gj9vLdggYSpHzkLdPrIvPCL7aJ6lIpor9ttM1KDS9P/ihk1adtMFOUaRPPXstDGmoSXyrSVpuk0tOJWVdyUDLuRfSz6pKKwaLL7e6ZNbnjrQVAlf3VXlYjqTT3ENgIlenamggsPBJYZHljCpJuSCL36/nrTfXG0FUnaytaa01gCI1FeuaRmps/V6wuRwajStGMwdPozxN1CSVBF8+UnnMusp7itQvRafLGJqWo2DSWveiLcVeCGK3LeiDD5qtypVbj91U/HCKRcImETCJhEwiYRMImETCKNvUV5WtrOj26EZRZpBG8DOSEWaGVJU5MFcqjcDGxCsQrNsN9strmkatMtG+hGsagg766GIPRZX2WxluD4nRvHgljS4OA3LXNc0wJEkTLZI1AUBeTv0761d0n1idbrrxYVIAyVAw77Su201lQf5SsCMOzI4JXLOnYz/3TP7o24bnd30BBggrZmPd6VxcNdRwymaDTI8RxBqR+60S2kesuI+yQdVcGtWVFVEVURAFVVAVVVRsqqo2AUAAAAbAZKAQtFPe57i5xJJMkkySTxJ4zxX656vlQf418qdQva1Tu9DTacenzI8Wq17dptXs0wvKbS7Fb2cNdalmVnEgkvW41ULIkCzFJICLg9Y9NerS6NS0np6QthUntS60lu/Hc0rW7tixauX9JhSoHmUTWHaMSX6DOpZJAyEoSKZx4As/xqfU2aB400yLT6AJbrLPJansX2mIj4pDP0tMA6bOSYZCUXinIihTy39M2pw6SunWauiVrDfwuG7qVO3ZtT6nWjvQWNZ9xHPplQRPfhjlRUDzjlO28kfTVmIvT0D0v6hVnjsLZrTums6hqIjkknijXSnfXbunaev4c46q6rqsU9mdEi3jjjX8f2ddZCL1PDfp51GlNpd2K5HbvQnVJtT91LJHWmtanVeSZqgSCWZIW1KOoBHLIRDTTivIwxxsRdH5FeUtuhb1K7YjpUU1AViNJ0yzYtUIbMT2ns6gr2K9JVs3/AHEYmWClAp6CMz2HcspFM2ETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwiYRMImETCJhEwi//Z" alt="Myse">
+          <div class="home-ai">
+            <div class="home-ai-header">🤖 Resumo IA — Maio 2026</div>
+            <div id="home-ai-text" class="loading"></div>
+          </div>
+          <div class="home-title">Bem-vindo ao Dashboard Myse</div>
+          <div class="home-sub">Navegue pelos meses no menu lateral.<br>Selecione <strong style="color:#E8192C;">Comparativo</strong> para ver a evolução.</div>
+          <div class="home-cards">
+            <div class="home-card"><div class="home-card-num">4</div><div class="home-card-label">Meses</div></div>
+            <div class="home-card"><div class="home-card-num">7</div><div class="home-card-label">Canais</div></div>
+            <div class="home-card"><div class="home-card-num">37.902</div><div class="home-card-label">Views mai/26</div></div>
+            <div class="home-card"><div class="home-card-num">3</div><div class="home-card-label">Plataformas</div></div>
+          </div>
+          <div class="home-updated">Atualizado em 01/06/2026</div>
+
+
+<!-- EXEC SUMMARY -->
+<button class="exec-trigger" onclick="openExec()">⚡ Resumo Executivo</button>
+<div class="exec-summary" id="exec-summary">
+  <div class="exec-card">
+    <button class="exec-close" onclick="closeExec()">✕</button>
+    <div class="exec-title">Resumo Executivo</div>
+    <div class="exec-month">Maio 2026</div>
+    <div class="exec-numbers">
+      <div class="exec-num"><div class="exec-num-val" style="color:#CC0000;">12.246</div><div class="exec-num-label">Views YouTube</div></div>
+      <div class="exec-num"><div class="exec-num-val" style="color:#a01060;">18.434</div><div class="exec-num-label">Views Instagram</div></div>
+      <div class="exec-num"><div class="exec-num-val" style="color:#1a55c0;">7.222</div><div class="exec-num-label">Views Facebook</div></div>
+    </div>
+    <div class="exec-insight">📈 <strong>YouTube +52,4%</strong> em maio. Instagram liderou com 18.434 views — 96,2% de não seguidores. <strong>FazNota +15.685%</strong> no Facebook. Total: <strong style="color:#0a8a50;">37.902 views ↑</strong></div>
+    <button class="exec-btn" onclick="closeExec()">Ver detalhes completos →</button>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<button class="glossary-btn" onclick="toggleGlossary()">❓</button>
+<div class="glossary-panel" id="glossary">
+  <div class="glossary-title">📖 Glossário</div>
+  <div class="glossary-item"><div class="glossary-term">CTR</div><div class="glossary-def">De 100 que viram a thumbnail, quantos clicaram.</div></div>
+  <div class="glossary-item"><div class="glossary-term">Impressões</div><div class="glossary-def">Vezes que a capa do vídeo apareceu para alguém.</div></div>
+  <div class="glossary-item"><div class="glossary-term">Retenção</div><div class="glossary-def">% do vídeo assistido. Acima de 100% = assistiram mais de uma vez.</div></div>
+  <div class="glossary-item"><div class="glossary-term">Inscritos líquidos</div><div class="glossary-def">Novos inscritos menos os que cancelaram.</div></div>
+  <div class="glossary-item"><div class="glossary-term">Shorts Feed</div><div class="glossary-def">Pessoas que encontraram o vídeo rolando os Shorts.</div></div>
+</div>
+<div class="toast" id="toast"></div>
+<canvas id="particles" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.12;"></canvas>
+
+<script>
+// ── CORE DATA ──
+const MONTHS_MAP = {'fev':'Fevereiro 2026','mar':'Março 2026','abr':'Abril 2026','mai':'Maio 2026'};
+const PAGE_TITLES = {
+  'fev-yt1':'Myse Sistemas','mar-yt1':'Myse Sistemas','abr-yt1':'Myse Sistemas','mai-yt1':'Myse Sistemas',
+  'mar-yt2':'Myse Cortes2','abr-yt2':'Myse Cortes2','mai-yt2':'Myse Cortes2',
+  'mai-yt3':'Myse_systems','mai-ig':'Instagram','mai-fb1':'FB Myse','mai-fb2':'FB FazNota','mai-fb3':'FB Foodi',
+  'fev-ig':'Instagram','fev-fb':'Facebook','mar-ig':'Instagram','mar-fb':'Facebook',
+  'abr-ig':'Instagram','abr-fb':'Facebook','compare':'Comparativo de Meses'
+};
+const PAGE_ORDER = [
+  'fev-yt1','fev-ig','fev-fb','mar-yt1','mar-yt2','mar-ig','mar-fb',
+  'abr-yt1','abr-yt2','abr-ig','abr-fb','mai-yt1','mai-yt2','mai-yt3',
+  'mai-ig','mai-fb1','mai-fb2','mai-fb3','compare'
+];
+
+// ── STATE ──
+const chartRegistry = {};
+let compChartsInit = false;
+let darkMode = false;
+let currentPageIdx = -1;
+
+// ── PASSWORD ──
+const SENHA = 'myse2026';
+
+function unlock() {
+  const input = document.getElementById('lock-input');
+  const error = document.getElementById('lock-error');
+  if (input.value === SENHA) {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'flex';
+    sessionStorage.setItem('auth','1');
+    initDashboard();
+  } else {
+    input.classList.add('error');
+    error.classList.add('show');
+    setTimeout(() => {
+      input.classList.remove('error');
+      error.classList.remove('show');
+    }, 2000);
+    input.value = '';
+    input.focus();
+  }
+}
+
+function togglePwd() {
+  const input = document.getElementById('lock-input');
+  const eye = document.getElementById('lock-eye');
+  input.type = input.type === 'password' ? 'text' : 'password';
+  eye.textContent = input.type === 'password' ? '👁' : '🙈';
+}
+
+// ── NAVIGATION ──
+function toggleMonth(m) {
+  const el = document.getElementById('nav-' + m);
+  if (el) el.classList.toggle('open');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sub-link').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.sidebar-compare').forEach(c => c.classList.remove('active'));
+
+  const page = document.getElementById('page-' + id);
+  if (page) {
+    page.classList.add('active');
+    setTimeout(() => animateCounters(page), 80);
+    if (AI_CONTEXTS[id]) loadAI(id);
+  }
+
+  document.querySelectorAll('.sub-link').forEach(l => {
+    if (l.getAttribute('onclick') === "showPage('" + id + "')") l.classList.add('active');
+  });
+  if (id === 'compare') {
+    document.getElementById('nav-compare').classList.add('active');
+    if (!compChartsInit) { compChartsInit = true; setTimeout(initCompCharts, 60); }
+  }
+
+  const month = id.split('-')[0];
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[id] || id;
+  document.getElementById('topbar-sub').textContent = MONTHS_MAP[month] || 'Análise comparativa';
+  document.getElementById('topbar-badge').textContent = '2026';
+
+  currentPageIdx = PAGE_ORDER.indexOf(id);
+  try { sessionStorage.setItem('lastPage', id); } catch(e) {}
+
+  const charts = {
+    'fev-yt1': () => makeWeekChart('c-fev-yt1-week', ['01/02','08/02','15/02','22/02'], [261,225,261,276]),
+    'mar-yt1': () => makeWeekChart('c-mar-yt1-week', ['01/03','08/03','15/03','22/03'], [349,374,2955,7658]),
+    'abr-yt1': () => makeWeekChart('c-abr-yt1-week', ['29/03','05/04','12/04','19/04'], [552,1103,411,1270]),
+    'mai-yt1': () => makeWeekChart('c-mai-yt1-week', ['03/05','10/05','17/05','24/05'], [1645,938,3018,941]),
+    'abr-yt2': () => makeWeekChart('c-abr-yt2-week', ['01/04','05/04','12/04','19/04'], [1447,1818,757,768]),
+    'mai-yt2': () => makeWeekChart('c-mai-yt2-week', ['03/05','10/05','17/05','24/05'], [709,2094,1164,1508]),
+    'mar-yt2': () => makeWeekChart('c-mar-yt2-week', ['23/03 - 28/03','29/03 - 31/03'], [13219,598]),
+  };
+  if (charts[id]) setTimeout(charts[id], 60);
+}
+
+// ── CHARTS ──
+function makeWeekChart(id, labels, data) {
+  if (chartRegistry[id]) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  const max = Math.max(...data);
+  chartRegistry[id] = new Chart(el, {
+    type: 'bar',
+    data: { labels, datasets: [{ data, backgroundColor: data.map(v => v === max ? '#E8192C' : '#e0d4d4'), borderRadius: 5, borderSkipped: false }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 600, easing: 'easeOutQuart' },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toLocaleString('pt-BR') + ' views' } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#888', font: { size: 11 } } },
+        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } }
+      }
+    }
+  });
+}
+
+function initCompCharts() {
+  const lineOpts = (label, data, labels, color) => ({
+    type: 'line',
+    data: { labels, datasets: [{ label, data, borderColor: color, backgroundColor: color + '22', tension: 0.4, fill: true, pointBackgroundColor: color, pointRadius: 4 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: { duration: 700 },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toLocaleString('pt-BR') + ' views' } } },
+      scales: { x: { grid: { display: false }, ticks: { color: '#888' } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } } }
+    }
+  });
+  const e1 = document.getElementById('c-comp-yt1');
+  const e2 = document.getElementById('c-comp-yt2');
+  const e3 = document.getElementById('c-comp-all');
+  const e4 = document.getElementById('c-comp-subs');
+  if (e1) new Chart(e1, lineOpts('Myse Sistemas', [1023,11541,4418,6732], ['Fev','Mar','Abr','Mai'], '#E8192C'));
+  if (e2) new Chart(e2, lineOpts('Myse Cortes2', [13817,4805,5511], ['Mar','Abr','Mai'], '#1a6fd4'));
+  if (e3) new Chart(e3, {
+    type: 'bar',
+    data: { labels: ['Fev','Mar','Abr','Mai'], datasets: [
+      { label: 'Myse Sistemas', data: [1023,11541,4418,6732], backgroundColor: '#E8192C', borderRadius: 4 },
+      { label: 'Myse Cortes2', data: [0,13817,4805,5511], backgroundColor: '#1a6fd4', borderRadius: 4 }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, animation: { duration: 700 },
+      plugins: { legend: { labels: { color: '#888', font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('pt-BR') } } },
+      scales: { x: { grid: { display: false }, ticks: { color: '#888' } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } } }
+    }
+  });
+  if (e4) new Chart(e4, {
+    type: 'bar',
+    data: { labels: ['Fev','Mar','Abr','Mai'], datasets: [{ data: [3,18,5,8], backgroundColor: ['#ddd','#E8192C','#ddd','#0a8a50'], borderRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, animation: { duration: 600 },
+      plugins: { legend: { display: false } },
+      scales: { x: { grid: { display: false }, ticks: { color: '#888' } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa' } } }
+    }
+  });
+  // Comp views charts
+  function compBar(id, labels, abril, maio, color) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    new Chart(el, {
+      type: 'bar',
+      data: { labels, datasets: [
+        { label: 'Abril', data: abril, backgroundColor: '#ddd', borderRadius: 4 },
+        { label: 'Maio', data: maio, backgroundColor: color, borderRadius: 4 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false, animation: { duration: 700 },
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('pt-BR') } } },
+        scales: { x: { grid: { display: false }, ticks: { color: '#888', font: { size: 11 } } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } } }
+      }
+    });
+  }
+  compBar('chart-comp-views', ['YouTube','Instagram','Facebook'], [7636,14098,7962], [12246,18434,7222], ['#CC0000','#a01060','#1a55c0']);
+  compBar('chart-comp-yt', ['Myse Sistemas','Myse Cortes2'], [2684,4952], [6732,5511], '#CC0000');
+  compBar('chart-comp-ig', ['Views','Alcançadas','Interações','Visitas'], [14098,843,34,64], [18434,2077,93,88], '#a01060');
+  compBar('chart-comp-fb', ['Myse','FazNota','Foodi'], [6784,939,239], [5736,1105,381], '#1a55c0');
+  const pieOpts = (data, colors) => ({
+    type: 'doughnut',
+    data: { labels: ['YouTube','Instagram','Facebook'], datasets: [{ data, backgroundColor: colors, borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, animation: { duration: 800 },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 10 }, padding: 8, boxWidth: 10, color: '#888' } }, tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.parsed.toLocaleString('pt-BR') } } }
+    }
+  });
+  const pa = document.getElementById('chart-pie-abril');
+  const pm = document.getElementById('chart-pie-maio');
+  if (pa) new Chart(pa, pieOpts([7636,14098,7962], ['#CC0000','#a01060','#1a55c0']));
+  if (pm) new Chart(pm, pieOpts([12246,18434,7222], ['#CC0000','#a01060','#1a55c0']));
+}
+
+// ── AI ──
+const AI_CONTEXTS = {
+  'fev-yt1': 'Canal Myse Sistemas YouTube fev/2026: 1.023 views, 0 videos, +3 inscritos, 5.4h exibição, impressões 6587, CTR 6.25%, pesquisa YT 83.1%. Curtidas 11, shares 7.',
+  'mar-yt1': 'Canal Myse Sistemas YouTube mar/2026: 11.541 views (pico), 22 videos, +18 inscritos, 25.3h, impressões 14512, CTR 4.06%, Shorts 82.6%. Curtidas 162, comentários 4, shares 33. Melhor video 1.482 views.',
+  'abr-yt1': 'Canal Myse Sistemas YouTube abr/2026: 4.418 views (queda -61.7% vs março), 16 videos, +5 inscritos, 8.9h, CTR 4.91%, Shorts 71.3%. Curtidas 66, shares 10.',
+  'mai-yt1': 'Canal Myse Sistemas YouTube mai/2026: 6.732 views (+52.4% vs abril), 42 videos, +8 inscritos, 14.9h, impressões 19353, CTR 2.77%, Shorts 98%. Curtidas 149, comentários 5, shares 53.',
+  'mar-yt2': 'Canal Myse Cortes2 YouTube mar/2026 (criado 23/03): 13.817 views em 9 dias, 17 videos, 20.2h, Shorts 97.3%, curtidas 129. Brasil 86.1%, Portugal 8.2%.',
+  'abr-yt2': 'Canal Myse Cortes2 YouTube abr/2026: 4.805 views (queda -65.2% vs março), 23 videos, 9.96h, CTR 4.44%, Shorts 96.3%, curtidas 60.',
+  'mai-yt2': 'Canal Myse Cortes2 YouTube mai/2026: 5.511 views (+14.7% vs abril), 57 videos, 17.2h, CTR 2.25%, Shorts 94.7%, público 95% masculino, Brasil 83.1%, Portugal 3%.',
+  'mai-yt3': 'Canal Myse_systems criado 04/05/2026: 3 views, 1 video, +2 inscritos, CTR 8.33%, 12 impressões.',
+  'mai-ig': 'Instagram @mysesistemas mai/2026: 18.434 views (campeão), 2.077 contas alcançadas, 362 seguidores, 93 interações. 96.2% de não seguidores. Reels 93.5%.',
+  'mai-fb1': 'Facebook Myse mai/2026: 5.736 views (-12%), 899 seguidores (+3), engajamento 100 (+96%). Reações 26, comentários 2, shares 18.',
+  'mai-fb2': 'Facebook FazNota mai/2026: 1.105 views (+15.685%!), 304 seguidores, 21 interações (+100%), shares 11, views 3s 470.',
+  'mai-fb3': 'Facebook Foodi mai/2026: 381 views (+1.488%), 5.440 seguidores (-2), engajamento 18 (+1.700%), shares 12.',
+};
+const aiLoaded = {};
+
+async function loadAI(pageId) {
+  if (aiLoaded[pageId]) return;
+  aiLoaded[pageId] = true;
+  const contentEl = document.getElementById('ai-content-' + pageId);
+  const suggestEl = document.getElementById('ai-suggestions-' + pageId);
+  if (!contentEl) return;
+  const context = AI_CONTEXTS[pageId];
+  if (!context) { contentEl.classList.remove('loading'); contentEl.textContent = 'Sem dados suficientes.'; return; }
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 300,
+        system: 'Analista de marketing digital. Analise os dados em 2 frases simples para leigos. Depois dê 2 sugestões práticas curtas. Responda APENAS em JSON: {"analise":"texto","sugestoes":["s1","s2"]}',
+        messages: [{ role: 'user', content: context }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    contentEl.classList.remove('loading');
+    contentEl.textContent = parsed.analise;
+    if (suggestEl && parsed.sugestoes) {
+      suggestEl.innerHTML = parsed.sugestoes.map((s, i) =>
+        '<div class="ai-suggestion"><span class="num">' + (i+1) + '</span><span>' + s + '</span></div>'
+      ).join('');
+    }
+    showToast('✅ Análise IA concluída!', 'success');
+  } catch(e) {
+    contentEl.classList.remove('loading');
+    contentEl.textContent = 'Análise temporariamente indisponível.';
+  }
+}
+
+async function loadHomeAI() {
+  const el = document.getElementById('home-ai-text');
+  if (!el) return;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 150,
+        system: 'Analista de marketing. Faça um resumo executivo em 2 frases curtas e diretas sobre maio/2026. Linguagem simples. Destaque o melhor e o pior.',
+        messages: [{ role: 'user', content: 'YouTube: 12.246 views (+60%). Instagram: 18.434 views (campeão, 96% não seguidores). Facebook: 7.222 views (Myse -12%, FazNota +15685%, Foodi +1488%). Total: 37.902 views.' }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '';
+    el.classList.remove('loading');
+    el.textContent = text;
+  } catch(e) {
+    el.classList.remove('loading');
+    el.textContent = 'YouTube cresceu +60% e Instagram liderou com 18.434 views. FazNota foi a surpresa com +15.685% no Facebook.';
+  }
+}
+
+// ── COUNTER ANIMATION ──
+function animateCounters(section) {
+  section.querySelectorAll('.kpi-value').forEach(el => {
+    const text = el.textContent.trim();
+    const num = parseFloat(text.replace(/[^0-9.]/g, ''));
+    if (isNaN(num) || num === 0) return;
+    const hasPlus = text.startsWith('+');
+    const suffix = text.replace(/^[+]?[\d.,]+/, '');
+    let start = 0;
+    const duration = 700;
+    const startTime = performance.now();
+    function update(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(ease * num);
+      el.textContent = (hasPlus ? '+' : '') + current.toLocaleString('pt-BR') + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+// ── SPARKLINES ──
+const SPARKLINE_DATA = {
+  'mai-yt1': [1023,11541,4418,6732],
+  'mai-yt2': [13817,4805,5511],
+};
+
+function addSparklines() {
+  Object.entries(SPARKLINE_DATA).forEach(([pageId, data]) => {
+    if (data.length < 2) return;
+    const kpi = document.querySelector('#page-' + pageId + ' .kpi:first-child');
+    if (!kpi || kpi.querySelector('.kpi-sparkline')) return;
+    const div = document.createElement('div');
+    div.className = 'kpi-sparkline';
+    const c = document.createElement('canvas');
+    c.style.width = '100%';
+    c.style.height = '30px';
+    div.appendChild(c);
+    kpi.appendChild(div);
+    const trend = data[data.length-1] >= data[data.length-2] ? 'up' : 'down';
+    kpi.classList.add('trend-' + trend);
+    new Chart(c, {
+      type: 'line',
+      data: { labels: data.map((_,i) => i), datasets: [{ data, borderColor: trend === 'up' ? '#0a8a50' : '#E8192C', borderWidth: 1.5, pointRadius: 0, fill: true, backgroundColor: trend === 'up' ? 'rgba(10,138,80,0.08)' : 'rgba(232,25,44,0.08)', tension: 0.4 }] },
+      options: { responsive: false, animation: { duration: 600 }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
+    });
+  });
+}
+
+// ── UTILS ──
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.className = 'toast ' + (type || '');
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function shareLink() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copiado!', 'success'));
+  } else {
+    showToast('🔗 ' + url, '');
+  }
+}
+
+function toggleDark() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('dark', darkMode);
+  document.getElementById('dark-btn').textContent = darkMode ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+}
+
+function openExec() { document.getElementById('exec-summary').classList.add('open'); }
+function closeExec() { document.getElementById('exec-summary').classList.remove('open'); }
+function toggleGlossary() { document.getElementById('glossary').classList.toggle('open'); }
+
+function initParticles() {
+  const canvas = document.getElementById('particles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const particles = Array.from({length:30}, () => ({
+    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.4, dx: (Math.random()-0.5)*0.25, dy: (Math.random()-0.5)*0.25,
+    opacity: Math.random() * 0.3 + 0.05
+  }));
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(232,25,44,' + p.opacity + ')';
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+}
+
+// ── ALERT BADGE ──
+function addAlertBadge() {
+  const link = document.getElementById('link-mai-fb1');
+  if (link && !link.querySelector('.nav-alert')) {
+    const badge = document.createElement('span');
+    badge.className = 'nav-alert';
+    badge.textContent = '↓';
+    link.appendChild(badge);
+  }
+}
+
+// ── KEYBOARD NAV ──
+document.addEventListener('keydown', e => {
+  const lock = document.getElementById('lock-screen');
+  if (lock && lock.style.display !== 'none') {
+    if (e.key === 'Enter') unlock();
+    return;
+  }
+  if (e.key === 'ArrowRight' && currentPageIdx < PAGE_ORDER.length - 1) {
+    currentPageIdx++;
+    showPage(PAGE_ORDER[currentPageIdx]);
+  } else if (e.key === 'ArrowLeft' && currentPageIdx > 0) {
+    currentPageIdx--;
+    showPage(PAGE_ORDER[currentPageIdx]);
+  }
+});
+
+// ── INIT DASHBOARD ──
+function initDashboard() {
+  initParticles();
+  addAlertBadge();
+  setTimeout(addSparklines, 800);
+  loadHomeAI();
+  const last = sessionStorage.getItem('lastPage');
+  if (last) showPage(last);
+}
+
+// ── BOOT ──
+document.addEventListener('DOMContentLoaded', () => {
+  // Setup lock buttons
+  document.getElementById('lock-btn').addEventListener('click', unlock);
+  document.getElementById('lock-eye').addEventListener('click', togglePwd);
+  document.getElementById('lock-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') unlock();
+  });
+
+  // Check auth
+  if (sessionStorage.getItem('auth') === '1') {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'flex';
+    initDashboard();
+  } else {
+    setTimeout(() => document.getElementById('lock-input').focus(), 100);
+  }
+});
+</script>
+
+</div></div>
+</body>
+</html>
