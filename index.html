@@ -350,9 +350,9 @@ body.dark ::-webkit-scrollbar-track{background:#141418;}
         <div class="sub-link" onclick="showPage('mai-yt2')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse Cortes2</div>
         <div class="sub-link" onclick="showPage('mai-yt3')"><div class="sub-link-dot" style="background:var(--yt)"></div>Myse_systems</div>
         <div class="sub-link" onclick="showPage('mai-ig')"><div class="sub-link-dot" style="background:var(--ig)"></div>Instagram</div>
-        <div class="sub-link" id="link-mai-fb1" onclick="showPage('mai-fb1')"><div class="sub-link-dot" style="background:var(--fb)"></div>FB Myse</div>
-        <div class="sub-link" onclick="showPage('mai-fb2')"><div class="sub-link-dot" style="background:var(--fb)"></div>FB FazNota</div>
-        <div class="sub-link" onclick="showPage('mai-fb3')"><div class="sub-link-dot" style="background:var(--fb)"></div>FB Foodi</div>
+        <div class="sub-link" id="link-mai-fb1" onclick="showPage('mai-fb1')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook Myse</div>
+        <div class="sub-link" onclick="showPage('mai-fb2')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook FazNota</div>
+        <div class="sub-link" onclick="showPage('mai-fb3')"><div class="sub-link-dot" style="background:var(--fb)"></div>Facebook Foodi</div>
       </div>
     </div>
     <div class="sidebar-section">Análise</div>
@@ -1044,7 +1044,7 @@ const MONTHS_MAP = {'fev':'Fevereiro 2026','mar':'Março 2026','abr':'Abril 2026
 const PAGE_TITLES = {
   'fev-yt1':'Myse Sistemas','mar-yt1':'Myse Sistemas','abr-yt1':'Myse Sistemas','mai-yt1':'Myse Sistemas',
   'mar-yt2':'Myse Cortes2','abr-yt2':'Myse Cortes2','mai-yt2':'Myse Cortes2',
-  'mai-yt3':'Myse_systems','mai-ig':'Instagram','mai-fb1':'FB Myse','mai-fb2':'FB FazNota','mai-fb3':'FB Foodi',
+  'mai-yt3':'Myse_systems','mai-ig':'Instagram','mai-fb1':'Facebook Myse','mai-fb2':'Facebook FazNota','mai-fb3':'Facebook Foodi',
   'fev-ig':'Instagram','fev-fb':'Facebook','mar-ig':'Instagram','mar-fb':'Facebook',
   'abr-ig':'Instagram','abr-fb':'Facebook','compare':'Comparativo de Meses'
 };
@@ -1061,7 +1061,7 @@ let darkMode = false;
 let currentPageIdx = -1;
 
 // ── PASSWORD ──
-const SENHA = 'myse2026';
+const SENHA = 'MF|9V=UG99ll';
 
 function unlock() {
   const input = document.getElementById('lock-input');
@@ -1148,10 +1148,31 @@ function makeWeekChart(id, labels, data) {
     options: {
       responsive: true, maintainAspectRatio: false,
       animation: { duration: 600, easing: 'easeOutQuart' },
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toLocaleString('pt-BR') + ' views' } } },
+      plugins: { 
+        legend: { display: false }, 
+        tooltip: { 
+          callbacks: { 
+            label: ctx => ' ' + ctx.parsed.y.toLocaleString('pt-BR') + ' views',
+            title: ctx => 'Semana de ' + ctx[0].label
+          },
+          backgroundColor: '#111',
+          titleColor: '#fff',
+          bodyColor: '#ccc',
+          padding: 10,
+          cornerRadius: 6
+        }
+      },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#888', font: { size: 11 } } },
-        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } }
+        x: { 
+          grid: { display: false }, 
+          ticks: { color: '#888', font: { size: 11 } },
+          title: { display: true, text: 'Semana', color: '#bbb', font: { size: 10 } }
+        },
+        y: { 
+          grid: { color: 'rgba(0,0,0,0.04)' }, 
+          ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v },
+          title: { display: true, text: 'Views', color: '#bbb', font: { size: 10 } }
+        }
       }
     }
   });
@@ -1160,11 +1181,36 @@ function makeWeekChart(id, labels, data) {
 function initCompCharts() {
   const lineOpts = (label, data, labels, color) => ({
     type: 'line',
-    data: { labels, datasets: [{ label, data, borderColor: color, backgroundColor: color + '22', tension: 0.4, fill: true, pointBackgroundColor: color, pointRadius: 4 }] },
+    data: { labels, datasets: [{ label, data, borderColor: color, backgroundColor: color + '22', tension: 0.4, fill: true, pointBackgroundColor: color, pointRadius: 5, pointHoverRadius: 7, pointBorderWidth: 2, pointBorderColor: '#fff' }] },
     options: {
       responsive: true, maintainAspectRatio: false, animation: { duration: 700 },
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toLocaleString('pt-BR') + ' views' } } },
-      scales: { x: { grid: { display: false }, ticks: { color: '#888' } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } } }
+      plugins: {
+        legend: { display: false },
+        tooltip: { 
+          callbacks: { 
+            label: ctx => ' ' + ctx.parsed.y.toLocaleString('pt-BR') + ' views',
+            title: ctx => ctx[0].label
+          },
+          backgroundColor: '#111',
+          titleColor: '#fff',
+          bodyColor: '#ccc',
+          padding: 10,
+          cornerRadius: 6
+        },
+        datalabels: { display: false }
+      },
+      scales: { 
+        x: { 
+          grid: { display: false }, 
+          ticks: { color: '#888', font: { size: 12, weight: '500' } },
+          title: { display: true, text: 'Mês', color: '#bbb', font: { size: 11 } }
+        }, 
+        y: { 
+          grid: { color: 'rgba(0,0,0,0.04)' }, 
+          ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v },
+          title: { display: true, text: 'Visualizações', color: '#bbb', font: { size: 11 } }
+        } 
+      }
     }
   });
   const e1 = document.getElementById('c-comp-yt1');
@@ -1180,8 +1226,21 @@ function initCompCharts() {
       { label: 'Myse Cortes2', data: [0,13817,4805,5511], backgroundColor: '#1a6fd4', borderRadius: 4 }
     ]},
     options: { responsive: true, maintainAspectRatio: false, animation: { duration: 700 },
-      plugins: { legend: { labels: { color: '#888', font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('pt-BR') } } },
-      scales: { x: { grid: { display: false }, ticks: { color: '#888' } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } } }
+      plugins: { 
+        legend: { 
+          display: true,
+          position: 'top',
+          labels: { color: '#888', font: { size: 11 }, padding: 16, boxWidth: 12 } 
+        }, 
+        tooltip: { 
+          callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('pt-BR') + ' views' },
+          backgroundColor: '#111', titleColor: '#fff', bodyColor: '#ccc', padding: 10, cornerRadius: 6
+        } 
+      },
+      scales: { 
+        x: { grid: { display: false }, ticks: { color: '#888' }, title: { display: true, text: 'Mês', color: '#bbb', font: { size: 11 } } }, 
+        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#aaa', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v }, title: { display: true, text: 'Visualizações', color: '#bbb', font: { size: 11 } } } 
+      }
     }
   });
   if (e4) new Chart(e4, {
