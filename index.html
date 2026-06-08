@@ -1791,6 +1791,22 @@ body.dark .admin-tab { color:#6060708 !important; }
 body.dark .admin-tab.active { background:#1A1A28 !important; }
 body.dark .admin-field label { color:#6060708 !important; }
 body.dark .admin-field input,.dark .admin-month-select,.dark .calc-input,.dark .meta-input-row input { background:#0E0E18 !important; border-color:rgba(255,255,255,0.1) !important; color:#E0E0F0 !important; }
+
+/* FINAL LAYOUT FIX */
+.app { display: flex !important; flex-direction: row !important; width: 100vw !important; height: 100vh !important; overflow: hidden !important; }
+.sidebar { flex-shrink: 0 !important; width: 230px !important; min-width: 230px !important; height: 100vh !important; }
+.main { flex: 1 !important; min-width: 0 !important; height: 100vh !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; }
+.topbar { flex-shrink: 0 !important; height: 58px !important; }
+.content { flex: 1 !important; overflow-y: auto !important; overflow-x: hidden !important; min-height: 0 !important; padding: 24px 28px 56px !important; background: #F0F2F5 !important; }
+.page-section { display: none !important; }
+.page-section.active { display: block !important; }
+#page-home.active { display: flex !important; align-items: center !important; justify-content: center !important; }
+#page-home { height: calc(100vh - 58px) !important; background: #F0F2F5 !important; }
+.home-inner { position: relative; z-index: 1; max-width: 560px; width: 100%; text-align: center; }
+.home-title { font-size: 28px !important; font-weight: 800 !important; color: #0F0F14 !important; }
+.home-card { background: #fff !important; }
+.home-card-num { color: #E8192C !important; }
+
 </style>
 </head>
 <body>
