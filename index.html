@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Myse Sistemas — Analytics</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -605,7 +606,7 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
     </div>
     <div id="lock-error">Senha incorreta. Tente novamente.</div>
     <button class="lock-btn" type="button" id="lock-btn">Entrar</button>
-    <div class="lock-footer">Myse Sistemas &middot; Analytics Dashboard</div>
+    <div class="lock-footer">🔒 Acesso protegido · Myse Sistemas &middot; Analytics Dashboard</div>
   </div>
 </div>
 
@@ -939,9 +940,9 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
 
     <!-- OVERVIEW PAGE -->
     <div class="page-section" id="page-overview">
-      <div class="summary-pill">📊 <strong>Visão geral completa</strong> — todos os canais e métricas principais de maio 2026 num único painel.</div>
+      <div class="summary-pill">📊 <strong>Visão geral completa</strong> — todos os canais e métricas principais de junho 2026 num único painel.</div>
 
-      <div class="slabel">performance geral — maio 2026</div>
+      <div class="slabel">performance geral — junho 2026</div>
 
       <!-- Platform Summary Cards -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:20px;">
@@ -1033,7 +1034,7 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
       </div>
 
       <!-- Total KPI Row -->
-      <div class="slabel">totais acumulados — fev a mai 2026</div>
+      <div class="slabel">totais acumulados — fev a jun 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--red),var(--red-dark))"></div><div class="kpi-label">Total Views Maio</div><div class="kpi-value">37.902</div><div class="kpi-sub up">↑ Melhor mês</div></div>
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--yt),#FF6666)"></div><div class="kpi-label">Canais YT</div><div class="kpi-value">3</div><div class="kpi-sub">ativos em mai/26</div></div>
@@ -1146,12 +1147,13 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
 
     <!-- ══════ FEV — YT1 ══════ -->
     <div class="page-section" id="page-fev-yt1">
-            <div class="ai-box" id="ai-fev-yt1">
+            
+      <div class="summary-pill">📊 Em fevereiro, o canal <strong>Myse Sistemas</strong> teve desempenho modesto com <strong>1.023 views</strong> — nenhum vídeo foi publicado no período, mas o canal manteve engajamento orgânico vindo principalmente da pesquisa do YouTube.</div>
+      <div class="ai-box" id="ai-fev-yt1">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Fevereiro 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-fev-yt1">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-fev-yt1"></div>
       </div>
-      <div class="summary-pill">📊 Em fevereiro, o canal <strong>Myse Sistemas</strong> teve desempenho modesto com <strong>1.023 views</strong> — nenhum vídeo foi publicado no período, mas o canal manteve engajamento orgânico vindo principalmente da pesquisa do YouTube.</div>
       <div class="slabel">visão geral — fevereiro 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--yt),#FF6666)"></div><div class="kpi-label">Visualizações <span class="help" data-tip="Quantas vezes os vídeos foram assistidos">ⓘ</span></div><div class="kpi-value">1.023</div></div>
@@ -1197,20 +1199,39 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
     </div>
     <!-- ══════ FEV — IG ══════ -->
     <div class="page-section" id="page-fev-ig">
+      
+      <div class="summary-pill">📸 <strong>Instagram — @mysesistemas</strong> · Fevereiro 2026 · Início do monitoramento — dados base do canal.</div>
       <div class="no-data-state-wrap"><div class="icon">📸</div><p>Dados de Instagram para fevereiro não disponíveis.<br>Postagens regulares iniciaram em maio/2026.</p></div>
+    
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-fev-ig" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('fev-ig')">Salvar</button>
+      </div>
     </div>
     <div class="page-section" id="page-fev-fb">
+      
+      <div class="summary-pill">📘 <strong>Facebook Myse</strong> · Fevereiro 2026 · Início do monitoramento — dados base do canal.</div>
       <div class="no-data-state-wrap"><div class="icon">📘</div><p>Dados de Facebook para fevereiro não disponíveis.<br>Postagens regulares iniciaram em maio/2026.</p></div>
+    
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-fev-fb" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('fev-fb')">Salvar</button>
+      </div>
     </div>
 
     <!-- ══════ MAR — YT1 ══════ -->
     <div class="page-section" id="page-mar-yt1">
-            <div class="ai-box" id="ai-mar-yt1">
+            
+      <div class="summary-pill">🚀 Março foi o <strong>mês de virada</strong> do canal Myse Sistemas — com 22 vídeos publicados, as views explodiram para <strong>11.541</strong>, um crescimento enorme. O Feed de Shorts foi o motor principal, representando 82,6% do tráfego.</div>
+      <div class="ai-box" id="ai-mar-yt1">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Março 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mar-yt1">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mar-yt1"></div>
       </div>
-      <div class="summary-pill">🚀 Março foi o <strong>mês de virada</strong> do canal Myse Sistemas — com 22 vídeos publicados, as views explodiram para <strong>11.541</strong>, um crescimento enorme. O Feed de Shorts foi o motor principal, representando 82,6% do tráfego.</div>
       <div class="slabel">visão geral — março 2026 <span class="best-month-badge">🏆 Melhor mês</span></div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--yt),#FF6666)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">11.541</div><div class="kpi-sub up">↑ 1.023 em fev (+1.028,2%)</div></div>
@@ -1257,12 +1278,13 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
     </div>
     <!-- ══════ MAR — YT2 ══════ -->
     <div class="page-section" id="page-mar-yt2">
-            <div class="ai-box" id="ai-mar-yt2">
+            
+      <div class="summary-pill">🆕 O canal <strong>Myse Cortes2</strong> foi criado em <strong>23/03/2026</strong> e já saiu forte — em apenas 9 dias acumulou <strong>13.817 views</strong>, impulsionado pelo Feed de Shorts que representou 97,3% do tráfego.</div>
+      <div class="ai-box" id="ai-mar-yt2">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Cortes2 · Março 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mar-yt2">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mar-yt2"></div>
       </div>
-      <div class="summary-pill">🆕 O canal <strong>Myse Cortes2</strong> foi criado em <strong>23/03/2026</strong> e já saiu forte — em apenas 9 dias acumulou <strong>13.817 views</strong>, impulsionado pelo Feed de Shorts que representou 97,3% do tráfego.</div>
       <div class="slabel">visão geral — março 2026 (a partir de 23/03) <span class="best-month-badge">🏆 Melhor mês</span></div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--yt),#FF6666)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">13.817</div><div class="kpi-sub">Apenas 9 dias de canal</div></div>
@@ -1306,27 +1328,46 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
         <div style="clear:both;"></div>
       </div>
     </div>
-    <div class="page-section" id="page-mar-ig"><div class="no-data-state">
+    <div class="page-section" id="page-mar-ig">
+      <div class="summary-pill">📸 <strong>Instagram — @mysesistemas</strong> · Março 2026 · Dados do período sem detalhamento mensal individual.</div>
+      <div class="no-data-state">
         <div class="no-data-icon">📸</div>
         <div class="no-data-title">Sem dados registrados</div>
         <div class="no-data-desc">As informações de <strong>Instagram</strong> referentes a <strong>Março 2026</strong> não estão disponíveis no momento, pois não temos dados registrados para este período.</div>
         <div class="no-data-pill">📅 Dados disponíveis a partir de Maio 2026</div>
-      </div></div>
-    <div class="page-section" id="page-mar-fb"><div class="no-data-state">
+      </div>
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-mar-ig" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mar-ig')">Salvar</button>
+      </div>
+    </div>
+    <div class="page-section" id="page-mar-fb">
+      <div class="summary-pill">📘 <strong>Facebook Myse</strong> · Março 2026 · Dados do período sem detalhamento mensal individual.</div>
+      <div class="no-data-state">
         <div class="no-data-icon">📘</div>
         <div class="no-data-title">Sem dados registrados</div>
         <div class="no-data-desc">As informações de <strong>Facebook</strong> referentes a <strong>Março 2026</strong> não estão disponíveis no momento, pois não temos dados registrados para este período.</div>
         <div class="no-data-pill">📅 Dados disponíveis a partir de Maio 2026</div>
-      </div></div>
+      </div>
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-mar-fb" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mar-fb')">Salvar</button>
+      </div>
+    </div>
 
     <!-- ══════ ABR — YT1 ══════ -->
     <div class="page-section" id="page-abr-yt1">
-            <div class="ai-box" id="ai-abr-yt1">
+            
+      <div class="summary-pill">📉 Abril foi um mês de <strong>desaceleração</strong> para o Myse Sistemas — as views caíram de 11.541 para <strong>4.418</strong>. Apesar disso, o canal manteve boa atividade com 16 vídeos publicados e CTR de 4,91%, o melhor do período.</div>
+      <div class="ai-box" id="ai-abr-yt1">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Abril 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-abr-yt1">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-abr-yt1"></div>
       </div>
-      <div class="summary-pill">📉 Abril foi um mês de <strong>desaceleração</strong> para o Myse Sistemas — as views caíram de 11.541 para <strong>4.418</strong>. Apesar disso, o canal manteve boa atividade com 16 vídeos publicados e CTR de 4,91%, o melhor do período.</div>
       <div class="slabel">visão geral — abril 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--yt),#FF6666)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">4.418</div><div class="kpi-sub down">↓ 11.541 em mar (-61,7%)</div></div>
@@ -1373,12 +1414,13 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
     </div>
     <!-- ══════ ABR — YT2 ══════ -->
     <div class="page-section" id="page-abr-yt2">
-            <div class="ai-box" id="ai-abr-yt2">
+            
+      <div class="summary-pill">📊 Em abril, o <strong>Myse Cortes2</strong> publicou 23 vídeos e alcançou <strong>4.805 views</strong>. O Feed de Shorts continuou dominando com 96,3% do tráfego.</div>
+      <div class="ai-box" id="ai-abr-yt2">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Cortes2 · Abril 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-abr-yt2">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-abr-yt2"></div>
       </div>
-      <div class="summary-pill">📊 Em abril, o <strong>Myse Cortes2</strong> publicou 23 vídeos e alcançou <strong>4.805 views</strong>. O Feed de Shorts continuou dominando com 96,3% do tráfego.</div>
       <div class="slabel">visão geral — abril 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--yt),#FF6666)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">4.805</div><div class="kpi-sub down">↓ 13.817 em mar (-65,2%)</div></div>
@@ -1419,22 +1461,42 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
         <div style="clear:both;"></div>
       </div>
     </div>
-    <div class="page-section" id="page-abr-ig"><div class="no-data-state">
+    <div class="page-section" id="page-abr-ig">
+      <div class="summary-pill">📸 <strong>Instagram — @mysesistemas</strong> · Abril 2026 · Canal em crescimento com alcance expandindo progressivamente.</div>
+      <div class="no-data-state">
         <div class="no-data-icon">📸</div>
         <div class="no-data-title">Sem dados registrados</div>
         <div class="no-data-desc">As informações de <strong>Instagram</strong> referentes a <strong>Abril 2026</strong> não estão disponíveis no momento, pois não temos dados registrados para este período.</div>
         <div class="no-data-pill">📅 Dados disponíveis a partir de Maio 2026</div>
-      </div></div>
-    <div class="page-section" id="page-abr-fb"><div class="no-data-state">
+      </div>
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-abr-ig" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('abr-ig')">Salvar</button>
+      </div>
+    </div>
+    <div class="page-section" id="page-abr-fb">
+      <div class="summary-pill">📘 <strong>Facebook Myse</strong> · Abril 2026 · Dados do período fev-mai em evolução. Facebook cresceu ao longo do trimestre.</div>
+      <div class="no-data-state">
         <div class="no-data-icon">📘</div>
         <div class="no-data-title">Sem dados registrados</div>
         <div class="no-data-desc">As informações de <strong>Facebook</strong> referentes a <strong>Abril 2026</strong> não estão disponíveis no momento, pois não temos dados registrados para este período.</div>
         <div class="no-data-pill">📅 Dados disponíveis a partir de Maio 2026</div>
-      </div></div>
+      </div>
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-abr-fb" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('abr-fb')">Salvar</button>
+      </div>
+    </div>
 
     <!-- ══════ MAI — YT1 ══════ -->
     <div class="page-section" id="page-mai-yt1">
-            <div class="score-wrap">
+            
+      <div class="summary-pill">📈 <strong>YouTube — Myse Sistemas</strong> · Maio 2026 · Canal se recuperou com 6.732 views (+52,4% vs abril). Melhor mês desde março.</div>
+      <div class="score-wrap">
         <div class="score-circle excellent">8.2</div>
         <div class="score-info">
           <div class="score-title">Score de Performance — Maio 2026</div>
@@ -1447,12 +1509,13 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
           </div>
         </div>
       </div>
+      
+      <div class="summary-pill">📈 Em maio, o Myse Sistemas <strong>se recuperou bem</strong> — saindo de 4.418 para <strong>6.732 views</strong> (+52,4%). Com 42 vídeos publicados, foi o mês com maior produção de conteúdo do canal.</div>
       <div class="ai-box" id="ai-mai-yt1">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Sistemas · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-yt1">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-yt1"></div>
       </div>
-      <div class="summary-pill">📈 Em maio, o Myse Sistemas <strong>se recuperou bem</strong> — saindo de 4.418 para <strong>6.732 views</strong> (+52,4%). Com 42 vídeos publicados, foi o mês com maior produção de conteúdo do canal.</div>
       <div class="slabel">visão geral — maio 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--yt),#FF6666)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">6.732</div><div class="kpi-sub up">↑ 4.418 em abr (+52,4%)</div></div>
@@ -1497,7 +1560,9 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
     </div>
     <!-- ══════ MAI — YT2 ══════ -->
     <div class="page-section" id="page-mai-yt2">
-            <div class="score-wrap">
+            
+      <div class="summary-pill">📊 <strong>YouTube — Myse Cortes2</strong> · Maio 2026 · 5.511 views (+14,7% vs abril). Crescimento consistente no segundo mês completo.</div>
+      <div class="score-wrap">
         <div class="score-circle good">7.4</div>
         <div class="score-info">
           <div class="score-title">Score de Performance — Maio 2026</div>
@@ -1510,12 +1575,13 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
           </div>
         </div>
       </div>
+      
+      <div class="summary-pill">📊 Em maio, o <strong>Myse Cortes2</strong> cresceu levemente com <strong>5.511 views</strong> (+14,7%). O público é 95% masculino e o canal começa a ter dados mais sólidos de audiência.</div>
       <div class="ai-box" id="ai-mai-yt2">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse Cortes2 · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-yt2">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-yt2"></div>
       </div>
-      <div class="summary-pill">📊 Em maio, o <strong>Myse Cortes2</strong> cresceu levemente com <strong>5.511 views</strong> (+14,7%). O público é 95% masculino e o canal começa a ter dados mais sólidos de audiência.</div>
       <div class="slabel">visão geral — maio 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--yt),#FF6666)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">5.511</div><div class="kpi-sub up">↑ 4.805 em abr (+14,7%)</div></div>
@@ -1561,12 +1627,13 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
     </div>
     <!-- MAI YT3, IG, FB (resumidos) -->
     <div class="page-section" id="page-mai-yt3">
-            <div class="ai-box" id="ai-mai-yt3">
+            
+      <div class="summary-pill">🆕 Canal <strong>Myse_systems</strong> criado em 04/05/2026 — ainda no início com apenas 1 vídeo publicado e 3 views. CTR de 8,33% é promissor para um canal recém-criado.</div>
+      <div class="ai-box" id="ai-mai-yt3">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Myse_systems · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-yt3">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-yt3"></div>
       </div>
-      <div class="summary-pill">🆕 Canal <strong>Myse_systems</strong> criado em 04/05/2026 — ainda no início com apenas 1 vídeo publicado e 3 views. CTR de 8,33% é promissor para um canal recém-criado.</div>
       <div class="slabel">visão geral — maio 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:var(--faint)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">3</div><div class="kpi-sub">Canal novo — 04/05</div></div>
@@ -1575,15 +1642,23 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--green),#16A05A)"></div><div class="kpi-label">CTR</div><div class="kpi-value">8,33%</div><div class="kpi-sub up">Excelente para início</div></div>
       </div>
       <div class="best-box"><div class="best-label">📹 Único vídeo</div><div class="best-title">Ninguém imaginava que o suporte ficaria tão fácil!</div><div class="best-stat">3 views · 12 impressões · 6,78% retenção</div></div>
+    
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-mai-yt3" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-yt3')">Salvar</button>
+      </div>
     </div>
 
     <div class="page-section" id="page-mai-ig">
-            <div class="ai-box" id="ai-mai-ig">
+            
+      <div class="summary-pill">🏆 Instagram foi o <strong>canal campeão de maio</strong> — com <strong>18.434 views</strong> e 96,2% vindo de não seguidores. Prova que os Reels estão alcançando muito além da base atual de 362 seguidores.</div>
+      <div class="ai-box" id="ai-mai-ig">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — Instagram · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-ig">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-ig"></div>
       </div>
-      <div class="summary-pill">🏆 Instagram foi o <strong>canal campeão de maio</strong> — com <strong>18.434 views</strong> e 96,2% vindo de não seguidores. Prova que os Reels estão alcançando muito além da base atual de 362 seguidores.</div>
       <div class="slabel">visão geral — maio 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--ig),#E05CB0)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">18.434</div><div class="kpi-sub up">🏆 Campeão do mês</div></div>
@@ -1610,15 +1685,23 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
           <div class="metric-row"><span class="metric-name">Engajamento único</span><span class="metric-val">48 contas</span></div>
         </div>
       </div>
+    
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-mai-ig" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-ig')">Salvar</button>
+      </div>
     </div>
 
     <div class="page-section" id="page-mai-fb1">
-            <div class="ai-box" id="ai-mai-fb1">
+            
+      <div class="summary-pill">📘 A página <strong>Myse no Facebook</strong> teve <strong>5.736 views</strong> em maio, queda de 12% vs abril. O engajamento cresceu +96% — sinal de que o conteúdo está mais relevante para quem já segue.</div>
+      <div class="ai-box" id="ai-mai-fb1">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — FB Myse · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-fb1">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-fb1"></div>
       </div>
-      <div class="summary-pill">📘 A página <strong>Myse no Facebook</strong> teve <strong>5.736 views</strong> em maio, queda de 12% vs abril. O engajamento cresceu +96% — sinal de que o conteúdo está mais relevante para quem já segue.</div>
       <div class="slabel">visão geral — maio 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--fb),#4A88EE)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">5.736</div><div class="kpi-sub down">↓ -12% vs abril</div></div>
@@ -1639,15 +1722,23 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
           <div class="metric-row"><span class="metric-name">Toledo, PR</span><span class="metric-val">43,7%</span></div>
         </div>
       </div>
+    
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-mai-fb1" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-fb1')">Salvar</button>
+      </div>
     </div>
 
     <div class="page-section" id="page-mai-fb2">
-            <div class="ai-box" id="ai-mai-fb2">
+            
+      <div class="summary-pill">🔥 A página <strong>FazNota no Facebook</strong> explodiu em maio — <strong>+15.685%</strong> em views, saindo de 939 para 1.105. Reels foram responsáveis por 86,7% das visualizações.</div>
+      <div class="ai-box" id="ai-mai-fb2">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — FB FazNota · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-fb2">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-fb2"></div>
       </div>
-      <div class="summary-pill">🔥 A página <strong>FazNota no Facebook</strong> explodiu em maio — <strong>+15.685%</strong> em views, saindo de 939 para 1.105. Reels foram responsáveis por 86,7% das visualizações.</div>
       <div class="slabel">visão geral — maio 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--fb),#4A88EE)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">1.105</div><div class="kpi-sub up">↑ +15.685,7%</div></div>
@@ -1688,15 +1779,23 @@ body.dark .notes-textarea{background:#0E0E18;border-color:rgba(255,255,255,0.1);
           <div class="metric-row"><span class="metric-name">São Paulo, SP</span><span class="metric-val">7,9%</span></div>
         </div>
       </div>
+    
+      <div class="slabel">anotações</div>
+      <div class="notes-wrap">
+        <div class="notes-label">Minhas anotações</div>
+        <textarea class="notes-textarea" id="notes-mai-fb2" placeholder="Adicione observações sobre este canal..."></textarea>
+        <button class="notes-save-btn" onclick="saveNote('mai-fb2')">Salvar</button>
+      </div>
     </div>
 
     <div class="page-section" id="page-mai-fb3">
-            <div class="ai-box" id="ai-mai-fb3">
+            
+      <div class="summary-pill">📊 A página <strong>Foodi</strong> tem a maior base de seguidores (5.440) mas ainda com baixo engajamento relativo. Em maio, as views cresceram +1.488% — os Reels estão começando a funcionar.</div>
+      <div class="ai-box" id="ai-mai-fb3">
         <div class="ai-box-header"><span class="ai-box-icon">🤖</span><span class="ai-box-title">Análise IA — FB Foodi · Maio 2026</span></div>
         <div class="ai-box-content loading" id="ai-content-mai-fb3">Carregando análise...</div>
         <div class="ai-suggestions" id="ai-suggestions-mai-fb3"></div>
       </div>
-      <div class="summary-pill">📊 A página <strong>Foodi</strong> tem a maior base de seguidores (5.440) mas ainda com baixo engajamento relativo. Em maio, as views cresceram +1.488% — os Reels estão começando a funcionar.</div>
       <div class="slabel">visão geral — maio 2026</div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-bar" style="background:linear-gradient(90deg,var(--fb),#4A88EE)"></div><div class="kpi-label">Visualizações</div><div class="kpi-value">381</div><div class="kpi-sub up">↑ +1.488%</div></div>
@@ -2344,12 +2443,73 @@ let darkMode = false;
 let currentPageIdx = -1;
 
 // ── PASSWORD ──
-const SENHA = 'MF|9V=UG99ll';
 
+// ── SHA-256 (pure JS for password security) ──
+function sha256(str) {
+  function rightRotate(value, amount) {
+    return (value>>>amount) | (value<<(32-amount));
+  }
+  var mathPow = Math.pow;
+  var maxWord = mathPow(2, 32);
+  var lengthProperty = 'length';
+  var i, j;
+  var result = '';
+  var words = [];
+  var asciiBitLength = str[lengthProperty]*8;
+  var hash = sha256.h = sha256.h || [];
+  var k = sha256.k = sha256.k || [];
+  var primeCounter = k[lengthProperty];
+  var isComposite = {};
+  for (var candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (i = 0; i < 313; i += candidate) { isComposite[i] = candidate; }
+      hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+      k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+    }
+  }
+  str += '\x80';
+  while (str[lengthProperty]%64 - 56) str += '\x00';
+  for (i = 0; i < str[lengthProperty]; i++) {
+    j = str.charCodeAt(i);
+    if (j>>8) return;
+    words[i>>2] |= j << ((3 - i)%4*8);
+  }
+  words[words[lengthProperty]] = ((asciiBitLength/maxWord)|0);
+  words[words[lengthProperty]] = (asciiBitLength);
+  for (j = 0; j < words[lengthProperty];) {
+    var w = words.slice(j, j += 16);
+    var oldHash = hash;
+    hash = hash.slice(0, 8);
+    for (i = 0; i < 64; i++) {
+      var i2 = i + j - 16;
+      var w15 = w[i-15], w2 = w[i-2];
+      var a = hash[0], e = hash[4];
+      var temp1 = hash[7] + (rightRotate(e,6) ^ rightRotate(e,11) ^ rightRotate(e,25)) + ((e&hash[5])^((~e)&hash[6])) + k[i] + (w[i] = (i<16)?w[i]:(w[i-16] + (rightRotate(w15,7)^rightRotate(w15,18)^(w15>>>3)) + w[i-7] + (rightRotate(w2,17)^rightRotate(w2,19)^(w2>>>10)))|0);
+      var temp2 = (rightRotate(a,2)^rightRotate(a,13)^rightRotate(a,22)) + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+      hash = [(temp1+temp2)|0].concat(hash);
+      hash[4] = (hash[4]+temp1)|0;
+    }
+    for (i = 0; i < 8; i++) { hash[i] = (hash[i]+oldHash[i])|0; }
+  }
+  for (i = 0; i < 8; i++) {
+    for (j = 3; j+1; j--) {
+      var b = (hash[i]>>(j*8))&255;
+      result += ((b < 16)?0:'') + b.toString(16);
+    }
+  }
+  return result;
+}
+
+const SENHA_HASH = '1f5bce642136071fb1f48856b563427e30114fd9842c033edaeb8cf48140c439'; // senha protegida com SHA-256 // senha protegida com SHA-256
+
+let _lockAttempts = 0;
+let _lockTimeout = null;
 function unlock() {
+  if (_lockTimeout) { showToast('Aguarde antes de tentar novamente.'); return; }
   const input = document.getElementById('lock-input');
   const error = document.getElementById('lock-error');
-  if (input.value === SENHA) {
+  if (sha256(input.value) === SENHA_HASH) {
+    _lockAttempts = 0;
     document.getElementById('lock-screen').style.display = 'none';
     document.getElementById('dashboard').classList.add('visible');
     sessionStorage.setItem('auth','1');
